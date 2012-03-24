@@ -1,0 +1,30 @@
+PATH
+  remote: .
+  specs:
+    deploy (0.0.1)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    ZenTest (4.6.2)
+    ansi (1.4.2)
+    autotest (4.4.6)
+      ZenTest (>= 4.4.1)
+    daemon_controller (1.0.0)
+    metaclass (0.0.1)
+    minitest (2.11.3)
+    mocha (0.10.5)
+      metaclass (~> 0.0.1)
+    turn (0.9.3)
+      ansi
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  autotest
+  daemon_controller
+  deploy!
+  minitest (>= 2.11.3, < 2.12.0)
+  mocha
+  turn
