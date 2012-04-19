@@ -6,17 +6,17 @@ namespace :test do
 
   Rake::TestTask.new(:units) do |t|
     t.libs << "test"
-    t.test_files = FileList['test/unit/test*.rb']
+    t.test_files = FileList['test/unit/**/test*.rb']
   end
 
   Rake::TestTask.new(:acceptance) do |t|
     t.libs << "test"
-    t.test_files = FileList['test/acceptance/test*.rb']
+    t.test_files = FileList['test/acceptance/**/test*.rb']
   end
 
   Rake::TestTask.new(:integration) do |t|
     t.libs << "test"
-    t.test_files = FileList['test/integration/test*.rb']
+    t.test_files = FileList['test/integration/**/test*.rb']
   end
 
   task :default do
