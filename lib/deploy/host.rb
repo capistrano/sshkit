@@ -14,7 +14,6 @@ module Deploy
 
       if parsers.any?
         parsers.first.tap do |parser|
-          warn "Using #{parser}"
           @username, @hostname, @port = parser.new(host_string).attributes
         end
       else
