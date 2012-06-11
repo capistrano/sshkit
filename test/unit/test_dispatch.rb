@@ -2,6 +2,7 @@ require 'helper'
 
 module Deploy
   class TestDispatch < UnitTest
+
     def test_new_dispatch_has_a_queue
       Queue.expects(:new)
       Dispatch.new
@@ -30,5 +31,6 @@ module Deploy
       consumer.expects(:join)
       Dispatch.new.work
     end
+
   end
 end
