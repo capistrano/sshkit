@@ -43,6 +43,18 @@ module Deploy
       assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
     end
 
+    def testing_host_casting_to_a_string
+      assert_equal "user@example.com:1234", Host.new('user@example.com:1234').to_s
+    end
+
+    def test_assert_hosts_hash_equally
+      assert_equal Host.new('example.com').hash, Host.new('example.com').hash
+    end
+
+    def test_assert_hosts_compare_equal
+      assert Host.new('example.com').eql? Host.new('example.com')
+    end
+
   end
 
 end

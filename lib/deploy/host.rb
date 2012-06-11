@@ -22,6 +22,18 @@ module Deploy
 
     end
 
+    def hash
+      username.hash ^ hostname.hash ^ port.hash
+    end
+
+    def eql?(other_host)
+      other_host.hash == hash
+    end
+
+    def to_s
+      sprintf("%s@%s:%d", username, hostname, port)
+    end
+
   end
 
   class SimpleHostParser

@@ -3,7 +3,7 @@ require 'helper'
 
 module Deploy
 
-  class TextCommandContexts < UnitTest
+  class TestCommandContexts < UnitTest
 
     def setup
       ::Object.const_set :TestClass, Class.new
