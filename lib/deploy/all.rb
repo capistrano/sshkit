@@ -1,6 +1,7 @@
 require_relative 'stages'
 require_relative 'server_roles'
 require_relative 'command'
+require_relative 'host'
 require_relative 'command_context'
 require_relative 'command_contexts'
 require_relative 'command_context/in'
