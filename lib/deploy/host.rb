@@ -8,7 +8,7 @@ module Deploy
 
     def initialize(host_string)
 
-      parsers = [SimpleHostParser, HostWithPortParser, HostWithUsernameParser, HostWithUsernameAndPortParser].select do |p|
+      parsers = [SimpleHostParser, HostWithPortParser, IPv6HostWithPortParser, HostWithUsernameParser, HostWithUsernameAndPortParser].select do |p|
         p.suitable?(host_string)
       end
 
@@ -76,6 +76,23 @@ module Deploy
 
     def hostname
       @host_string.split(':').first
+    end
+
+  end
+
+  class IPv6HostWithPortParser < SimpleHostParser
+
+    def self.suitable?(host_string)
+      host_string.match /[a-fA-F0-9:]+:\d+/
+    end
+
+    def port
+      @host_string.split(':').last.to_i
+    end
+
+    def hostname
+      @host_string.gsub!(/\[|\]/, '')
+      @host_string.split(':')[0..-2].join(':')
     end
 
   end
