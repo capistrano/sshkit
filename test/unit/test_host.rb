@@ -36,8 +36,8 @@ module Deploy
       assert_equal 'example.com', h.hostname
     end
 
-    def test_does_not_confuse_upv6_hosts_with_port_specification
-      skip
+    def test_does_not_confuse_ipv6_hosts_with_port_specification
+      #skip
       h = Host.new '[1fff:0:a88:85a3::ac1f]:8001'
       assert_equal 8001,                    h.port
       assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
