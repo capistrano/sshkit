@@ -6,9 +6,12 @@ module Deploy
     end
 
     def execute
+      output = File.open('/dev/null', 'w+')
       @role.channels.each do |channel|
-        puts "#{@role.name}@#{channel}> #{@command.execute}"
+        output.write "#{@role.name}@#{channel}> #{@command.execute}"
       end
+    ensure
+      output.close
     end
   end
 end

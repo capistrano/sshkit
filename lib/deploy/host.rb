@@ -29,6 +29,12 @@ module Deploy
     def eql?(other_host)
       other_host.hash == hash
     end
+    alias :== :eql?
+    alias :equal? :eql?
+
+    def to_key
+      to_s.to_sym
+    end
 
     def to_s
       sprintf("%s@%s:%d", username, hostname, port)

@@ -10,7 +10,15 @@ GEM
     ansi (1.4.2)
     autotest (4.4.6)
       ZenTest (>= 4.4.1)
+    columnize (0.3.6)
     daemon_controller (1.0.0)
+    debugger (1.2.2)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.1.1)
+      debugger-ruby_core_source (~> 1.1.5)
+    debugger-linecache (1.1.2)
+      debugger-ruby_core_source (>= 1.1.1)
+    debugger-ruby_core_source (1.1.5)
     metaclass (0.0.1)
     minitest (2.11.3)
     mocha (0.10.5)
@@ -24,6 +32,7 @@ PLATFORMS
 DEPENDENCIES
   autotest
   daemon_controller
+  debugger
   deploy!
   minitest (>= 2.11.3, < 2.12.0)
   mocha

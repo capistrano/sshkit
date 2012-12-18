@@ -37,10 +37,13 @@ module Deploy
     end
 
     def test_does_not_confuse_ipv6_hosts_with_port_specification
-      #skip
       h = Host.new '[1fff:0:a88:85a3::ac1f]:8001'
       assert_equal 8001,                    h.port
       assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
+    end
+
+    def testing_host_casting_to_a_key
+      assert_equal :"user@example.com:1234", Host.new('user@example.com:1234').to_key
     end
 
     def testing_host_casting_to_a_string
@@ -52,7 +55,9 @@ module Deploy
     end
 
     def test_assert_hosts_compare_equal
+      assert Host.new('example.com') == Host.new('example.com')
       assert Host.new('example.com').eql? Host.new('example.com')
+      assert Host.new('example.com').equal? Host.new('example.com')
     end
 
   end
