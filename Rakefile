@@ -9,9 +9,9 @@ namespace :test do
     t.test_files = FileList['test/unit/**/test*.rb']
   end
 
-  Rake::TestTask.new(:acceptance) do |t|
+  Rake::TestTask.new(:functional) do |t|
     t.libs << "test"
-    t.test_files = FileList['test/acceptance/**/test*.rb']
+    t.test_files = FileList['test/functional/**/test*.rb']
   end
 
   Rake::TestTask.new(:integration) do |t|
@@ -21,7 +21,7 @@ namespace :test do
 
   task :default do
     Rake::Task['test:units'].execute
-    Rake::Task['test:acceptance'].execute
+    Rake::Task['test:functional'].execute
     Rake::Task['test:integration'].execute
   end
 
