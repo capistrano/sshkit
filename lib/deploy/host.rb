@@ -8,12 +8,18 @@ module Deploy
 
     def initialize(host_string)
 
-      parsers = [SimpleHostParser, HostWithPortParser, IPv6HostWithPortParser, HostWithUsernameParser, HostWithUsernameAndPortParser].select do |p|
+      suitable_parsers = [
+        SimpleHostParser,
+        HostWithPortParser,
+        IPv6HostWithPortParser,
+        HostWithUsernameParser,
+        HostWithUsernameAndPortParser
+      ].select do |p|
         p.suitable?(host_string)
       end
 
-      if parsers.any?
-        parsers.first.tap do |parser|
+      if suitable_parsers.any?
+        suitable_parsers.first.tap do |parser|
           @username, @hostname, @port = parser.new(host_string).attributes
         end
       else

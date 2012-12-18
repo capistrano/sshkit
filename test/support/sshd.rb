@@ -13,6 +13,7 @@ class SSH
         :ping_command   => lambda { TCPSocket.new('localhost', 2234) },
         :pid_file       => pid_file,
         :log_file       => log_file,
+        :before_start   => lambda { create_sandbox! }
       )
     end
 
@@ -25,6 +26,10 @@ class SSH
       File.unlink configuration_file if File.exists?(configuration_file)
       File.unlink hostkey_file       if File.exists?(hostkey_file)
       write_configurations
+    end
+
+    def create_sandbox!
+      chroot
     end
 
     private
@@ -57,8 +62,7 @@ class SSH
       def default_configuration
         <<-EOB
           Port 2234
-          ListenAddress ::
-          ListenAddress 0.0.0.0
+          ListenAddress 127.0.0.1
           Protocol 2
           StrictModes yes
           PasswordAuthentication yes
@@ -68,9 +72,9 @@ class SSH
         EOB
       end
       def chroot
-        sandbox = File.join(Dir.pwd, %w(test tmp sshd sandbox))
-        FileUtils.mkdir_p(File.dirname(sandbox))
-        sandbox
+        chroot = File.join(Dir.pwd, %w(test tmp sshd sandbox))
+        FileUtils.mkdir_p(chroot)
+        chroot
       end
       def pid_file
         pid = File.join(Dir.pwd, %w(test tmp sshd pids sshd.pid))

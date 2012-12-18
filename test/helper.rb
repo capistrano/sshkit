@@ -16,6 +16,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'deploy'
 require 'support/sshd'
+require 'support/sshd_user_with_key'
 
 class UnitTest < MiniTest::Unit::TestCase
 
@@ -24,12 +25,15 @@ end
 class FunctionalTest < MiniTest::Unit::TestCase
 
   def setup
+    SSH.daemon.stop if SSH.daemon.running?
     SSH.write_configurations!
     SSH.daemon.start
+    assert SSH.daemon.running?
   end
 
   def teardown
     SSH.daemon.stop
+    refute SSH.daemon.running?
   end
 
 end
