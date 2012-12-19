@@ -84,3 +84,15 @@ for example
 
     The responder needs only to respond to call, and take the prompt (that will be the last line of the standard output of
     the process, if it returns something, that will be written to the processes stdin.
+
+The final command Result object will have fields covering start and end times, host, time waiting for mutexes, time waiting for
+a connection, the processes stdin, stdout, stderr and exit status, as well as convenience methods which will make implemeting
+
+## Better Error Messages
+
+By encapsulating things such as `as()` into helper methods, we can contextualise what went wrong, a message such as:
+
+    "Tried to run `su - deploy` as `root` failed with status `0` *No askpass program was provided*"
+
+would be much more helpful than what we have now, and the check can be made on the connection object when as() is called,
+before executing commands.

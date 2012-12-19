@@ -1,7 +1,9 @@
 require 'helper'
 
 module Deploy
-  class TestStages < UnitTest 
+
+  class TestStages < UnitTest
 
   end
+
 end
