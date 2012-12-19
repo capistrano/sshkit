@@ -67,7 +67,7 @@ class FunctionalTest < MiniTest::Unit::TestCase
 
   def create_user_with_key(username, password = :secret)
     username, password = username.to_s, password.to_s
-    venv.vms.collect do |hostname, vm|
+    keys = venv.vms.collect do |hostname, vm|
 
       # Remove the user, make it again, force-generate a key for him
       # short keys save us a few microseconds
@@ -92,9 +92,13 @@ class FunctionalTest < MiniTest::Unit::TestCase
       # Clean Up Files
       vm.channel.sudo("rm #{username} #{username}.pub")
 
-      return sio.tap { |s| s.rewind }.read
+      # Rewind the stringio, and read it as a string
+      sio.tap { |s| s.rewind }.read
 
     end
+
+    Hash[venv.vms.collect { |n,vm| n }.zip(keys)]
+
   end
 
 end

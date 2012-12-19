@@ -13,8 +13,9 @@ module Deploy
     end
 
     def test_creating_a_user_gives_us_back_his_private_key_as_a_string
-      out = create_user_with_key(:peter)
-      refute out.empty?
+      keys = create_user_with_key(:peter)
+      assert_equal [:one, :two, :three], keys.keys
+      assert keys.values.all?
     end
 
   end

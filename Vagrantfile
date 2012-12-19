@@ -7,12 +7,12 @@ Vagrant::Config.run do |config|
     one.vm.box = "lucid32"
   end
 
-  #config.vm.define :two do |one|
-  #  one.vm.box = "lucid32"
-  #end
+  config.vm.define :two do |one|
+    one.vm.box = "lucid32"
+  end
 
-  #config.vm.define :three do |one|
-  #  one.vm.box = "lucid32"
-  #end
+  config.vm.define :three do |one|
+    one.vm.box = "lucid32"
+  end
 
 end
