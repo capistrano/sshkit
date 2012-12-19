@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('turn')
   gem.add_development_dependency('mocha')
 
-  gem.add_development_dependency('daemon_controller')
   gem.add_development_dependency('debugger')
+  gem.add_development_dependency('vagrant')
 
 end

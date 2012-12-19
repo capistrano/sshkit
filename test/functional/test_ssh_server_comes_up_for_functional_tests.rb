@@ -13,8 +13,8 @@ module Deploy
     end
 
     def test_step_in_here
+      create_user_with_key(:codebeaker)
       keyfile = SSHUser.create(:codebeaker)
-      warn keyfile
       assert File.exists?(keyfile)
     end
 

@@ -8,10 +8,12 @@ GEM
   specs:
     ZenTest (4.6.2)
     ansi (1.4.2)
+    archive-tar-minitar (0.5.2)
     autotest (4.4.6)
       ZenTest (>= 4.4.1)
+    childprocess (0.3.6)
+      ffi (~> 1.0, >= 1.0.6)
     columnize (0.3.6)
-    daemon_controller (1.0.0)
     debugger (1.2.2)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.1.1)
@@ -19,21 +21,38 @@ GEM
     debugger-linecache (1.1.2)
       debugger-ruby_core_source (>= 1.1.1)
     debugger-ruby_core_source (1.1.5)
+    erubis (2.7.0)
+    ffi (1.2.0)
+    i18n (0.6.1)
+    json (1.5.4)
+    log4r (1.1.10)
     metaclass (0.0.1)
     minitest (2.11.3)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
+    net-scp (1.0.4)
+      net-ssh (>= 1.99.1)
+    net-ssh (2.2.2)
     turn (0.9.3)
       ansi
+    vagrant (1.0.5)
+      archive-tar-minitar (= 0.5.2)
+      childprocess (~> 0.3.1)
+      erubis (~> 2.7.0)
+      i18n (~> 0.6.0)
+      json (~> 1.5.1)
+      log4r (~> 1.1.9)
+      net-scp (~> 1.0.4)
+      net-ssh (~> 2.2.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   autotest
-  daemon_controller
   debugger
   deploy!
   minitest (>= 2.11.3, < 2.12.0)
   mocha
   turn
+  vagrant
