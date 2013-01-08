@@ -4,16 +4,20 @@ module Deploy
 
   class TestConfiguration < UnitTest
 
-    def default_config
-      skip
+    def setup
+      Deploy.config = nil
     end
 
-    def test_reading_the_configuration_output
-      skip
+    def test_output
+      assert_equal $stdout, Deploy.config.output
+      assert Deploy.config.output = $stderr
+      assert_equal $stderr, Deploy.config.output
     end
 
-    def test_reading_the_default_configuration_formatter
-      skip
+    def test_format
+      assert_equal :dot, Deploy.config.format
+      assert Deploy.config.format = :pretty
+      assert_equal :pretty, Deploy.config.format
     end
 
   end

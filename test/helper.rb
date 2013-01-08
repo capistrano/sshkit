@@ -65,6 +65,10 @@ class FunctionalTest < MiniTest::Unit::TestCase
 
   private
 
+  def vm_hosts
+    venv.vms.collect { |name, vm| debugger; name }
+  end
+
   def create_user_with_key(username, password = :secret)
     username, password = username.to_s, password.to_s
     keys = venv.vms.collect do |hostname, vm|
