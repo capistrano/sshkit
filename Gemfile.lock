@@ -33,6 +33,7 @@ GEM
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.2.2)
+    rake (10.0.3)
     turn (0.9.3)
       ansi
     vagrant (1.0.5)
@@ -54,5 +55,6 @@ DEPENDENCIES
   deploy!
   minitest (>= 2.11.3, < 2.12.0)
   mocha
+  rake
   turn
   vagrant

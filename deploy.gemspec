@@ -18,9 +18,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
   gem.add_development_dependency('autotest')
+  gem.add_development_dependency('rake')
   gem.add_development_dependency('turn')
   gem.add_development_dependency('mocha')
-
   gem.add_development_dependency('debugger')
   gem.add_development_dependency('vagrant')
 
