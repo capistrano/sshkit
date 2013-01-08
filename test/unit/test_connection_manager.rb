@@ -5,9 +5,7 @@ module Deploy
   class TestConnectionManager < UnitTest
 
     def setup
-      mbe = Class.new
-      mbe.send(:define_method, :connect, lambda { |h| return })
-      ConnectionManager.backend = mbe
+      Deploy.config.backend = Deploy::Backend::Abstract
     end
 
     def test_connection_manager_handles_a_single_argument
@@ -30,7 +28,7 @@ module Deploy
     def test_connection_manager_raises_a_connection_timeout_error_if_a_host_takes_too_long_to_respond
       mbe = Class.new
       mbe.send(:define_method, :connect, lambda { |h| sleep 60 })
-      ConnectionManager.backend = mbe
+      Deploy.config.backend = mbe
       ConnectionManager.connection_timeout = 1
       assert_raises ConnectionTimeoutExpired do
         ConnectionManager.new '1.example.com'

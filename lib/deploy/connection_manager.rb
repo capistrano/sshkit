@@ -59,11 +59,7 @@ module Deploy
 
     class << self
 
-      attr_writer :backend, :connection_timeout
-
-      def backend
-        (@backend.class == Class) ? @backend.new : @backend
-      end
+      attr_writer :connection_timeout
 
       def connection_timeout
         @connection_timeout ||= 5
@@ -104,7 +100,7 @@ module Deploy
             @hosts.each do |h|
               threads << Thread.new do
                 Thread.current[:host] = h
-                Thread.current[:connection] = self.class.backend.connect(h)
+                Thread.current[:connection] = Deploy.config.backend.connect(h)
               end
             end
           end.map(&:join).inject({}) { |h, thread| h[thread[:host].to_key] = thread[:connection]; h }

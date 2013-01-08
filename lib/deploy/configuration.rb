@@ -2,11 +2,18 @@ module Deploy
 
   class Configuration
 
-    attr_accessor :output, :format
+    attr_writer :backend
+    attr_accessor :output, :format, :runner
 
     def initialize
-      @output = $stdout
-      @format = :dot
+      @output  = $stdout
+      @format  = :dot
+      @runner  = :parallel
+      @backend = :ssh
+    end
+
+    def backend
+      (@backend.class == Class) ? @backend.new : @backend
     end
 
   end
