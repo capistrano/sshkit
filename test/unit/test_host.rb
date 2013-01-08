@@ -12,9 +12,9 @@ module Deploy
 
     def test_regular_hosts
       h = Host.new 'example.com'
-      assert_equal 22,            h.port
-      assert_equal `whoami`,      h.username
-      assert_equal 'example.com', h.hostname
+      assert_equal 22,             h.port
+      assert_equal `whoami`.chomp, h.username
+      assert_equal 'example.com',  h.hostname
     end
 
     def test_host_with_port

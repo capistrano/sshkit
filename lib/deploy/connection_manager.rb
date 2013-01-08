@@ -1,5 +1,55 @@
 require 'timeout'
 
+class Runner
+
+  attr_reader :hosts, :connections, :block
+
+  def initialize(hosts, connections, &block)
+    @hosts       = Array(hosts)
+    @connections = connections
+    @block       = block
+  end
+
+end
+
+class ParallelRunner < Runner
+  def run
+    threads = []
+    hosts.each do |host|
+      threads << Thread.new(host, connections[host.to_key]) { |h,c| block.call h, c }
+    end
+    threads.map(&:join)
+  end
+end
+
+class SequentialRunner < Runner
+  attr_writer :wait_interval
+  def run
+    hosts.each do |host|
+      block.call host, connections[host.to_key]
+      sleep wait_interval
+    end
+  end
+  private
+  def wait_interval
+    @wait_interval ||= 2
+  end
+end
+
+class GroupRunner < SequentialRunner
+  attr_writer :group_size
+  def run
+    hosts.each_slice(group_size).collect do |group_hosts|
+      ParallelRunner.new(group_hosts, connections, &block).run
+      sleep wait_interval
+    end.flatten
+  end
+  private
+  def group_size
+    @group_size ||= 2
+  end
+end
+
 module Deploy
 
   NoValidHosts = Class.new(StandardError)
@@ -14,9 +64,11 @@ module Deploy
       def backend
         (@backend.class == Class) ? @backend.new : @backend
       end
+
       def connection_timeout
         @connection_timeout ||= 5
       end
+
     end
 
     attr_accessor :hosts, :connections
@@ -28,13 +80,23 @@ module Deploy
       connect_hosts!
     end
 
-    def each(&block)
-      hosts.each do |host|
-        yield host, connections[host.to_key]
-      end
+    def each(options=default_options, &block)
+      case options[:in]
+      when :parallel then ParallelRunner
+      when :sequence then SequentialRunner
+      when :groups   then GroupRunner
+      else
+        raise RuntimeError, "Don't know how to handle run style #{options[:in]}"
+      end.new(hosts, connections, &block).run
     end
 
     private
+
+      attr_accessor :cooldown
+
+      def default_options
+        { in: :parallel }
+      end
 
       def connect_hosts!
         Timeout.timeout self.class.connection_timeout, ConnectionTimeoutExpired do

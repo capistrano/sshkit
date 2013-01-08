@@ -88,6 +88,14 @@ for example
 The final command Result object will have fields covering start and end times, host, time waiting for mutexes, time waiting for
 a connection, the processes stdin, stdout, stderr and exit status, as well as convenience methods which will make implemeting
 
+## ToDo
+
+* Assertive backend (also logging backend)
+
+* Capture helper
+* Run helper should be useable in an if statement value (simply return the
+  command result)
+
 ## Better Error Messages
 
 By encapsulating things such as `as()` into helper methods, we can contextualise what went wrong, a message such as:

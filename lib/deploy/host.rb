@@ -59,7 +59,7 @@ module Deploy
     end
 
     def username
-      `whoami`
+      `whoami`.chomp
     end
 
     def port
