@@ -2,7 +2,11 @@ module Deploy
   module Backend
     class Abstract
 
-      def connect(host, &block)
+      #
+      # Should include The Command and Command Contexts
+      #
+
+      def connect(host)
       end
 
       def make(commands=[])

@@ -12,11 +12,10 @@ module Deploy
 
       def teardown
         @be = nil
-        @be.verify!
       end
 
       def test_mocking_a_run_call
-        pending
+        skip
         be.mock(:run, "date").to_return(stdout: ['Tue  8 Jan 2013 14:36:12 CET'])
         cr = be.run("date")
         assert cr.success?
@@ -29,4 +28,3 @@ module Deploy
   end
 
 end
-
