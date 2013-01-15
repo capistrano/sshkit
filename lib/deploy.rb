@@ -9,6 +9,7 @@ module Deploy
 
   def self.capture_output(io, &block)
     original_io = config.output
+    config.output = io
     yield
   ensure
     config.output = original_io

@@ -5,32 +5,26 @@ module Deploy
 
       include Deploy::CommandHelper
 
-      def initialize(&block)
-        instance_eval &block if block_given?
+      attr_reader :host
+
+      def initialize(host, &block)
+        @host  = host
+        @block = block
       end
 
-      def execute(command, args=[])
-        command(command, args).tap do |c|
-          output << c.to_s + "\n"
-        end
+      def run
+        instance_exec(host, &@block)
+      end
+
+      def execute(*args)
+        output << command(*args)
       end
 
       def capture(command, args=[])
         raise MethodUnavailableError
       end
 
-      def within(dir, &block)
-        directories.push dir
-        output << String(thing) + "\n"
-      ensure
-        directories.pop
-      end
-
       private
-
-      def command(command, args=[], options={})
-        Command.new command, Array(args), options
-      end
 
       def output
         Deploy.config.output

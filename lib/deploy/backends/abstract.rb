@@ -6,12 +6,7 @@ module Deploy
     class Abstract
 
       def initialize(*args)
-
-      end
-
-      def connect(host)
-        # Nothing to connect *to* in the abstract
-        # adapter
+        # Nothing here
       end
 
       def make(commands=[])
@@ -31,16 +26,16 @@ module Deploy
       end
 
       def within(directory, &block)
-        @pwd.unfhift directory
+        (@pwd ||= []).push directory.to_s
         execute <<-EOTEST
-          if test ! -d #{directory}; then
-            echo "Directory does not exist '#{directory}'" 2>&1
+          if test ! -d #{File.join(@pwd)}; then
+            echo "Directory does not exist '#{File.join(@pwd)}'" 2>&1
             false
           fi
         EOTEST
         yield
       ensure
-        @pwd.shift
+        @pwd.pop
       end
 
       def with(environment, &block)
@@ -54,12 +49,12 @@ module Deploy
 
       private
 
-      def command(command, args=[])
-        Deploy::Command.new(command, Array(args), in: @pwd, with: @env)
+      def command(*args)
+        Deploy::Command.new(*args, in: @pwd.nil? ? nil : File.join(@pwd), env: @env)
       end
 
       def connection
-
+        raise "No Connection Pool Implementation"
       end
 
     end

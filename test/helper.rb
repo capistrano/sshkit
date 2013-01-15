@@ -11,6 +11,7 @@ require 'tempfile'
 require 'minitest/unit'
 require 'mocha'
 require 'turn'
+require 'unindent'
 require 'debugger'
 require 'vagrant'
 require 'stringio'
@@ -114,6 +115,6 @@ end
 # Force colours in Autotest
 #
 Turn.config.ansi = true
-Turn.config.format = :outline
+Turn.config.format = :dot
 
 MiniTest::Unit.autorun
