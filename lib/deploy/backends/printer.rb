@@ -20,12 +20,17 @@ module Deploy
       end
 
       def within(dir, &block)
-        super.tap do |thing|
-          output << String(thing) + "\n"
-        end
+        directories.push dir
+        output << String(thing) + "\n"
+      ensure
+        directories.pop
       end
 
       private
+
+      def command(command, args=[], options={})
+        Command.new command, Array(args), options
+      end
 
       def output
         Deploy.config.output

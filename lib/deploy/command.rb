@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module Deploy
 
   module CommandHelper
@@ -24,15 +26,47 @@ module Deploy
 
   class Command
 
-    attr_reader :command, :args
+    attr_reader :command, :args, :options
 
-    def initialize(command, args=[])
-      @command = command
-      @args    = Array(args)
+    def initialize(*args)
+      @options = args.extract_options!
+      @command = args.shift.to_sym
+      @args    = args
     end
 
     def to_s
-      args.any? ? [command, *args].join(" ") : command.to_s
+      if command.to_s.match("\n")
+        String.new.tap do |cs|
+          command.to_s.lines.each do |line|
+            cs << line.strip
+            cs << '; ' unless line == command.to_s.lines.to_a.last
+          end
+        end
+      else
+        String.new.tap do |cs|
+          if options[:in]
+            cs << sprintf("cd %s &&", options[:in])
+            cs << 040
+          end
+          if options[:env]
+            cs << '( '
+            options[:env].each do |k,v|
+              cs << k.to_s.upcase
+              cs << "="
+              cs << v.to_s.shellescape
+            end
+            cs << ' '
+          end
+          cs << Deploy.config.command_map[command.to_sym]
+          if args.any?
+            cs << ' '
+            cs << args.join(' ')
+          end
+          if options[:env]
+            cs << ' )'
+          end
+        end
+      end
     end
 
   end

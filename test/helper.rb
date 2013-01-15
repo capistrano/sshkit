@@ -19,7 +19,6 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'deploy'
 
-
 module Vagrant
   module Communication
     class SSH
@@ -115,6 +114,6 @@ end
 # Force colours in Autotest
 #
 Turn.config.ansi = true
-Turn.config.format = :dot
+Turn.config.format = :outline
 
 MiniTest::Unit.autorun

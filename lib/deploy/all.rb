@@ -1,3 +1,5 @@
+require_relative '../core_ext/array'
+
 require_relative 'command'
 require_relative 'host'
 require_relative 'connection_manager'

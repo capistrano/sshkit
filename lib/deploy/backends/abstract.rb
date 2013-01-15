@@ -27,17 +27,35 @@ module Deploy
       end
 
       def within(directory, &block)
-        raise "Boom"
+        @pwd.unfhift directory
+        execute <<-EOTEST
+          if test ! -d #{directory} then
+            echo "Directory does not exist '#{directory}'" 2>&1
+            false
+          fi
+        EOTEST
+        yield
+      ensure
+        @pwd.shift
       end
 
       def with(environment, &block)
-        raise "Boom"
+        @_env = (@env ||= {})
+        @env = @_env.merge environment
+        yield
+      ensure
+        @env = @_env
+        remove_instance_variable(:@_env)
       end
 
       private
 
       def command(command, args=[])
-        Deploy::Command.new(command, Array(args))
+        Deploy::Command.new(command, Array(args), in: @pwd, with: @env)
+      end
+
+      def connection
+
       end
 
     end
