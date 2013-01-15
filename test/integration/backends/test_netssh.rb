@@ -70,6 +70,24 @@ module Deploy
         end
       end
 
+      def test_raising_an_error_if_a_command_returns_a_bad_exit_status
+        skip "Where to implement this?"
+        # NOTE: I think that it might be wise to have Command raise when
+        # Command#exit_status=() is called, it would allow an option to
+        # be passed to command (raise_errors: false), which could also be
+        # inherited through Backend#command and specified on the (not yet
+        # existing) backend configurations.
+        assert_raises RuntimeError do
+          File.open('/dev/null', 'w') do |dnull|
+            Deploy.capture_output(dnull) do
+              Netssh.new(a_host) do |host|
+                execute :false
+              end.run
+            end
+          end
+        end
+      end
+
     end
 
   end

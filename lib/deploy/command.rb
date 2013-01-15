@@ -32,6 +32,7 @@ module Deploy
     attr_accessor :exit_status, :stdout, :stderr
 
     def initialize(*args)
+      raise ArgumentError, "May not pass no arguments to Command.new" if args.empty?
       @options = args.extract_options!
       @command = args.shift.to_s.strip.to_sym
       @args    = args

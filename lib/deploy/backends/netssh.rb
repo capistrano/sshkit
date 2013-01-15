@@ -24,7 +24,6 @@ module Deploy
           output << cmd
           ssh.open_channel do |chan|
             chan.exec cmd.to_s do |ch, success|
-              # TODO: Something about checking success
               chan.on_data do |ch, data|
                 cmd.stdout += data
                 output << cmd
@@ -37,6 +36,24 @@ module Deploy
                 exit_status = data.read_string.to_i
                 cmd.exit_status = exit_status
                 output << cmd
+              end
+              chan.on_request("exit-signal") do |ch, data|
+                # TODO: This gets called if the program is killed by a signal
+                # might also be a worthwhile thing to report
+                exit_status = data.read_string.to_i
+                cmd.exit_status = exit_status
+                output << cmd
+              end
+              chan.on_open_failed do |ch|
+                # TODO: What do do here?
+                # I think we should raise something
+              end
+              chan.on_process do |ch|
+                # TODO: I don't know if this is useful
+              end
+              chan.on_eof do |ch|
+                # TODO: chan sends EOF before the exit status has been
+                # writtend
               end
             end
             chan.wait

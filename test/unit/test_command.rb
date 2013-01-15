@@ -97,7 +97,9 @@ module Deploy
     end
 
     def test_wont_take_no_args
-      skip "Assert that we raise an argument error"
+      assert_raises ArgumentError do
+        Command.new
+      end
     end
 
   end
