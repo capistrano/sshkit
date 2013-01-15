@@ -24,7 +24,12 @@ module Deploy
 
     def test_working_in_a_given_directory
       c = Command.new(:ls, '-l', in: "/opt/sites")
-      assert_equal "cd /opt/sites && /usr/bin/env ls -l", String(c)
+      assert_equal "cd /opt/sites && /usr/bin/env ls -l; cd -", String(c)
+    end
+
+    def test_working_in_a_given_directory_with_env
+      c = Command.new(:ls, '-l', in: "/opt/sites", env: {a: :b})
+      assert_equal "cd /opt/sites && ( A=b /usr/bin/env ls -l ); cd -", String(c)
     end
 
   end

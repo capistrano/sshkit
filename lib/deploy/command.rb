@@ -45,8 +45,7 @@ module Deploy
       else
         String.new.tap do |cs|
           if options[:in]
-            cs << sprintf("cd %s &&", options[:in])
-            cs << 040
+            cs << sprintf("cd %s && ", options[:in])
           end
           if options[:env]
             cs << '( '
@@ -64,6 +63,9 @@ module Deploy
           end
           if options[:env]
             cs << ' )'
+          end
+          if options[:in]
+            cs << '; cd -'
           end
         end
       end
