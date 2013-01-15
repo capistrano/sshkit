@@ -63,7 +63,7 @@ module Deploy
           Deploy.capture_output(dnull) do
             captured_command_result = ""
             Netssh.new(a_host) do |host|
-              warn capture("tail", '-f', '/var/log/messages')
+              captured_command_result = capture(:hostname)
             end.run
             assert_equal "lucid32", captured_command_result
           end

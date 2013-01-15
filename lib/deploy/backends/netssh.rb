@@ -14,7 +14,7 @@ module Deploy
       end
 
       def capture(*args)
-        _execute(*args).stdout
+        _execute(*args).stdout.strip
       end
 
       private
@@ -23,37 +23,25 @@ module Deploy
         command(*args).tap do |cmd|
           output << cmd
           ssh.open_channel do |chan|
-            chan.request_pty do |_, success|
-              if success
-                warn 'pty request successful'
-              else
-                warn 'pty request failed'
-              end
-            end
-            chan.exec String(command) do |ch, success|
+            chan.exec cmd.to_s do |ch, success|
               # TODO: Something about checking success
               chan.on_data do |ch, data|
-                warn "STDOUT: #{data}"
                 cmd.stdout += data
                 output << cmd
               end
               chan.on_extended_data do |ch, type, data|
-                warn "STDERR: ##{type} #{data}"
                 cmd.stderr += data
                 output << cmd
               end
               chan.on_request("exit-status") do |ch, data|
                 exit_status = data.read_string.to_i
-                warn "EXIT_STATUS: #{exit_status}"
                 cmd.exit_status = exit_status
                 output << cmd
               end
             end
             chan.wait
           end
-          warn "jumping ssh loop"
           ssh.loop
-          warn "Abandoning SSH loop"
         end
       end
 
@@ -63,7 +51,7 @@ module Deploy
             host.hostname,
             host.username,
             port: host.port,
-            password: host.password
+            password: host.password,
           )
         end
       end

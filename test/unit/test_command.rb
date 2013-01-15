@@ -96,5 +96,9 @@ module Deploy
       assert Command.new(:whosmi).uuid
     end
 
+    def test_wont_take_no_args
+      skip "Assert that we raise an argument error"
+    end
+
   end
 end

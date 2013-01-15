@@ -17,7 +17,7 @@ module Deploy
     end
 
     def command_map
-      @command_map ||= Hash.new { |h,k| h[k] = "/usr/bin/env #{k}"}
+      @command_map ||= Hash.new { |hash, command| hash[command] = "/usr/bin/env #{command}"}
     end
 
   end
