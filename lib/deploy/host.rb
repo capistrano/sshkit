@@ -6,6 +6,8 @@ module Deploy
 
     attr_reader :hostname, :port, :username
 
+    attr_accessor :password
+
     def initialize(host_string)
 
       suitable_parsers = [

@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     deploy (0.0.1)
+      net-ssh
 
 GEM
   remote: http://rubygems.org/

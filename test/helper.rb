@@ -66,7 +66,12 @@ class FunctionalTest < MiniTest::Unit::TestCase
   private
 
   def vm_hosts
-    venv.vms.collect { |name, vm| debugger; name }
+    venv.vms.collect do |name, vm|
+      port = vm.env.config.for_vm(name).vm.forwarded_ports.first[:hostport]
+      Deploy::Host.new("vagrant@localhost:#{port}").tap do |h|
+        h.password = 'vagrant'
+      end
+    end
   end
 
   def create_user_with_key(username, password = :secret)

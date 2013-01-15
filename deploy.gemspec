@@ -15,7 +15,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Deploy::VERSION
 
-  gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
+  gem.add_dependency('net-ssh')
+
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
   gem.add_development_dependency('autotest')
   gem.add_development_dependency('rake')

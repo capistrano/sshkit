@@ -1,4 +1,5 @@
 require 'shellwords'
+require 'securerandom'
 
 module Deploy
 
@@ -28,19 +29,43 @@ module Deploy
 
     attr_reader :command, :args, :options
 
+    attr_accessor :exit_status, :stdout, :stderr
+
     def initialize(*args)
       @options = args.extract_options!
       @command = args.shift.to_s.strip.to_sym
       @args    = args
       @options.symbolize_keys!
       sanitize_command!
+      @stdout, @stderr = String.new, String.new
     end
+
+    def complete?
+      !exit_status.nil?
+    end
+
+    def uuid
+      @uuid ||= SecureRandom.uuid
+    end
+
+    def success?
+      exit_status.nil? ? false : exit_status.to_i == 0
+    end
+    alias :successful? :success?
+
+    def failure?
+      exit_status.to_i > 0
+    end
+    alias :failed? :failure?
 
     def to_hash
       {
-        command: command,
-        args: args,
-        options: options
+        command:     command,
+        args:        args,
+        options:     options,
+        exit_status: exit_status,
+        stdout:      stdout,
+        stderr:      stderr
       }
     end
 

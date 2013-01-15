@@ -43,5 +43,58 @@ module Deploy
       assert_equal "( sudo su -u anotheruser /usr/bin/env whoami )", String(c)
     end
 
+    def test_complete?
+      c = Command.new(:whoami)
+      refute c.complete?
+      c.exit_status = 1
+      assert c.complete?
+      c.exit_status = 0
+      assert c.complete?
+    end
+
+    def test_successful?
+      c = Command.new(:whoami)
+      refute c.successful?
+      refute c.success?
+      c.exit_status = 0
+      assert c.successful?
+      assert c.success?
+    end
+
+    def test_failure?
+      c = Command.new(:whoami)
+      refute c.failure?
+      refute c.failed?
+      c.exit_status = 1
+      assert c.failure?
+      assert c.failed?
+      c.exit_status = 127
+      assert c.failure?
+      assert c.failed?
+    end
+
+    def test_appending_stdout
+      c = Command.new(:whoami)
+      assert c.stdout += "test\n"
+      assert_equal "test\n", c.stdout
+    end
+
+    def test_appending_stderr
+      c = Command.new(:whoami)
+      assert c.stderr += "test\n"
+      assert_equal "test\n", c.stderr
+    end
+
+    def test_setting_exit_status
+      c = Command.new(:whoami)
+      assert_equal nil, c.exit_status
+      assert c.exit_status = 1
+      assert_equal 1, c.exit_status
+    end
+
+    def test_command_has_a_guid
+      assert Command.new(:whosmi).uuid
+    end
+
   end
 end
