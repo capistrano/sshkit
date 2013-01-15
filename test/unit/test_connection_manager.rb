@@ -63,7 +63,7 @@ module Deploy
       assert_operator results.first.to_i, :<, results.last.to_i
     end
 
-    def test_the_connection_mnager_can_run_things_in_groups
+    def test_the_connection_manager_can_run_things_in_groups
       results = []
       command = lambda do |host,connection|
         results << Time.now

@@ -5,6 +5,10 @@ module Deploy
 
     class Abstract
 
+      def initialize(*args)
+
+      end
+
       def connect(host)
         # Nothing to connect *to* in the abstract
         # adapter
@@ -29,7 +33,7 @@ module Deploy
       def within(directory, &block)
         @pwd.unfhift directory
         execute <<-EOTEST
-          if test ! -d #{directory} then
+          if test ! -d #{directory}; then
             echo "Directory does not exist '#{directory}'" 2>&1
             false
           fi

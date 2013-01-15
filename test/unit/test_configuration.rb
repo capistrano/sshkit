@@ -6,6 +6,7 @@ module Deploy
 
     def setup
       Deploy.config = nil
+      Deploy.config.command_map.clear
     end
 
     def test_output
