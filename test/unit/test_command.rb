@@ -29,11 +29,3 @@ module Deploy
 
   end
 end
-
-#ParallelRunner.new(group_hosts, connections) do
-#  execute "date"
-#  execute "uptime"
-#  as :root do
-#    capture "sv restart unicorn_rails"
-#  end
-#end.execute
