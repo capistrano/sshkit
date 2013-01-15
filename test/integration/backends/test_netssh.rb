@@ -59,7 +59,6 @@ module Deploy
       end
 
       def test_capture
-        skip "Not working :-("
         File.open('/dev/null', 'w') do |dnull|
           Deploy.capture_output(dnull) do
             captured_command_result = ""
