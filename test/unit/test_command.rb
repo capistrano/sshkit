@@ -24,12 +24,23 @@ module Deploy
 
     def test_working_in_a_given_directory
       c = Command.new(:ls, '-l', in: "/opt/sites")
-      assert_equal "cd /opt/sites && /usr/bin/env ls -l; cd -", String(c)
+      assert_equal "cd /opt/sites && /usr/bin/env ls -l", String(c)
     end
 
     def test_working_in_a_given_directory_with_env
       c = Command.new(:ls, '-l', in: "/opt/sites", env: {a: :b})
-      assert_equal "cd /opt/sites && ( A=b /usr/bin/env ls -l ); cd -", String(c)
+      assert_equal "cd /opt/sites && ( A=b /usr/bin/env ls -l )", String(c)
+    end
+
+    def test_having_a_host_passed
+      refute Command.new(:date).host
+      assert Command.new(:date, host: :foo)
+      assert_equal :foo, Command.new(host: :foo).host
+    end
+
+    def test_working_as_a_given_user
+      c = Command.new(:whoami, user: :anotheruser)
+      assert_equal "( sudo su -u anotheruser /usr/bin/env whoami )", String(c)
     end
 
   end

@@ -5,8 +5,12 @@ module Deploy
 
     class Abstract
 
-      def initialize(*args)
-        # Nothing here
+      attr_reader :host
+
+      def initialize(host, &block)
+        raise "Must pass a Host object" unless host.is_a? Host
+        @host  = host
+        @block = block
       end
 
       def make(commands=[])
@@ -28,8 +32,8 @@ module Deploy
       def within(directory, &block)
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST
-          if test ! -d #{File.join(@pwd)}; then
-            echo "Directory does not exist '#{File.join(@pwd)}'" 2>&1
+          if test ! -d #{File.join(@pwd)}
+            then echo "Directory does not exist '#{File.join(@pwd)}'" 2>&1
             false
           fi
         EOTEST
@@ -47,10 +51,23 @@ module Deploy
         remove_instance_variable(:@_env)
       end
 
+      def as(user, &block)
+        @user = user
+        execute <<-EOTEST
+          if ! sudo su -u #{user} whoami > /dev/null
+            then echo "You cannot switch to user '#{user}' using sudo, please check the sudoers file" 2>&1
+            false
+          fi
+        EOTEST
+        yield
+      ensure
+        remove_instance_variable(:@user)
+      end
+
       private
 
       def command(*args)
-        Deploy::Command.new(*args, in: @pwd.nil? ? nil : File.join(@pwd), env: @env)
+        Deploy::Command.new(*args, in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user)
       end
 
       def connection

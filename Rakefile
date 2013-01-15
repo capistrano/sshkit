@@ -22,8 +22,8 @@ namespace :test do
 
   task :test do
     Rake::Task['test:units'].execute
-    Rake::Task['test:functional'].execute
     Rake::Task['test:integration'].execute
+    Rake::Task['test:functional'].execute unless ENV['TRAVIS']
   end
 
   task default: :test

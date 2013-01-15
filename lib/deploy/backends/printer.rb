@@ -5,13 +5,6 @@ module Deploy
 
       include Deploy::CommandHelper
 
-      attr_reader :host
-
-      def initialize(host, &block)
-        @host  = host
-        @block = block
-      end
-
       def run
         instance_exec(host, &@block)
       end

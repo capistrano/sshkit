@@ -115,6 +115,6 @@ end
 # Force colours in Autotest
 #
 Turn.config.ansi = true
-Turn.config.format = :dot
+Turn.config.format = :pretty
 
 MiniTest::Unit.autorun

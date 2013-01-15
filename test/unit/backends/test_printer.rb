@@ -25,7 +25,9 @@ module Deploy
             execute :ls, '-l', '/some/directory'
             with rails_env: :production do
               within :tmp do
-                execute :touch, 'restart.txt'
+                as :root do
+                  execute :touch, 'restart.txt'
+                end
               end
             end
           end
@@ -44,11 +46,12 @@ module Deploy
         sio.rewind
         result = sio.read
         assert_equal <<-EOEXPECTED.unindent, result
-          > Executing if test ! -d /opt/sites/example.com; then; echo \"Directory does not exist '/opt/sites/example.com'\" 2>&1; false; fi
-          > Executing cd /opt/sites/example.com && /usr/bin/env date; cd -
-          > Executing cd /opt/sites/example.com && /usr/bin/env ls -l /some/directory; cd -
-          > Executing if test ! -d /opt/sites/example.com/tmp; then; echo \"Directory does not exist '/opt/sites/example.com/tmp'\" 2>&1; false; fi
-          > Executing cd /opt/sites/example.com/tmp && ( RAILS_ENV=production /usr/bin/env touch restart.txt ); cd -
+          > Executing if test ! -d /opt/sites/example.com; then echo "Directory does not exist '/opt/sites/example.com'" 2>&1; false; fi
+          > Executing cd /opt/sites/example.com && /usr/bin/env date
+          > Executing cd /opt/sites/example.com && /usr/bin/env ls -l /some/directory
+          > Executing if test ! -d /opt/sites/example.com/tmp; then echo "Directory does not exist '/opt/sites/example.com/tmp'" 2>&1; false; fi
+          > Executing if ! sudo su -u root whoami > /dev/null; then echo "You cannot switch to user 'root' using sudo, please check the sudoers file" 2>&1; false; fi
+          > Executing cd /opt/sites/example.com/tmp && ( RAILS_ENV=production ( sudo su -u root /usr/bin/env touch restart.txt ) )
         EOEXPECTED
       end
 
