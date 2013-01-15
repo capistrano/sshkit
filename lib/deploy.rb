@@ -7,6 +7,13 @@ module Deploy
     attr_accessor :config
   end
 
+  def self.capture_output(io, &block)
+    original_io = config.output
+    yield
+  ensure
+    config.output = original_io
+  end
+
   def self.configure
     @@config ||= Configuration.new
     yield config

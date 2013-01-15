@@ -2,7 +2,7 @@ module Deploy
 
   class Configuration
 
-    attr_writer :backend
+    attr_writer :backend, :command_map
     attr_accessor :output, :format, :runner
 
     def initialize
@@ -14,6 +14,10 @@ module Deploy
 
     def backend
       (@backend.class == Class) ? @backend.new : @backend
+    end
+
+    def command_map
+      @command_map ||= Hash.new { |h,k| h[k] = "/usr/bin/env ruby"}
     end
 
   end

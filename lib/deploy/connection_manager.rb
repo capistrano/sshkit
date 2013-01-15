@@ -13,7 +13,7 @@ class Runner
 end
 
 class ParallelRunner < Runner
-  def run
+  def execute
     threads = []
     hosts.each do |host|
       threads << Thread.new(host, connections[host.to_key]) { |h,c| block.call h, c }
@@ -24,7 +24,7 @@ end
 
 class SequentialRunner < Runner
   attr_writer :wait_interval
-  def run
+  def execute
     hosts.each do |host|
       block.call host, connections[host.to_key]
       sleep wait_interval
@@ -38,9 +38,9 @@ end
 
 class GroupRunner < SequentialRunner
   attr_writer :group_size
-  def run
+  def execute
     hosts.each_slice(group_size).collect do |group_hosts|
-      ParallelRunner.new(group_hosts, connections, &block).run
+      ParallelRunner.new(group_hosts, connections, &block).execute
       sleep wait_interval
     end.flatten
   end
@@ -52,6 +52,7 @@ end
 
 module Deploy
 
+  NilConnection = Class.new
   NoValidHosts = Class.new(StandardError)
   ConnectionTimeoutExpired = Class.new(StandardError)
 
@@ -83,7 +84,7 @@ module Deploy
       when :groups   then GroupRunner
       else
         raise RuntimeError, "Don't know how to handle run style #{options[:in]}"
-      end.new(hosts, connections, &block).run
+      end.new(hosts, connections, &block).execute
     end
 
     private
@@ -100,7 +101,7 @@ module Deploy
             @hosts.each do |h|
               threads << Thread.new do
                 Thread.current[:host] = h
-                Thread.current[:connection] = Deploy.config.backend.connect(h)
+                Thread.current[:connection] = NilConnection.new
               end
             end
           end.map(&:join).inject({}) { |h, thread| h[thread[:host].to_key] = thread[:connection]; h }

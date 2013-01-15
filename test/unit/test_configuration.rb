@@ -32,6 +32,15 @@ module Deploy
       assert_equal :logger, Deploy.config.backend
     end
 
+    def test_command_map
+      cm = Hash.new { |h,k| h[k] = "/opt/sites/example/current/bin #{k}"}
+      assert_equal Hash.new, Deploy.config.command_map
+      assert_equal "/usr/bin/env ruby", Deploy.config.command_map[:ruby]
+      assert Deploy.config.command_map = cm
+      assert_equal cm, Deploy.config.command_map
+      assert_equal "/opt/sites/example/current/bin ruby", Deploy.config.command_map[:ruby]
+    end
+
   end
 
 end
