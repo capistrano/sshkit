@@ -1,5 +1,4 @@
-![SSHKit Logo](/Users/leehambley/Projects/deployrb-deploy/assets/images/logo.png)
-
+![SSHKit Logo](https://raw.github.com/wacku/sshkit/master/assets/images/logo.png)
 
 **SSHKit** is a toolkit for running commands in a structured way on one or
 more servers.
@@ -155,6 +154,8 @@ desirable.
 first argument before attempting to find it in the *command map*.
 
 ## Output Handling
+
+![Example Output](https://raw.github.com/wacku/sshkit/master/assets/images/example_output.png)
 
 The output handling comprises two objects, first is the output itself, by
 default this is *$stdout*, but can be any object responding to a
