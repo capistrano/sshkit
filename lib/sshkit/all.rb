@@ -11,6 +11,7 @@ require_relative 'connection_manager'
 require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
 require_relative 'formatters/pretty'
+require_relative 'formatters/dot'
 
 require_relative 'backends/abstract'
 require_relative 'backends/printer'
