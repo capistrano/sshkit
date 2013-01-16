@@ -1,3 +1,4 @@
 *.gem
+.yardoc
 .vagrant
 test/tmp
