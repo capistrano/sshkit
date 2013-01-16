@@ -37,9 +37,6 @@ module Deploy
 
     # Initialize a new Command object
     #
-    #
-    #
-    #
     # @param  [Array] A list of arguments, the first is considered to be the
     # command name, with optional variadaric args
     # @return [Command] An un-started command object with no exit staus, and
@@ -124,15 +121,12 @@ module Deploy
           cs << ' '
         end
         if options[:user]
-          cs << " sudo su #{options[:user]} -c "
+          cs << "sudo su #{options[:user]} -c "
         end
         cs << Deploy.config.command_map[command.to_sym]
         if args.any?
           cs << ' '
           cs << args.join(' ')
-        end
-        if options[:user]
-          cs << ' '
         end
         if options[:env]
           cs << ' )'

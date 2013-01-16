@@ -57,6 +57,9 @@ Deploy.config.output = ColorizedFormatter.new($stdout)
 
 on hosts do |host|
   target = '/opt/rack-rack-repository'
+  if host.hostname =~ /seven/
+    target = '/var/rack-rack-repository'
+  end
   if execute(:test, "-d #{target}")
     within target do
       execute :git, :pull

@@ -7,6 +7,10 @@ module Deploy
 
       attr_reader :host
 
+      def run
+        # Nothing to do
+      end
+
       def initialize(host, &block)
         raise "Must pass a Host object" unless host.is_a? Host
         @host  = host

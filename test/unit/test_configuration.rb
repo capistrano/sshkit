@@ -28,9 +28,9 @@ module Deploy
     end
 
     def test_backend
-      assert_equal :ssh, Deploy.config.backend
-      assert Deploy.config.backend = :logger
-      assert_equal :logger, Deploy.config.backend
+      assert_equal Deploy::Backend::Netssh, Deploy.config.backend
+      assert Deploy.config.backend = Deploy::Backend::Printer
+      assert_equal Deploy::Backend::Printer, Deploy.config.backend
     end
 
     def test_command_map

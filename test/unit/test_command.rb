@@ -3,9 +3,16 @@ require 'helper'
 module Deploy
   class TestCommand < UnitTest
 
-    def test_execute_returns_command
-      c = Command.new('test')
-      assert_equal '/usr/bin/env test', String(c)
+    def test_maps_a_command
+      c = Command.new('example')
+      assert_equal '/usr/bin/env example', String(c)
+    end
+
+    def test_not_mapping_a_builtin
+      %w{if test time}.each do |builtin|
+        c = Command.new(builtin)
+        assert_equal builtin, String(c)
+      end
     end
 
     def test_using_a_heredoc
@@ -40,7 +47,7 @@ module Deploy
 
     def test_working_as_a_given_user
       c = Command.new(:whoami, user: :anotheruser)
-      assert_equal "( sudo su -u anotheruser /usr/bin/env whoami )", String(c)
+      assert_equal "sudo su anotheruser -c /usr/bin/env whoami", String(c)
     end
 
     def test_complete?
