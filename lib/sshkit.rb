@@ -1,5 +1,5 @@
 require 'thread'
-require_relative 'deploy/all'
+require_relative 'sshkit/all'
 
 module SSHKit
 

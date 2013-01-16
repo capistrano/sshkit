@@ -4,9 +4,9 @@
 # working directory on the load path.
 $: << Dir.pwd + '/lib/'
 
-# Automatically sucks in the `deploy`
+# Automatically sucks in the `sshkit`
 # files so that you don't need to.
-require 'deploy/dsl'
+require 'sshkit/dsl'
 require 'forwardable'
 require 'term/ansicolor'
 

@@ -1,4 +1,4 @@
-require_relative '../deploy'
+require_relative '../sshkit'
 
 module SSHKit
 
