@@ -48,7 +48,7 @@ the raised error.
 Helpers such as `runner()` and `rake()` which expand to `execute(:rails, "runner", ...)` and
 `execute(:rake, ...)` are convenience helpers for Ruby, and Rails based apps.
 
-## Parallel
+## Parallel
 
 Notice on the `on()` call the `in: :sequence` option, the following will do
 what you might expect:
