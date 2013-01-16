@@ -25,17 +25,6 @@ module Deploy
       assert_equal ['user@1.example.com:22'], cm.hosts.map(&:to_s)
     end
 
-    def test_connection_manager_raises_a_connection_timeout_error_if_a_host_takes_too_long_to_respond
-      skip
-      mbe = Class.new
-      mbe.send(:define_method, :connect, lambda { |h| sleep 60 })
-      Deploy.config.backend = mbe
-      ConnectionManager.connection_timeout = 1
-      assert_raises ConnectionTimeoutExpired do
-        ConnectionManager.new '1.example.com'
-      end
-    end
-
     def test_the_connection_manager_yields_the_host_to_each_connection_instance
       spy = lambda do |host, connection|
         assert_equal host, Host.new("1.example.com")
@@ -66,6 +55,7 @@ module Deploy
     def test_the_connection_manager_can_run_things_in_groups
       results = []
       command = lambda do |host,connection|
+        debugger
         results << Time.now
       end
       ConnectionManager.new(%w{1.example.com 2.example.com 3.example.com

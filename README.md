@@ -1,4 +1,5 @@
-# SSHKit
+![SSHKit Logo](/Users/leehambley/Projects/deployrb-deploy/assets/images/logo.png)
+
 
 **SSHKit** is a toolkit for running commands in a structured way on one or
 more servers.
@@ -36,23 +37,36 @@ The directory check is implemented like this:
 
 And the user switching test implemented like this:
 
-    if ! sudo su -u <user> whoami > /dev/null; then echo "Can't switch user" 2>&1; false; fi
+    if ! sudo su <user> -c whoami > /dev/null; then echo "Can't switch user" 2>&1; false; fi
 
 According to the defaults, any command that exits with a status other than 0
 raises an error (this can be changed). The body of the message is whatever was
-written to *stdout* by the process.
+written to *stdout* by the process. The `1>&2` redirects the standard output
+of echo to the standard error channel, so that it's available as the body of
+the raised error.
 
 Helpers such as `runner()` and `rake()` which expand to `execute(:rails, "runner", ...)` and
 `execute(:rake, ...)` are convenience helpers for Ruby, and Rails based apps.
 
 ## Parallel
 
-Notice on the `on()` call the `in: :parallel` option, the following will do
+Notice on the `on()` call the `in: :sequence` option, the following will do
 what you might expect:
 
     on(in: :parallel, limit: 2) { ...}
     on(in: :sequence, wait: 5) { ... }
     on(in: :groups, limit: 2, wait: 5) { ... }
+
+The default is to run `in: :parallel` with no limit, if you have 400 servers,
+this might be a problem, and you might better look at changing that to run in
+groups, or sequence.
+
+Groups were designed in this case to relieve problems (mass Git checkouts)
+where you rely on a contested resource that you don't want to DDOS by hitting
+it too hard.
+
+Sequential runs were intended to be used for rolling restarts, amongst other
+similar use-cases.
 
 ## Synchronisation
 
@@ -154,3 +168,14 @@ The *formatter* will typically delegate all calls to the *output*, depending
 on it's implementation it will almost certainly override the implementation of
 `write()` (alias `<<()`) and query the objects it receives to determine what
 should be printed.
+
+
+## Known Issues
+
+* No handling of slow / timed out connections
+* No handling ot slow / hung remote commands
+* No built-in way to background() something (execute and background the
+  process)
+* No environment handling
+* No arbitrary `Host` properties
+
