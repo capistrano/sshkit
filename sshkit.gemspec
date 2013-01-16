@@ -5,15 +5,15 @@ Gem::Specification.new do |gem|
 
   gem.authors       = ["Lee Hambley", "Tom Clements"]
   gem.email         = ["lee.hambley@gmail.com", "seenmyfate@gmail.com"]
-  gem.description   = %q{A comprehensive toolkit for remotely running commands and deploying software.}
-  gem.homepage      = ""
+  gem.description   = %q{A comprehensive toolkit for remotely running commands in a structured manner on groups of servers.}
+  gem.homepage      = "http://wacku.github.com/sshkit"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  gem.name          = "deploy"
+  gem.test_files    = `git ls-files -- test/*`.split("\n")
+  gem.name          = "sshkit"
   gem.require_paths = ["lib"]
-  gem.version       = Deploy::VERSION
+  gem.version       = SSHKit::VERSION
 
   gem.add_dependency('net-ssh')
   gem.add_dependency('term-ansicolor')
