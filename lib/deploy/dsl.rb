@@ -1,6 +1,6 @@
 require_relative '../deploy'
 
-module Deploy
+module SSHKit
 
   module DSL
 

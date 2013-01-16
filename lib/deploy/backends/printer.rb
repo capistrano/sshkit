@@ -1,4 +1,4 @@
-module Deploy
+module SSHKit
   module Backend
 
     class Printer < Abstract

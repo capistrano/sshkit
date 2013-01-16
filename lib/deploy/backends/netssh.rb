@@ -1,6 +1,6 @@
 require 'net/ssh'
 
-module Deploy
+module SSHKit
   module Backend
 
     class Netssh < Printer

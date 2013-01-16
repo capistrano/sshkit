@@ -1,6 +1,6 @@
 require 'helper'
 
-module Deploy
+module SSHKit
   class TestCommand < UnitTest
 
     def test_maps_a_command

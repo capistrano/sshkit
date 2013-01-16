@@ -1,6 +1,6 @@
 require 'helper'
 
-module Deploy
+module SSHKit
 
   class TestHost < FunctionalTest
 

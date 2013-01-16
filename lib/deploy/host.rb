@@ -1,4 +1,4 @@
-module Deploy
+module SSHKit
 
   UnparsableHostStringError = Class.new(StandardError)
 

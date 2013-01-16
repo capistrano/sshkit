@@ -1,7 +1,7 @@
 require 'thread'
 require_relative 'deploy/all'
 
-module Deploy
+module SSHKit
 
   class << self
     attr_accessor :config

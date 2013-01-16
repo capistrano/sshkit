@@ -3,7 +3,7 @@ require 'digest/sha1'
 require 'securerandom'
 
 # @author Lee Hambley
-module Deploy
+module SSHKit
 
   # @author Lee Hambley
   module CommandHelper

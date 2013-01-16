@@ -51,7 +51,7 @@ class GroupRunner < SequentialRunner
   end
 end
 
-module Deploy
+module SSHKit
 
   NoValidHosts = Class.new(StandardError)
 
