@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/deploy/version', __FILE__)
+require File.expand_path('../lib/sshkit/version', __FILE__)
 
 Gem::Specification.new do |gem|
 
   gem.authors       = ["Lee Hambley", "Tom Clements"]
   gem.email         = ["lee.hambley@gmail.com", "seenmyfate@gmail.com"]
+  gem.summary       = %q{SSHKit makes it easy to write structured, testable SSH commands in Ruby}
   gem.description   = %q{A comprehensive toolkit for remotely running commands in a structured manner on groups of servers.}
   gem.homepage      = "http://wacku.github.com/sshkit"
 
