@@ -174,9 +174,30 @@ should be printed.
 ## Known Issues
 
 * No handling of slow / timed out connections
-* No handling ot slow / hung remote commands
+* No handling of slow / hung remote commands
 * No built-in way to background() something (execute and background the
-  process)
-* No environment handling
-* No arbitrary `Host` properties
-
+  process).
+* No environment handling (sshkit might not need to care)
+* No arbitrary `Host` properties (example storing `roles` on servers, or other
+  metadata that might be useful in the `on()` block)
+* No log/warning facility (passing Log messages to the output would work)
+  A log object could be made available globally which would emit a LogMessage
+  type object which would be recognised by the formatters that need to care
+  about them.
+* No verbosity control, commands should have a `Logger::LEVEL` on them,
+  user-generated should be at a high level, the commands auto-generated from
+  the guards and checks from as() and within() should have a lower level.
+* Decide if `execute()` (and friends) should raise on non-zero exit statuses or
+  not, perhaps a family of similarly named bang methods should be the ones to
+  raise. (Perhaps `test()` should be a way to `execute()` without raising, and
+  `execute()` and friends should always raise)
+* It would be nice to be able to say `SSHKit.config.formatter = :pretty` and
+  have that method setter do the legwork of updating `SSHKit.config.output` to
+  be an instance of the correct formatter class wrapping the existing output
+  stream.
+* No closing of connections, the abstract backend class should include a
+  cleanup method which is empty but can be overriden by
+* No conncetion pooling, the `connection` method of the NetSSH backend could
+  easily be modified to look into some connection factory for it's objects,
+  saving half a second when running lots of `on()` blocks.
+* Documentation! (YARD style)
