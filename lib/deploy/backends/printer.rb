@@ -3,7 +3,7 @@ module SSHKit
 
     class Printer < Abstract
 
-      include Deploy::CommandHelper
+      include SSHKit::CommandHelper
 
       def run
         instance_exec(host, &@block)

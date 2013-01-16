@@ -9,7 +9,7 @@ module SSHKit
       @output  = $stdout
       @format  = :dot
       @runner  = :parallel
-      @backend = Deploy::Backend::Netssh
+      @backend = SSHKit::Backend::Netssh
     end
 
     def command_map

@@ -11,7 +11,7 @@ require 'forwardable'
 require 'term/ansicolor'
 
 directory = '/opt/sites/web_application'
-hosts     = Deploy::Host.new("root@example.com")
+hosts     = SSHKit::Host.new("root@example.com")
 
 #
 # Custom output formatter!
@@ -26,7 +26,7 @@ class ColorizedFormatter < StringIO
   end
 
   def write(obj)
-    if obj.is_a? Deploy::Command
+    if obj.is_a? SSHKit::Command
       unless obj.started?
         original_output << "[#{c.green(obj.uuid)}] Running #{c.yellow(c.bold(String(obj)))} on #{c.yellow(obj.host.to_s)}\n"
       end

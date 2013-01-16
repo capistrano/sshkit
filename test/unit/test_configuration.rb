@@ -28,9 +28,9 @@ module SSHKit
     end
 
     def test_backend
-      assert_equal Deploy::Backend::Netssh, Deploy.config.backend
-      assert Deploy.config.backend = Deploy::Backend::Printer
-      assert_equal Deploy::Backend::Printer, Deploy.config.backend
+      assert_equal SSHKit::Backend::Netssh, Deploy.config.backend
+      assert Deploy.config.backend = SSHKit::Backend::Printer
+      assert_equal SSHKit::Backend::Printer, Deploy.config.backend
     end
 
     def test_command_map

@@ -5,7 +5,7 @@ module SSHKit
 
     class Netssh < Printer
 
-      include Deploy::CommandHelper
+      include SSHKit::CommandHelper
 
       def run
         instance_exec(host, &@block)

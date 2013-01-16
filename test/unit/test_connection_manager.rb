@@ -5,7 +5,7 @@ module SSHKit
   class TestConnectionManager < UnitTest
 
     def setup
-      Deploy.config.backend = Deploy::Backend::Abstract
+      Deploy.config.backend = SSHKit::Backend::Abstract
     end
 
     def test_connection_manager_handles_a_single_argument

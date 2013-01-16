@@ -12,4 +12,4 @@ module SSHKit
 
 end
 
-include Deploy::DSL
+include SSHKit::DSL

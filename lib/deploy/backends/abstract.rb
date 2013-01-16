@@ -71,7 +71,7 @@ module SSHKit
       private
 
       def command(*args)
-        Deploy::Command.new(*args, in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user)
+        SSHKit::Command.new(*args, in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user)
       end
 
       def connection
