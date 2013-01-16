@@ -70,6 +70,10 @@ module Deploy
         end
       end
 
+      def test_exit_status
+
+      end
+
       def test_raising_an_error_if_a_command_returns_a_bad_exit_status
         skip "Where to implement this?"
         # NOTE: I think that it might be wise to have Command raise when

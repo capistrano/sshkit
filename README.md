@@ -1,106 +1,156 @@
-## Deploy.rb
+# SSHKit
 
-This is a work in progress alternative backend for what may become Capistrano
-*v3.0*.
-
-## Ready?
-
-Nowhere near, it's barely more than a collection of tests, and classes to
-prove some concepts; there's nothing you could even use in production even if
-you wanted!
+**SSHKit** is a toolkit for running commands in a structured way on one or
+more servers.
 
 ## How might it work?
 
-The typical use-case will look something like this:
+The typical use-case looks something like this:
 
-``` ruby
-Deploy::ConnectionManager.backend = :net_ssh
-on(%{1.example.com 2.example.com}, in: :parallel) do
-  in("/opt/sites/example.com") do
-    as("deploy") do
-      with({rails_env: :production}) do
-        puts capture "ls -lr public/assets/"
-        rake "assets:precompile"
-      ensure
-        runner "S3::Sync.notify"
+    require 'sshkit/dsl'
+
+    on %w{1.example.com 2.example.com}, in: :sequence, wait: 5 do
+      within "/opt/sites/example.com" do
+        as :deploy  do
+          with rails_env: :production do
+            rake   "assets:precompile"
+            runner "S3::Sync.notify"
+          end
+        end
       end
     end
-  end
-end
-```
-One will notice that it's quite low level, but exposes a convenient API, the
-`as()`/`in()`/`with()` are nestable in any order, repeatable, and stackable.
 
-Helpers such as `runner()` and `rake()` which expand to `run("rails runner", ...)` and
-`run("rake", ...)` are convenience helpers for Rails based apps.
+One will notice that it's quite low level, but exposes a convenient API, the
+`as()`/`within()`/`with()` are nestable in any order, repeatable, and stackable.
+
+When used inside a block in this way, `as()` and `within()` will guard
+the block they are given with a check.
+
+In the case of `within()`, an error-raising check will be made that the directory
+exists; for `as()` a simple call to `sudo su -<user> whoami` wrapped in a check for
+success, raising an error if unsuccessful.
+
+The directory check is implemented like this:
+
+    if test ! -d <directory>; then echo "Directory doesn't exist" 2>&1; false; fi
+
+And the user switching test implemented like this:
+
+    if ! sudo su -u <user> whoami > /dev/null; then echo "Can't switch user" 2>&1; false; fi
+
+According to the defaults, any command that exits with a status other than 0
+raises an error (this can be changed). The body of the message is whatever was
+written to *stdout* by the process.
+
+Helpers such as `runner()` and `rake()` which expand to `execute(:rails, "runner", ...)` and
+`execute(:rake, ...)` are convenience helpers for Ruby, and Rails based apps.
 
 ## Parallel
 
 Notice on the `on()` call the `in: :parallel` option, the following will do
 what you might expect:
 
-```
-on(in: :parallel, limit: 2) { ...}
-on(in: :sequence, wait: 5) { ... }
-on(in: :parallel, limit: 2, wait: 5) { ... }
-```
+    on(in: :parallel, limit: 2) { ...}
+    on(in: :sequence, wait: 5) { ... }
+    on(in: :groups, limit: 2, wait: 5) { ... }
 
-## Shell Escaping
+## Synchronisation
 
-We've not talked about this extensively, but sufficed to say that we'll test
-for, and document the most sane behaviour.
+The `on()` block is the unit of synchronisation, one `on()` block will wait
+for all servers to complete before it returns.
+
+For example:
+
+    all_servers = %w{one.example.com two.example.com three.example.com}
+    site_dir    = '/opt/sites/example.com'
+
+    # Let's simulate a backup task, assuming that some servers take longer
+    # then others to complete
+    on servers do |host|
+      in site_dir do
+        execute :tar, '-czf', "backup-#{host.hostname}.tar.gz", 'current'
+        # Will run: "/usr/bin/env tar -czf backup-one.example.com.tar.gz current"
+      end
+    end
+
+    # Now we can do something with those backups, safe in the knowledge that
+    # they will all exist (all tar commands exited with a success status, or
+    # that we will have raised an exception if one of them failed.
+    on servers do |host|
+      in site_dir do
+        backup_filename = "backup-#{host.hostname}.tar.gz"
+        target_filename = "backups/#{Time.now.utc.iso8601}/#{host.hostname}.tar.gz"
+        puts capture(:s3cmd, 'put', backup_filename, target_filename)
+      end
+    end
+
+## The Command Map
+
+It's often a problem that programatic SSH sessions don't share the same environmental
+variables as sessions that are started interactively.
+
+This problem often comes when calling out to executables, expected to be on
+the `$PATH` which, under conditions without dotfiles or other environmental
+configuration are not where they are expected to be.
+
+To try and solve this there is the `with()` helper which takes a hash of variables and makes them
+available to the environment.
+
+    with path: '/usr/local/bin/rbenv/shims:$PATH' do
+      execute :ruby, '--version'
+    end
+
+Will execute:
+
+    ( PATH=/usr/local/bin/rbenv/shims:$PATH /usr/bin/env ruby --version )
+
+**Often more preferable is to use the *command map*.**
+
+The *command map* is used by default when instantiating a *Command* object
+
+The *command map* exists on the configuration object, and in principle is
+quite simple, it's a *Hash* structure with a default key factory block
+specified, for example:
+
+    puts SSHKit.config.command_map[:ruby]
+    # => /usr/bin/env ruby
+
+The `/usr/bin/env` prefix is applied to all commands, to make clear that the
+environment is being deferred to to make the decision, this is what happens
+anyway when one would simply attempt to execute `ruby`, however by making it
+explicit, it was hoped that it might lead people to explore the documentation.
+
+One can override the hash map for individual commands:
+
+    SSHKit.config.command_map[:rake] = "/usr/local/rbenv/shims/rake"
+    puts SSHKit.config.command_map[:rake]
+    # => /usr/local/rbenv/shims/rake
+
+One can also override the command map completely, this may not be wise, but it
+would be possible, for example:
+
+    SSHKit.config.command_map = Hash.new do |hash, command|
+      hash[command] = "/usr/local/rbenv/shims/#{command}"
+    end
+
+This would effectively make it impossible to call any commands which didn't
+provide an executable in that directory, but in some cases that might be
+desirable.
+
+*Note:* All keys should be symbolised, as the *Command* object will symbolize it's
+first argument before attempting to find it in the *command map*.
 
 ## Output Handling
 
-The output will work very much like MiniTest, in that result and event objects
-will be emitted to an IOStream, these classes are emitted at various times,
-for example
+The output handling comprises two objects, first is the output itself, by
+default this is *$stdout*, but can be any object responding to a
+*StringIO*-like interface. The second part is the *formatter*.
 
-1. A Command is emitted from each `run()` `rake()` `runner()` etc, this
-   command has a handful of instance variables the output formatter can call
-   on such as `host` and `command`, the example above might emit something
-   like this:
+The *formatter* and *output* have a strange relationship:
 
-    {
-      host: "1.example.com"
-      command: "su deploy 'cd /opt/sites/example.com/ && RAILS_ENV=production ls -lr public_assets'"
-    }
-    {
-      host: "1.example.com"
-      command: "su deploy 'cd /opt/sites/example.com/ && RAILS_ENV=production rake assets:precompile '"
-    }
-    {
-      host: "1.example.com"
-      command: "su deploy 'cd /opt/sites/example.com/ && RAILS_ENV=production rails runner \'S3::Sync.notify\''"
-    }
+    SSHKit.config.output = SSHKit.config.formatter.new($stdout)
 
-2. When the command results are finished, or in progress (not implemented, streaming responses, such as tail) then
-   there is emitted every time a CommandStatus object (might end up being called CommandResult) this will encapsulate
-   the logic around success, or error conditions, capturing stderr/out of the result instance.
-
-3. *Responders* might be made available to command objects, which allow you to interact with a command, an example might beL
-
-    run "git checkout", responder: lambda { |prompt| "fullysecret" if prompt =~ /^Password/ }
-
-    The responder needs only to respond to call, and take the prompt (that will be the last line of the standard output of
-    the process, if it returns something, that will be written to the processes stdin.
-
-The final command Result object will have fields covering start and end times, host, time waiting for mutexes, time waiting for
-a connection, the processes stdin, stdout, stderr and exit status, as well as convenience methods which will make implemeting
-
-## ToDo
-
-* Assertive backend (also logging backend)
-
-* Capture helper
-* Run helper should be useable in an if statement value (simply return the
-  command result)
-
-## Better Error Messages
-
-By encapsulating things such as `as()` into helper methods, we can contextualise what went wrong, a message such as:
-
-    "Tried to run `su - deploy` as `root` failed with status `0` *No askpass program was provided*"
-
-would be much more helpful than what we have now, and the check can be made on the connection object when as() is called,
-before executing commands.
+The *formatter* will typically delegate all calls to the *output*, depending
+on it's implementation it will almost certainly override the implementation of
+`write()` (alias `<<()`) and query the objects it receives to determine what
+should be printed.

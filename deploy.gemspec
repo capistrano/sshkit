@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = Deploy::VERSION
 
   gem.add_dependency('net-ssh')
+  gem.add_dependency('term-ansicolor')
 
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
   gem.add_development_dependency('autotest')
@@ -25,5 +26,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('mocha')
   gem.add_development_dependency('debugger')
   gem.add_development_dependency('vagrant')
+
+  gem.add_development_dependency('yard')
+  gem.add_development_dependency('redcarpet')
 
 end

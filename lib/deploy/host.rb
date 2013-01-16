@@ -50,6 +50,8 @@ module Deploy
 
   end
 
+  # @private
+  # :nodoc:
   class SimpleHostParser
 
     def self.suitable?(host_string)
@@ -78,6 +80,8 @@ module Deploy
 
   end
 
+  # @private
+  # :nodoc:
   class HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
@@ -94,6 +98,8 @@ module Deploy
 
   end
 
+  # @private
+  # :nodoc:
   class IPv6HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
@@ -111,6 +117,8 @@ module Deploy
 
   end
 
+  # @private
+  # :nodoc:
   class HostWithUsernameParser < SimpleHostParser
     def self.suitable?(host_string)
       host_string.match(/@/) && !host_string.match(/\:/)
@@ -123,6 +131,8 @@ module Deploy
     end
   end
 
+  # @private
+  # :nodoc:
   class HostWithUsernameAndPortParser < SimpleHostParser
     def self.suitable?(host_string)
       host_string.match /@.*:\d+/

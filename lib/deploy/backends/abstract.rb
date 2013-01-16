@@ -33,7 +33,7 @@ module Deploy
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST
           if test ! -d #{File.join(@pwd)}
-            then echo "Directory does not exist '#{File.join(@pwd)}'" 2>&1
+            then echo "Directory does not exist '#{File.join(@pwd)}'" 1>&2
             false
           fi
         EOTEST
@@ -54,8 +54,8 @@ module Deploy
       def as(user, &block)
         @user = user
         execute <<-EOTEST
-          if ! sudo su -u #{user} whoami > /dev/null
-            then echo "You cannot switch to user '#{user}' using sudo, please check the sudoers file" 2>&1
+          if ! sudo su #{user} -c whoami > /dev/null
+            then echo "You cannot switch to user '#{user}' using sudo, please check the sudoers file" 1>&2
             false
           fi
         EOTEST

@@ -3,6 +3,7 @@ PATH
   specs:
     deploy (0.0.1)
       net-ssh
+      term-ansicolor
 
 GEM
   remote: http://rubygems.org/
@@ -35,6 +36,8 @@ GEM
       net-ssh (>= 1.99.1)
     net-ssh (2.2.2)
     rake (10.0.3)
+    redcarpet (2.2.2)
+    term-ansicolor (1.0.7)
     turn (0.9.3)
       ansi
     unindent (1.0)
@@ -47,6 +50,7 @@ GEM
       log4r (~> 1.1.9)
       net-scp (~> 1.0.4)
       net-ssh (~> 2.2.2)
+    yard (0.8.3)
 
 PLATFORMS
   ruby
@@ -58,6 +62,8 @@ DEPENDENCIES
   minitest (>= 2.11.3, < 2.12.0)
   mocha
   rake
+  redcarpet
   turn
   unindent
   vagrant
+  yard
