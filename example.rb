@@ -53,7 +53,7 @@ class ColorizedFormatter < StringIO
   end
 end
 
-Deploy.config.output = ColorizedFormatter.new($stdout)
+SSHKit.config.output = ColorizedFormatter.new($stdout)
 
 on hosts do |host|
   target = '/opt/rack-rack-repository'

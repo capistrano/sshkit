@@ -16,7 +16,7 @@ class ParallelRunner < Runner
     threads = []
     hosts.each do |host|
       threads << Thread.new(host) do |h|
-        Deploy.config.backend.new(host, &block).run
+        SSHKit.config.backend.new(host, &block).run
       end
     end
     threads.map(&:join)
@@ -27,7 +27,7 @@ class SequentialRunner < Runner
   attr_writer :wait_interval
   def execute
     hosts.each do |host|
-      Deploy.config.backend.new(host, &block).run
+      SSHKit.config.backend.new(host, &block).run
       sleep wait_interval
     end
   end

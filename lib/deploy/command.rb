@@ -23,7 +23,7 @@ module SSHKit
     private
 
       def map(command)
-        Deploy.config.command_map[command.to_sym]
+        SSHKit.config.command_map[command.to_sym]
       end
 
   end
@@ -123,7 +123,7 @@ module SSHKit
         if options[:user]
           cs << "sudo su #{options[:user]} -c "
         end
-        cs << Deploy.config.command_map[command.to_sym]
+        cs << SSHKit.config.command_map[command.to_sym]
         if args.any?
           cs << ' '
           cs << args.join(' ')

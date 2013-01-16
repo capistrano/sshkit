@@ -43,7 +43,7 @@ module SSHKit
 
       def simple_netssh
         sio = ToSIoFormatter.new(StringIO.new)
-        Deploy.capture_output(sio) do
+        SSHKit.capture_output(sio) do
           printer.run
         end
         sio.rewind
@@ -60,7 +60,7 @@ module SSHKit
 
       def test_capture
         File.open('/dev/null', 'w') do |dnull|
-          Deploy.capture_output(dnull) do
+          SSHKit.capture_output(dnull) do
             captured_command_result = ""
             Netssh.new(a_host) do |host|
               captured_command_result = capture(:hostname)
@@ -83,7 +83,7 @@ module SSHKit
         # existing) backend configurations.
         assert_raises RuntimeError do
           File.open('/dev/null', 'w') do |dnull|
-            Deploy.capture_output(dnull) do
+            SSHKit.capture_output(dnull) do
               Netssh.new(a_host) do |host|
                 execute :false
               end.run

@@ -40,7 +40,7 @@ module SSHKit
 
       def test_simple_printing
         sio = ToSIoFormatter.new(StringIO.new)
-        Deploy.capture_output(sio) do
+        SSHKit.capture_output(sio) do
           printer.run
         end
         sio.rewind

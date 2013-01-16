@@ -20,7 +20,7 @@ module SSHKit
       private
 
       def output
-        Deploy.config.output
+        SSHKit.config.output
       end
 
     end
