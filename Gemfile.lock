@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deploy (0.0.1)
+    sshkit (0.0.1)
       net-ssh
       term-ansicolor
 
@@ -58,11 +58,11 @@ PLATFORMS
 DEPENDENCIES
   autotest
   debugger
-  deploy!
   minitest (>= 2.11.3, < 2.12.0)
   mocha
   rake
   redcarpet
+  sshkit!
   turn
   unindent
   vagrant
