@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sshkit (0.0.3)
+    sshkit (0.0.4)
       net-ssh
       term-ansicolor
 

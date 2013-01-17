@@ -165,3 +165,35 @@ An extension of the behaviour above, if you write a command like this:
 **Note:** The logic which reformats the script into a oneliner may be naïve, but in all
 known test cases, it works. The key thing is that `if` is not mapped to
 `/usr/bin/env if`, which would break with a syntax error.
+
+## Using with Rake
+
+Into the `Rakefile` simply put something like:
+
+    require 'sshkit/dsl'
+
+    SSHKit.config.command_map[:rake] = "./bin/rake"
+
+    desc "Deploy the site, pulls from Git, migrate the db and precompile assets, then restart Passenger."
+    task :deploy do
+      on "example.com" do |host|
+        within "/opt/sites/example.com" do
+          execute :git, :pull
+          execute :rake, 'db:migrate'
+          execute :rake, 'assets:precompile'
+          execute :touch, 'tmp/restart.txt'
+        end
+      end
+    end
+
+## Using without the DSL
+
+The *Coordinator* will resolve all hosts into *Host* objects, you can mix and
+match.
+
+    Coordinator.new("one.example.com", SSHKit::Host.new('two.example.com')).each in: :sequence do
+      puts capture :uptime
+    end
+
+You might also look at `./lib/sshkit/dsl.rb` where you can see almost the
+exact code as above, which implements the `on()` method.
