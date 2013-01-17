@@ -3,6 +3,32 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.7
+
+* DSL method `execute()` will now raise `SSHKit::Command::Failed` when the
+  exit status is non-zero. The message of the exception will be whatever the
+  process had written to stdout.
+* New DSL method `test()` behaves as `execute()` used to until this version.
+* `Command` now raises an error in `#exit_status=()` if the exit status given
+  is not zero. (see below)
+* All errors raised by error conditions of SSHKit are defined as subclasses of
+  `SSHKit::StandardError` which is itself a subclass of `StandardError`.
+
+The `Command` objects can be set to not raise, by passing `raise_on_non_zero_exit: false`
+when instantiating them, this is exactly what `test()` does internally.
+
+Example:
+
+    on hosts do |host
+      if test "[ -d /opt/sites ]" do
+        within "/opt/sites" do
+          execute :git, :pull
+        end
+      else
+        execute :git, :clone, 'some-repository', '/opt/sites'
+      end
+    end
+
 ## 0.0.6
 
 * Support arbitrary properties on Host objects. (see below)
