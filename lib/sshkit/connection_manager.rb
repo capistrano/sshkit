@@ -1,54 +1,68 @@
 require 'timeout'
 
-class Runner
+module SSHKit
 
-  attr_reader :hosts, :block
+  module Runner
 
-  def initialize(hosts, &block)
-    @hosts       = Array(hosts)
-    @block       = block
-  end
+    class Abstract
 
-end
+      attr_reader :hosts, :block
 
-class ParallelRunner < Runner
-  def execute
-    threads = []
-    hosts.each do |host|
-      threads << Thread.new(host) do |h|
-        SSHKit.config.backend.new(host, &block).run
+      def initialize(hosts, &block)
+        @hosts       = Array(hosts)
+        @block       = block
+      end
+
+      private
+
+      def backend(host, &block)
+        SSHKit.config.backend.new(host, &block)
+      end
+
+    end
+
+    class Parallel < Abstract
+      def execute
+        threads = []
+        hosts.each do |host|
+          threads << Thread.new(host) do |h|
+            backend(host, &block).run
+          end
+        end
+        threads.map(&:join)
       end
     end
-    threads.map(&:join)
-  end
-end
 
-class SequentialRunner < Runner
-  attr_writer :wait_interval
-  def execute
-    hosts.each do |host|
-      SSHKit.config.backend.new(host, &block).run
-      sleep wait_interval
+    class Sequential < Abstract
+      attr_writer :wait_interval
+      def execute
+        hosts.each do |host|
+          backend(host, &block).run
+          sleep wait_interval
+        end
+      end
+      private
+      def wait_interval
+        @wait_interval ||= 2
+      end
     end
-  end
-  private
-  def wait_interval
-    @wait_interval ||= 2
-  end
-end
 
-class GroupRunner < SequentialRunner
-  attr_writer :group_size
-  def execute
-    hosts.each_slice(group_size).collect do |group_hosts|
-      ParallelRunner.new(group_hosts, &block).execute
-      sleep wait_interval
-    end.flatten
+    class Group < Sequential
+      attr_writer :group_size
+      def execute
+        hosts.each_slice(group_size).collect do |group_hosts|
+          Parallel.new(group_hosts, &block).execute
+          sleep wait_interval
+        end.flatten
+      end
+      private
+      def group_size
+        @group_size ||= 2
+      end
+    end
+
   end
-  private
-  def group_size
-    @group_size ||= 2
-  end
+
 end
 
 module SSHKit
@@ -68,9 +82,9 @@ module SSHKit
     def each(options={}, &block)
       options = default_options.merge(options)
       case options[:in]
-      when :parallel then ParallelRunner
-      when :sequence then SequentialRunner
-      when :groups   then GroupRunner
+      when :parallel then Runner::Parallel
+      when :sequence then Runner::Sequential
+      when :groups   then Runner::Group
       else
         raise RuntimeError, "Don't know how to handle run style #{options[:in].inspect}"
       end.new(hosts, &block).execute

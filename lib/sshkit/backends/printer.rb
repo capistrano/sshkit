@@ -10,7 +10,7 @@ module SSHKit
       end
 
       def execute(*args)
-        output << command(*args)
+        output << String(command(*args)) + "\n"
       end
 
       def capture(command, args=[])
