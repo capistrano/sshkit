@@ -3,6 +3,35 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.6
+
+* Support arbitrary properties on Host objects. (see below)
+
+Starting with this version, the `Host` class supports arbitrary properties,
+here's a proposed use-case:
+
+    servers = %w{one.example.com two.example.com
+                 three.example.com four.example.com}.collect do |s|
+      h = SSHKit::Host.new(s)
+      if s.match /(one|two)/
+        h.properties.roles = [:web]
+      else
+        h.properties.roles = [:app]
+      end
+    end
+
+    on servers do |host|
+      if host.properties.roles.include?(:web)
+        # Do something pertinent to web servers
+      elsif host.properties.roles.include?(:app)
+        # Do something pertinent to application servers
+      end
+    end
+
+Naturally, this is a contrived example, the `#properties` attribute on the
+Host instance is implemented as an [`OpenStruct`](http://ruby-doc.org/stdlib-1.9.3/libdoc/ostruct/rdoc/OpenStruct.html) and
+will behave exactly as such.
+
 ## 0.0.5
 
 * Removed configuration option `SSHKit.config.format` (see below)

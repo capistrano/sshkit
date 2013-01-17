@@ -198,3 +198,29 @@ match.
 
 You might also look at `./lib/sshkit/dsl.rb` where you can see almost the
 exact code as above, which implements the `on()` method.
+
+## Use the Host properties attribute
+
+Implemented since `v0.0.6`
+
+    servers = %w{one.example.com two.example.com
+                 three.example.com four.example.com}.collect do |s|
+      h = SSHKit::Host.new(s)
+      if s.match /(one|two)/
+        h.properties.roles = [:web]
+      else
+        h.properties.roles = [:app]
+      end
+    end
+
+    on servers do |host|
+      if host.properties.roles.include?(:web)
+        # Do something pertinent to web servers
+      elsif host.properties.roles.include?(:app)
+        # Do something pertinent to application servers
+      end
+    end
+
+The `SSHKit::Host#properties` is an [`OpenStruct`](http://ruby-doc.org/stdlib-1.9.3/libdoc/ostruct/rdoc/OpenStruct.html)
+which is not verified or validated in any way, it is up to you, or your
+library to attach meanings or conventions to this mechanism.

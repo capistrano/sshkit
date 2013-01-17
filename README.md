@@ -181,8 +181,8 @@ should be printed.
 * No built-in way to background() something (execute and background the
   process).
 * No environment handling (sshkit might not need to care)
-* No arbitrary `Host` properties (example storing `roles` on servers, or other
-  metadata that might be useful in the `on()` block)
+* ~~No arbitrary `Host` properties (example storing `roles` on servers, or other
+  metadata that might be useful in the `on()` block)~~
 * No log/warning facility (passing Log messages to the output would work)
   A log object could be made available globally which would emit a LogMessage
   type object which would be recognised by the formatters that need to care
