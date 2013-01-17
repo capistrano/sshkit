@@ -128,10 +128,16 @@ module SSHKit
         if options[:user]
           cs << "sudo su #{options[:user]} -c "
         end
+        if options[:run_in_background]
+          cs << 'nohup '
+        end
         cs << SSHKit.config.command_map[command.to_sym]
         if args.any?
           cs << ' '
           cs << args.join(' ')
+        end
+        if options[:run_in_background]
+          cs << ' > /dev/null &'
         end
         if options[:env]
           cs << ' )'
@@ -142,7 +148,7 @@ module SSHKit
     private
 
       def default_options
-        { raise_on_non_zero_exit: true }
+        { raise_on_non_zero_exit: true, run_in_background: false }
       end
 
       def sanitize_command!

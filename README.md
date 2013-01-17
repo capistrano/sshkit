@@ -178,8 +178,8 @@ should be printed.
 
 * No handling of slow / timed out connections
 * No handling of slow / hung remote commands
-* No built-in way to background() something (execute and background the
-  process).
+* ~~No built-in way to background() something (execute and background the
+  process).~~
 * No environment handling (sshkit might not need to care)
 * ~~No arbitrary `Host` properties (example storing `roles` on servers, or other
   metadata that might be useful in the `on()` block)~~
@@ -204,3 +204,6 @@ should be printed.
   easily be modified to look into some connection factory for it's objects,
   saving half a second when running lots of `on()` blocks.
 * Documentation! (YARD style)
+* Wrap all commands in a known shell, that is that `execute('uptime')` should
+  be converted into `sh -c 'uptime'` to ensure that we have a consistent shell
+  experience.

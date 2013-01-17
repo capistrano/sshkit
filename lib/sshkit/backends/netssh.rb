@@ -20,6 +20,11 @@ module SSHKit
         _execute(*args).success?
       end
 
+      def background(*args)
+        options = args.extract_options!.merge(run_in_background: true)
+        _execute(*[*args, options]).success?
+      end
+
       def capture(*args)
         _execute(*args).stdout.strip
       end

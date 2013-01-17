@@ -1,21 +1,9 @@
 require 'helper'
+require 'benchmark'
 
 module SSHKit
 
   module Backend
-
-    class ToSIoFormatter < StringIO
-      extend Forwardable
-      attr_reader :original_output
-      def_delegators :@original_output, :read, :rewind
-      def initialize(oio)
-        @original_output = oio
-      end
-      def write(obj)
-        warn "What: #{obj.to_hash}"
-        original_output.write "> Executing #{obj}\n"
-      end
-    end
 
     class TestNetssh < FunctionalTest
 
@@ -47,19 +35,18 @@ module SSHKit
       end
 
       def simple_netssh
-        sio = ToSIoFormatter.new(StringIO.new)
         SSHKit.capture_output(sio) do
           printer.run
         end
         sio.rewind
         result = sio.read
         assert_equal <<-EOEXPECTED.unindent, result
-          > Executing if test ! -d /opt/sites/example.com; then echo "Directory does not exist '/opt/sites/example.com'" 2>&1; false; fi
-          > Executing cd /opt/sites/example.com && /usr/bin/env date
-          > Executing cd /opt/sites/example.com && /usr/bin/env ls -l /some/directory
-          > Executing if test ! -d /opt/sites/example.com/tmp; then echo "Directory does not exist '/opt/sites/example.com/tmp'" 2>&1; false; fi
-          > Executing if ! sudo su -u root whoami > /dev/null; then echo "You cannot switch to user 'root' using sudo, please check the sudoers file" 2>&1; false; fi
-          > Executing cd /opt/sites/example.com/tmp && ( RAILS_ENV=production ( sudo su -u root /usr/bin/env touch restart.txt ) )
+          if test ! -d /opt/sites/example.com; then echo "Directory does not exist '/opt/sites/example.com'" 2>&1; false; fi
+          cd /opt/sites/example.com && /usr/bin/env date
+          cd /opt/sites/example.com && /usr/bin/env ls -l /some/directory
+          if test ! -d /opt/sites/example.com/tmp; then echo "Directory does not exist '/opt/sites/example.com/tmp'" 2>&1; false; fi
+          if ! sudo su -u root whoami > /dev/null; then echo "You cannot switch to user 'root' using sudo, please check the sudoers file" 2>&1; false; fi
+          cd /opt/sites/example.com/tmp && ( RAILS_ENV=production ( sudo su -u root /usr/bin/env touch restart.txt ) )
         EOEXPECTED
       end
 
@@ -88,6 +75,21 @@ module SSHKit
         Netssh.new(a_host) do |host|
           test :false
         end.run
+      end
+
+      def test_backgrounding_a_process
+        #SSHKit.config.output = SSHKit::Formatter::Pretty.new($stdout)
+        process_list = ""
+        time = Benchmark.measure do
+          Netssh.new(a_host) do
+            background :sleep, 5
+          end.run
+          Netssh.new(a_host) do
+            process_list = capture :ps, "aux | grep sleep | grep -v grep; true"
+          end.run
+        end
+        assert_operator time.real, :<, 1
+        assert_match "sleep 5", process_list
       end
 
     end
