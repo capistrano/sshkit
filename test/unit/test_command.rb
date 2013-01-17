@@ -1,4 +1,5 @@
 require 'helper'
+require 'sshkit'
 
 module SSHKit
   class TestCommand < UnitTest
@@ -51,7 +52,7 @@ module SSHKit
     end
 
     def test_complete?
-      c = Command.new(:whoami)
+      c = Command.new(:whoami, raise_on_non_zero_exit: false)
       refute c.complete?
       c.exit_status = 1
       assert c.complete?
@@ -69,7 +70,7 @@ module SSHKit
     end
 
     def test_failure?
-      c = Command.new(:whoami)
+      c = Command.new(:whoami, raise_on_non_zero_exit: false)
       refute c.failure?
       refute c.failed?
       c.exit_status = 1
@@ -93,7 +94,7 @@ module SSHKit
     end
 
     def test_setting_exit_status
-      c = Command.new(:whoami)
+      c = Command.new(:whoami, raise_on_non_zero_exit: false)
       assert_equal nil, c.exit_status
       assert c.exit_status = 1
       assert_equal 1, c.exit_status
@@ -107,6 +108,13 @@ module SSHKit
       assert_raises ArgumentError do
         Command.new
       end
+    end
+
+    def test_command_raises_command_failed_error_when_non_zero_exit
+      error = assert_raises SSHKit::Command::Failed do
+        Command.new(:whoami).exit_status = 1
+      end
+      assert_equal "No messages written to stderr", error.message
     end
 
   end

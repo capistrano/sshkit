@@ -1,6 +1,6 @@
-require_relative 'sshkit/all'
-
 module SSHKit
+
+  StandardError = Class.new(::StandardError)
 
   class << self
     attr_accessor :config
@@ -24,3 +24,5 @@ module SSHKit
   end
 
 end
+
+require_relative 'sshkit/all'

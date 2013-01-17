@@ -31,6 +31,8 @@ module SSHKit
   # @author Lee Hambley
   class Command
 
+    Failed = Class.new(SSHKit::StandardError)
+
     attr_reader :command, :args, :options, :started_at, :started, :exit_status
 
     attr_accessor :stdout, :stderr
@@ -44,7 +46,7 @@ module SSHKit
     #
     def initialize(*args)
       raise ArgumentError, "May not pass no arguments to Command.new" if args.empty?
-      @options = args.extract_options!
+      @options = default_options.merge(args.extract_options!)
       @command = args.shift.to_s.strip.to_sym
       @args    = args
       @options.symbolize_keys!
@@ -83,6 +85,9 @@ module SSHKit
     def exit_status=(new_exit_status)
       @finished_at = Time.now
       @exit_status = new_exit_status
+      if options[:raise_on_non_zero_exit] && exit_status > 0
+        raise Failed, stderr.empty? ? "No messages written to stderr" : stderr
+      end
     end
 
     def runtime
@@ -135,6 +140,10 @@ module SSHKit
     end
 
     private
+
+      def default_options
+        { raise_on_non_zero_exit: true }
+      end
 
       def sanitize_command!
         command.to_s.strip!
