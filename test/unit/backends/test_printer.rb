@@ -27,12 +27,10 @@ module SSHKit
       end
 
       def test_simple_printing
-        sio = StringIO.new
-        SSHKit.capture_output(sio) do
+        result = String.new
+        SSHKit.capture_output(result) do
           printer.run
         end
-        sio.rewind
-        result = sio.read
         assert_equal <<-EOEXPECTED.unindent, result
           if test ! -d /opt/sites/example.com; then echo "Directory does not exist '/opt/sites/example.com'" 1>&2; false; fi
           cd /opt/sites/example.com && /usr/bin/env date
