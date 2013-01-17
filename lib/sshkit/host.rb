@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module SSHKit
 
   UnparsableHostStringError = Class.new(StandardError)
@@ -46,6 +48,10 @@ module SSHKit
 
     def to_s
       sprintf("%s@%s:%d", username, hostname, port)
+    end
+
+    def properties
+      @properties ||= OpenStruct.new
     end
 
   end
