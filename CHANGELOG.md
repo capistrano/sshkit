@@ -3,6 +3,10 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.3
+
+* Refactor the runner classes into an abstract heirarchy.
+
 ## 0.0.2
 
 * Include a *Pretty* formatter
