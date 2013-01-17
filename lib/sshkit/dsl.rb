@@ -5,7 +5,7 @@ module SSHKit
   module DSL
 
     def on(hosts, options={}, &block)
-      ConnectionManager.new(hosts).each(options, &block)
+      Coordinator.new(hosts).each(options, &block)
     end
 
   end

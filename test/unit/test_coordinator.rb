@@ -3,7 +3,7 @@ require 'helper'
 
 module SSHKit
 
-  class TestConnectionManager < UnitTest
+  class TestCoordinator < UnitTest
 
     def setup
       @s = String.new
@@ -23,17 +23,17 @@ module SSHKit
     def test_connection_manager_handles_a_single_argument
       h = Host.new('1.example.com')
       Host.expects(:new).with('1.example.com').once().returns(h)
-      ConnectionManager.new '1.example.com'
+      Coordinator.new '1.example.com'
     end
 
     def test_connection_manager_resolves_hosts
       h = Host.new('n.example.com')
       Host.expects(:new).times(3).returns(h)
-      ConnectionManager.new %w{1.example.com 2.example.com 3.example.com}
+      Coordinator.new %w{1.example.com 2.example.com 3.example.com}
     end
 
     def test_connection_manager_removes_duplicates_after_resolving_hosts
-      cm = ConnectionManager.new %w{user@1.example.com:22 user@1.example.com}
+      cm = Coordinator.new %w{user@1.example.com:22 user@1.example.com}
       assert_equal ['user@1.example.com:22'], cm.hosts.map(&:to_s)
     end
 
@@ -43,7 +43,7 @@ module SSHKit
       end
       String.new.tap do |str|
         SSHKit.capture_output str do
-          ConnectionManager.new(%w{1.example.com}).each &spy
+          Coordinator.new(%w{1.example.com}).each &spy
         end
         assert_equal "echo 1.example.com", str.strip
       end
@@ -51,7 +51,7 @@ module SSHKit
 
     def test_the_connection_manaager_runs_things_in_parallel_by_default
       SSHKit.capture_output @s do
-        ConnectionManager.new(%w{1.example.com 2.example.com}).each &block_to_run
+        Coordinator.new(%w{1.example.com 2.example.com}).each &block_to_run
       end
       assert_equal 2, results.length
       assert_equal *results.map(&:to_i)
@@ -59,7 +59,7 @@ module SSHKit
 
     def test_the_connection_manager_can_run_things_in_sequence
       SSHKit.capture_output @s do
-        ConnectionManager.new(%w{1.example.com 2.example.com}).each in: :sequence, &block_to_run
+        Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, &block_to_run
       end
       assert_equal 2, results.length
       assert_operator results.first.to_i, :<, results.last.to_i
@@ -67,7 +67,7 @@ module SSHKit
 
     def test_the_connection_manager_can_run_things_in_groups
       SSHKit.capture_output @s do
-        ConnectionManager.new(%w{1.example.com 2.example.com 3.example.com
+        Coordinator.new(%w{1.example.com 2.example.com 3.example.com
                                  4.example.com 5.example.com 6.example.com}).each in: :groups, &block_to_run
       end
       assert_equal 6, results.length

@@ -2,7 +2,7 @@ require 'helper'
 
 module SSHKit
 
-  class TestConnectionManager < FunctionalTest
+  class TestCoordinator < FunctionalTest
 
     def setup
 

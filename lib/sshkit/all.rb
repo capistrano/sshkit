@@ -6,7 +6,7 @@ require_relative 'host'
 
 require_relative 'command'
 require_relative 'configuration'
-require_relative 'connection_manager'
+require_relative 'coordinator'
 
 require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
