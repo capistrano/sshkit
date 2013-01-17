@@ -179,6 +179,7 @@ Into the `Rakefile` simply put something like:
       on "example.com" do |host|
         within "/opt/sites/example.com" do
           execute :git, :pull
+          execute :bundle, :install, '--deployment'
           execute :rake, 'db:migrate'
           execute :rake, 'assets:precompile'
           execute :touch, 'tmp/restart.txt'
