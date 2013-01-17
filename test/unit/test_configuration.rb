@@ -10,21 +10,9 @@ module SSHKit
     end
 
     def test_output
-      assert_equal $stdout, SSHKit.config.output
+      assert SSHKit.config.output.is_a? SSHKit::Formatter::Pretty
       assert SSHKit.config.output = $stderr
       assert_equal $stderr, SSHKit.config.output
-    end
-
-    def test_runner
-      assert_equal :parallel, SSHKit.config.runner
-      assert SSHKit.config.runner = :sequence
-      assert_equal :sequence, SSHKit.config.runner
-    end
-
-    def test_format
-      assert_equal :dot, SSHKit.config.format
-      assert SSHKit.config.format = :pretty
-      assert_equal :pretty, SSHKit.config.format
     end
 
     def test_backend

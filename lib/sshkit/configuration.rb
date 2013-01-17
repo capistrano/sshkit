@@ -3,12 +3,10 @@ module SSHKit
   class Configuration
 
     attr_writer :command_map
-    attr_accessor :output, :format, :runner, :backend
+    attr_accessor :output, :backend
 
     def initialize
-      @output  = $stdout
-      @format  = :dot
-      @runner  = :parallel
+      @output  = SSHKit::Formatter::Pretty.new($stdout)
       @backend = SSHKit::Backend::Netssh
     end
 
