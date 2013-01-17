@@ -9,7 +9,7 @@ rescue Bundler::BundlerError => e
 end
 require 'tempfile'
 require 'minitest/unit'
-require 'mocha'
+require 'mocha/setup'
 require 'turn'
 require 'unindent'
 require 'debugger'
