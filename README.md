@@ -190,10 +190,10 @@ should be printed.
 * No verbosity control, commands should have a `Logger::LEVEL` on them,
   user-generated should be at a high level, the commands auto-generated from
   the guards and checks from as() and within() should have a lower level.
-* Decide if `execute()` (and friends) should raise on non-zero exit statuses or
+* ~~Decide if `execute()` (and friends) should raise on non-zero exit statuses or
   not, perhaps a family of similarly named bang methods should be the ones to
   raise. (Perhaps `test()` should be a way to `execute()` without raising, and
-  `execute()` and friends should always raise)
+  `execute()` and friends should always raise)~~
 * It would be nice to be able to say `SSHKit.config.formatter = :pretty` and
   have that method setter do the legwork of updating `SSHKit.config.output` to
   be an instance of the correct formatter class wrapping the existing output
