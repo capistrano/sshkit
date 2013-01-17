@@ -1,4 +1,3 @@
-require 'thread'
 require_relative 'sshkit/all'
 
 module SSHKit
