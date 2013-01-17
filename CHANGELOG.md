@@ -3,6 +3,29 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.8
+
+* Added DSL method `background()` this sends a task to the background using
+  `nohup` and redirects it's output to `/dev/null` so as to avoid littering
+  the filesystem with `nohup.out` files.
+
+**Note:** Backgrounding a task won't work as you expect if you give it a
+string, that is you must do `background(:sleep, 5)` and not `background("sleep 5")`
+according to the rules by which a command is not processed in any way **if it
+contains a spaca character in it's first argument**.
+
+Usage Example:
+
+    on hosts do
+      background :rake, "assets:precompile" # typically takes 5 minutes!
+    end
+
+**Further:** Many programs are badly behaved and no not work well with `nohup`
+it has to do with the way nohup works, reopening the processe's file
+descriptors and redirecting them. Programs that re-open, or otherwise
+manipulate their own file descriptors may lock up when the SSH session is
+disconnected, often they block writing to, or reading from stdin/out.
+
 ## 0.0.7
 
 * DSL method `execute()` will now raise `SSHKit::Command::Failed` when the

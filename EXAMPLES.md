@@ -65,6 +65,25 @@ leading slashes. It may be misleading as the `File.join()` is performed on the
 machine running the code, if that's a Windows box, the paths may be incorrectly
 joined according to the expectations of the machine receiving the commands.
 
+## Running a task in the background
+
+    on hosts do
+      in '/opt/sites/example.com' do
+        background :rails, :server
+      end
+    end
+
+This will run something like `nohup /usr/bin/env rails server > /dev/null &`,
+backgrounding the Rails process, and making sure we don't leave nohup log
+files littering the filesystem.
+
+**Note:** The `background()` method won't do what you expect if you pass a
+string `sleep 5`, according to the rules of processing commands, you must call
+`background(:sleep, "5")` (that is, command: sleep, args: 5).
+
+**Further Note:** The background() task wraps the given command in `nohup .... &` under some
+circumstances the program will hang anyway when the SSH session exits.
+
 ## Do not care about the host block
 
     on hosts do
