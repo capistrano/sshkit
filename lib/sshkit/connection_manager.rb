@@ -1,5 +1,3 @@
-require 'timeout'
-
 module SSHKit
 
   module Runner
