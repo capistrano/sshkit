@@ -3,7 +3,7 @@
 **SSHKit** is a toolkit for running commands in a structured way on one or
 more servers.
 
-[![Build Status](https://travis-ci.org/wacku/sshkit.png?branch=master)](undefined)
+[![Build Status](https://travis-ci.org/wacku/sshkit.png?branch=master)](https://travis-ci.org/wacku/sshkit)
 [![Dependency Status](https://gemnasium.com/wacku/sshkit.png)](https://gemnasium.com/wacku/sshkit)
 
 ## How might it work?
