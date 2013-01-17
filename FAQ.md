@@ -35,3 +35,12 @@ This can be summarized as:
 If you experience consistent problems, please report it as an issue, I'll be
 in a position to give a better answer once I can examine the problem in more
 detail.
+
+## My daemon doesn't work properly when run from SSHKit
+
+You should probably read:
+
+* http://www.enderunix.org/docs/eng/daemon.php
+
+If any of those things aren't being done by your daemon, then you ought to
+adopt some or all of those techniques.
