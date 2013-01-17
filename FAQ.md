@@ -15,3 +15,23 @@ deployments.
 
 It's in private Beta use, and the documentation could use more work, but this
 is open source, that's more or less how it works.
+
+## Why does <something> stop responding after I started it with `background()`?
+
+The answer is complicated, but it can be summed up by saying that under
+certain circumstances processes can find themselves connected to file
+descriptors which no longer exist.
+
+The following resources are worth a read to better understand what a process
+must do in order to daemonize reliably, not all processes perform all of the
+steps necassary:
+
+* [http://stackoverflow.com/questions/881388/what-is-the-reason-for-performing-a-double-fork-when-creating-a-daemon]
+
+This can be summarized as:
+
+> On some flavors of Unix, you are forced to do a double-fork on startup, in order to go into daemon mode. This is because single forking isn’t guaranteed to detach from the controlling terminal.
+
+If you experience consistent problems, please report it as an issue, I'll be
+in a position to give a better answer once I can examine the problem in more
+detail.
