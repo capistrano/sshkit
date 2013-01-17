@@ -1,7 +1,7 @@
 module SSHKit
   module Backend
 
-    MethodUnavailableError = Class.new(RuntimeError)
+    MethodUnavailableError = Class.new(SSHKit::StandardError)
 
     class Abstract
 
@@ -22,6 +22,10 @@ module SSHKit
       end
 
       def rake(commands=[])
+        raise MethodUnavailableError
+      end
+
+      def test(command, args=[]
         raise MethodUnavailableError
       end
 
