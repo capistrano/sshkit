@@ -43,7 +43,7 @@ This will output:
 **Note:** This example is a bit misleading, as the `www-data` user doesn't
 have a shell defined, one cannot switch to that user.
 
-## Stack directory nestings:
+## Stack directory nestings
 
     on hosts do
       in "/var" do
@@ -65,7 +65,7 @@ leading slashes. It may be misleading as the `File.join()` is performed on the
 machine running the code, if that's a Windows box, the paths may be incorrectly
 joined according to the expectations of the machine receiving the commands.
 
-## Do not care about the host block:
+## Do not care about the host block
 
     on hosts do
       # The |host| argument is optional, it will
@@ -76,7 +76,7 @@ joined according to the expectations of the machine receiving the commands.
 
     SSHKit.config.output = File.open('/dev/null')
 
-## Implement a dirt-simple formatter class:
+## Implement a dirt-simple formatter class
 
     class MyFormatter < SSHKit::Formatter::Abstract
       def write(obj)
@@ -99,16 +99,32 @@ joined according to the expectations of the machine receiving the commands.
       puts capture(:echo, "I don't care about security!")
     end
 
-## Execute and raise an error if something goes wrong:
+## Execute and raise an error if something goes wrong
 
     on hosts do |host|
       execute!(:echo, '"Example Message!" 1>&2; false')
     end
 
-This will raise `SSHKit::CommandUncleanExit.new("Example Message!")` which
-will cause the command to abort.
+This will raise `SSHKit::Command:Failed` with the `#message` "Example Message!"`
+which will cause the command to abort.
 
-## Do something different on one host, or another depending on a host property:
+## Make a test, or run a command which may fail without raising an error:
+
+    on hosts do |host
+      if test "[ -d /opt/sites ]" do
+        within "/opt/sites" do
+          execute :git, :pull
+        end
+      else
+        execute :git, :clone, 'some-repository', '/opt/sites'
+      end
+    end
+
+The `test()` command behaves exactly the same as execute however will return
+false if the command exits with a non-zero exit (as `man 1 test` does). As ti
+returns boolean it can be used to direct the control flow within the block.
+
+## Do something different on one host, or another depending on a host property
 
     host1 = SSHKit::Host.new 'user@example.com'
     host2 = SSHKit::Host.new 'user@example.org'
@@ -123,7 +139,7 @@ will cause the command to abort.
       execute! :git, :clone, "git@git.#{host.hostname}", target
     end
 
-## Connect to a host in the easiest possible way:
+## Connect to a host in the easiest possible way
 
     on 'example.com' do |host|
       execute :uptime
@@ -133,7 +149,7 @@ This will resolve the `example.com` hostname into a `SSHKit::Host` object, and
 try to pull up the correct configuration for it.
 
 
-## Run a command without it being command-mapped:
+## Run a command without it being command-mapped
 
 If the command you attempt to call contains a space character it won't be
 mapped:

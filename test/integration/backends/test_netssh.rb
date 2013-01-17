@@ -17,7 +17,12 @@ module SSHKit
       end
     end
 
-    class TestPrinter < FunctionalTest
+    class TestNetssh < FunctionalTest
+
+      def setup
+        super
+        SSHKit.config.output = SSHKit::Formatter::BlackHole.new($stdout)
+      end
 
       def block_to_run
         lambda do |host|
@@ -70,26 +75,19 @@ module SSHKit
         end
       end
 
-      def test_exit_status
-
+      def test_execute_raises_on_non_zero_exit_status_and_captures_stderr
+        err = assert_raises SSHKit::Command::Failed do
+          Netssh.new(a_host) do |host|
+            execute :echo, "'Test capturing stderr' 1>&2; false"
+          end.run
+        end
+        assert_equal "Test capturing stderr", err.message
       end
 
-      def test_raising_an_error_if_a_command_returns_a_bad_exit_status
-        skip "Where to implement this?"
-        # NOTE: I think that it might be wise to have Command raise when
-        # Command#exit_status=() is called, it would allow an option to
-        # be passed to command (raise_errors: false), which could also be
-        # inherited through Backend#command and specified on the (not yet
-        # existing) backend configurations.
-        assert_raises RuntimeError do
-          File.open('/dev/null', 'w') do |dnull|
-            SSHKit.capture_output(dnull) do
-              Netssh.new(a_host) do |host|
-                execute :false
-              end.run
-            end
-          end
-        end
+      def test_test_does_not_raise_on_non_zero_exit_status
+        Netssh.new(a_host) do |host|
+          test :false
+        end.run
       end
 
     end

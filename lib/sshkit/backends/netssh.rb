@@ -11,6 +11,11 @@ module SSHKit
         instance_exec(host, &@block)
       end
 
+      def test(*args)
+        options = args.extract_options!.merge(raise_on_non_zero_exit: false)
+        _execute(*[*args, options]).success?
+      end
+
       def execute(*args)
         _execute(*args).success?
       end

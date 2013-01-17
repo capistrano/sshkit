@@ -2,7 +2,7 @@ require 'ostruct'
 
 module SSHKit
 
-  UnparsableHostStringError = Class.new(StandardError)
+  UnparsableHostStringError = Class.new(SSHKit::StandardError)
 
   class Host
 

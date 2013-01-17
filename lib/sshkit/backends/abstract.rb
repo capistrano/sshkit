@@ -25,7 +25,7 @@ module SSHKit
         raise MethodUnavailableError
       end
 
-      def test(command, args=[]
+      def test(command, args=[])
         raise MethodUnavailableError
       end
 
@@ -75,7 +75,8 @@ module SSHKit
       private
 
       def command(*args)
-        SSHKit::Command.new(*args, in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user)
+        options = args.extract_options!
+        SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user})])
       end
 
       def connection
