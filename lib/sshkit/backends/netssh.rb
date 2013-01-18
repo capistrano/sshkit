@@ -5,6 +5,10 @@ module SSHKit
 
     class Netssh < Printer
 
+      class Configuration
+        attr_accessor :connection_timeout, :pty
+      end
+
       include SSHKit::CommandHelper
 
       def run
@@ -29,6 +33,14 @@ module SSHKit
         _execute(*args).stdout.strip
       end
 
+      def configure
+        yield config
+      end
+
+      def config
+        @config ||= Configuration.new
+      end
+
       private
 
       def _execute(*args)
@@ -36,6 +48,7 @@ module SSHKit
           output << cmd
           cmd.started = true
           ssh.open_channel do |chan|
+            chan.request_pty if config.pty
             chan.exec cmd.to_s do |ch, success|
               chan.on_data do |ch, data|
                 cmd.stdout += data
