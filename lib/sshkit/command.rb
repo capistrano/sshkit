@@ -97,7 +97,7 @@ module SSHKit
 
     def to_hash
       {
-        command:     command,
+        command:     self.to_s,
         args:        args,
         options:     options,
         exit_status: exit_status,
@@ -105,6 +105,7 @@ module SSHKit
         stderr:      stderr,
         started_at:  @started_at,
         finished_at: @finished_at,
+        runtime:     runtime,
         uuid:        uuid,
         started:     started?,
         finished:    finished?,
