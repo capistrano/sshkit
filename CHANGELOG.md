@@ -3,6 +3,10 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.10
+
+* Include more attributes in `Command#to_hash`.
+
 ## 0.0.9
 
 * Include more attributes in `Command#to_hash`.
