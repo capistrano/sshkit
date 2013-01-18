@@ -102,7 +102,14 @@ module SSHKit
         options:     options,
         exit_status: exit_status,
         stdout:      stdout,
-        stderr:      stderr
+        stderr:      stderr,
+        started_at:  @started_at,
+        finished_at: @finished_at,
+        uuid:        uuid,
+        started:     started?,
+        finished:    finished?,
+        successful:  successful?,
+        failed:      failed?
       }
     end
 
