@@ -194,10 +194,10 @@ should be printed.
   not, perhaps a family of similarly named bang methods should be the ones to
   raise. (Perhaps `test()` should be a way to `execute()` without raising, and
   `execute()` and friends should always raise)~~
-* It would be nice to be able to say `SSHKit.config.formatter = :pretty` and
+* ~~It would be nice to be able to say `SSHKit.config.formatter = :pretty` and
   have that method setter do the legwork of updating `SSHKit.config.output` to
   be an instance of the correct formatter class wrapping the existing output
-  stream.
+  stream.~~
 * No closing of connections, the abstract backend class should include a
   cleanup method which is empty but can be overriden by
 * No conncetion pooling, the `connection` method of the NetSSH backend could

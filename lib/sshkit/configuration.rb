@@ -2,12 +2,19 @@ module SSHKit
 
   class Configuration
 
-    attr_writer :command_map
-    attr_accessor :output, :backend
+    attr_writer :output, :backend, :command_map
 
-    def initialize
-      @output  = SSHKit::Formatter::Pretty.new($stdout)
-      @backend = SSHKit::Backend::Netssh
+    def output
+      @output ||= format=:pretty
+    end
+
+    def backend
+      @backend ||= SSHKit::Backend::Netssh
+    end
+
+    def format=(format)
+      formatter = SSHKit::Formatter.const_get(format.capitalize)
+      self.output = formatter.new($stdout)
     end
 
     def command_map

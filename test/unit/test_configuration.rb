@@ -7,6 +7,7 @@ module SSHKit
     def setup
       SSHKit.config = nil
       SSHKit.config.command_map.clear
+      SSHKit.config.output = SSHKit::Formatter::Pretty.new($stdout)
     end
 
     def test_output
@@ -30,6 +31,10 @@ module SSHKit
       assert_equal "/opt/sites/example/current/bin ruby", SSHKit.config.command_map[:ruby]
     end
 
+    def test_setting_formatter
+      assert SSHKit.config.format = :dot
+      assert SSHKit.config.output.is_a? SSHKit::Formatter::Dot
+    end
   end
 
 end
