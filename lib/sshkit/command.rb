@@ -142,7 +142,7 @@ module SSHKit
           end
         end
         if options[:user]
-          cs << "sudo su #{options[:user]} -c "
+          cs << "sudo su #{options[:user]} -c \""
         end
         if options[:run_in_background]
           cs << 'nohup '
@@ -154,6 +154,9 @@ module SSHKit
         end
         if options[:run_in_background]
           cs << ' > /dev/null &'
+        end
+        if options[:user]
+          cs << "\""
         end
         if options[:env]
           cs << ' )'

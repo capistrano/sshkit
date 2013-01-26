@@ -78,7 +78,7 @@ module SSHKit
 
     def test_working_as_a_given_user
       c = Command.new(:whoami, user: :anotheruser)
-      assert_equal "sudo su anotheruser -c /usr/bin/env whoami", String(c)
+      assert_equal "sudo su anotheruser -c \"/usr/bin/env whoami\"", String(c)
     end
 
     def test_backgrounding_a_task
@@ -88,12 +88,12 @@ module SSHKit
 
     def test_backgrounding_a_task_as_a_given_user
       c = Command.new(:sleep, 15, run_in_background: true, user: :anotheruser)
-      assert_equal "sudo su anotheruser -c nohup /usr/bin/env sleep 15 > /dev/null &", String(c)
+      assert_equal "sudo su anotheruser -c \"nohup /usr/bin/env sleep 15 > /dev/null &\"", String(c)
     end
 
     def test_backgrounding_a_task_as_a_given_user_with_env
       c = Command.new(:sleep, 15, run_in_background: true, user: :anotheruser, env: {a: :b})
-      assert_equal "( A=b sudo su anotheruser -c nohup /usr/bin/env sleep 15 > /dev/null & )", String(c)
+      assert_equal "( A=b sudo su anotheruser -c \"nohup /usr/bin/env sleep 15 > /dev/null &\" )", String(c)
     end
 
     def test_complete?
