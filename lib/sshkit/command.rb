@@ -192,7 +192,10 @@ module SSHKit
     private
 
     def default_options
-      { raise_on_non_zero_exit: true, run_in_background: false }
+      {
+        raise_on_non_zero_exit: true,
+        run_in_background:      false
+      }
     end
 
     def sanitize_command!
