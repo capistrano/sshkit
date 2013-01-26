@@ -43,7 +43,7 @@ module SSHKit
 
       def within(directory, &block)
         (@pwd ||= []).push directory.to_s
-        execute <<-EOTEST
+        execute <<-EOTEST, verbosity: Logger::DEBUG
           if test ! -d #{File.join(@pwd)}
             then echo "Directory does not exist '#{File.join(@pwd)}'" 1>&2
             false
@@ -65,7 +65,7 @@ module SSHKit
 
       def as(user, &block)
         @user = user
-        execute <<-EOTEST
+        execute <<-EOTEST, verbosity: Logger::DEBUG
           if ! sudo su #{user} -c whoami > /dev/null
             then echo "You cannot switch to user '#{user}' using sudo, please check the sudoers file" 1>&2
             false

@@ -34,7 +34,7 @@ module SSHKit
 
       def capture(*args)
         options = args.extract_options!.merge(verbosity: Logger::DEBUG)
-        _execute(*[*args, options])
+        _execute(*[*args, options]).stdout.strip
       end
 
       def configure
