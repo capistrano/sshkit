@@ -3,6 +3,14 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.17
+
+ * Fixed a bug introduced in 0.0.16 where the capture() helper returned
+   the name of the command that had been run, not it's output.
+
+ * Classify the pre-directory switch, and pre-user switch command guards
+   as having a DEBUG log level to exclude them from the logs.
+
 ## 0.0.16
 
  * Fixed a bug introduced in 0.0.15 where the capture() helper returned
