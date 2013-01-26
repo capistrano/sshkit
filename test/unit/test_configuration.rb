@@ -21,6 +21,12 @@ module SSHKit
       assert_equal '007', SSHKit.config.umask
     end
 
+    def test_output_verbosity
+      assert_equal Logger::INFO, SSHKit.config.output_verbosity
+      assert SSHKit.config.output_verbosity = Logger::DEBUG
+      assert_equal Logger::DEBUG, SSHKit.config.output_verbosity
+    end
+
     def test_default_env
       assert SSHKit.config.default_env
     end

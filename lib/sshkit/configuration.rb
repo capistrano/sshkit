@@ -2,7 +2,7 @@ module SSHKit
 
   class Configuration
 
-    attr_accessor :umask
+    attr_accessor :umask, :output_verbosity
     attr_writer :output, :backend, :default_env, :command_map
 
     def output
@@ -15,6 +15,10 @@ module SSHKit
 
     def backend
       @backend ||= SSHKit::Backend::Netssh
+    end
+
+    def output_verbosity
+      @output_verbosity ||= Logger::INFO
     end
 
     def format=(format)

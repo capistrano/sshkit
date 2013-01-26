@@ -122,10 +122,10 @@ module SSHKit
     end
 
     def verbosity
-      if vb = options.has_key?([:verbosity])
-        case vb.class
-        when Symbol then Logger.const_get(vb.to_s.upcase)
-        when Fixnum then vb
+      if vb = options[:verbosity]
+        case vb.class.name
+        when 'Symbol' then return Logger.const_get(vb.to_s.upcase)
+        when 'Fixnum' then return vb
         end
       else
         Logger::INFO
