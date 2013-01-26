@@ -22,9 +22,9 @@ module SSHKit
 
     private
 
-      def map(command)
-        SSHKit.config.command_map[command.to_sym]
-      end
+    def map(command)
+      SSHKit.config.command_map[command.to_sym]
+    end
 
   end
 
@@ -132,69 +132,80 @@ module SSHKit
       end
     end
 
-    def to_s(expanded=false)
-      return command.to_s if command.match /\s/
-      String.new.tap do |cs|
-        if options[:in]
-          cs << sprintf("cd %s && ", options[:in])
-        end
-        unless SSHKit.config.default_env.empty?
-          if options[:env].is_a? Hash
-            options[:env] = SSHKit.config.default_env.merge(options[:env])
-          end
-        end
-        if options[:env]
-          cs << '( '
-          options[:env].each do |k,v|
-            cs << k.to_s.upcase
-            cs << "="
-            cs << v.to_s
-            cs << ' '
-          end
-        end
-        if options[:user]
-          cs << "sudo su #{options[:user]} -c \""
-        end
-        if options[:run_in_background]
-          cs << 'nohup '
-        end
-        if umask = SSHKit.config.umask
-          cs << "umask #{umask} && "
-        end
-        cs << SSHKit.config.command_map[command.to_sym]
-        if args.any?
-          cs << ' '
-          cs << args.join(' ')
-        end
-        if options[:run_in_background]
-          cs << ' > /dev/null &'
-        end
-        if options[:user]
-          cs << "\""
-        end
-        if options[:env]
-          cs << ' )'
-        end
-      end
+    def should_map?
+      !command.match /\s/
     end
 
-    private
+    def within(&block)
+      return yield unless options[:in]
+      "cd #{options[:in]} && %s" % yield
+    end
 
-      def default_options
-        { raise_on_non_zero_exit: true, run_in_background: false }
-      end
+    def environment_hash
+      (SSHKit.config.default_env || {}).merge(options[:env] || {})
+    end
 
-      def sanitize_command!
-        command.to_s.strip!
-        if command.to_s.match("\n")
-          @command = String.new.tap do |cs|
-            command.to_s.lines.each do |line|
-              cs << line.strip
-              cs << '; ' unless line == command.to_s.lines.to_a.last
+    def envivonment_string
+      environment_hash.collect do |key,value|
+        "#{key.to_s.upcase}=#{value}"
+      end.join(' ')
+    end
+
+    def with(&block)
+      return yield unless environment_hash.any?
+      "( #{envivonment_string} %s )" % yield
+    end
+
+    def user(&block)
+      return yield unless options[:user]
+      "sudo su #{options[:user]} -c \"%s\"" % yield
+    end
+
+    def in_background(&block)
+      return yield unless options[:run_in_background]
+      "nohup %s > /dev/null &" % yield
+    end
+
+    def umask(&block)
+      return yield unless SSHKit.config.umask
+      "umask #{SSHKit.config.umask} && %s" % yield
+    end
+
+    def to_s
+
+      return command.to_s unless should_map?
+
+      within do
+        with do
+          user do
+            in_background do
+              umask do
+                [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+              end
             end
           end
         end
       end
+
+    end
+
+    private
+
+    def default_options
+      { raise_on_non_zero_exit: true, run_in_background: false }
+    end
+
+    def sanitize_command!
+      command.to_s.strip!
+      if command.to_s.match("\n")
+        @command = String.new.tap do |cs|
+          command.to_s.lines.each do |line|
+            cs << line.strip
+            cs << '; ' unless line == command.to_s.lines.to_a.last
+          end
+        end
+      end
+    end
 
   end
 
