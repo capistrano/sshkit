@@ -96,6 +96,30 @@ module SSHKit
       assert_equal "( A=b sudo su anotheruser -c \"nohup /usr/bin/env sleep 15 > /dev/null &\" )", String(c)
     end
 
+    def test_umask
+      SSHKit.config.umask = '007'
+      c = Command.new(:touch, 'somefile')
+      assert_equal "umask 007 && /usr/bin/env touch somefile", String(c)
+    end
+
+    def test_umask_with_working_directory
+      SSHKit.config.umask = '007'
+      c = Command.new(:touch, 'somefile', in: '/opt')
+      assert_equal "cd /opt && umask 007 && /usr/bin/env touch somefile", String(c)
+    end
+
+    def test_umask_with_working_directory_and_user
+      SSHKit.config.umask = '007'
+      c = Command.new(:touch, 'somefile', in: '/var', user: 'alice')
+      assert_equal "cd /var && sudo su alice -c \"umask 007 && /usr/bin/env touch somefile\"", String(c)
+    end
+
+    def test_umask_with_env_and_working_directory_and_user
+      SSHKit.config.umask = '007'
+      c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var')
+      assert_equal "cd /var && ( A=b sudo su bob -c \"umask 007 && /usr/bin/env touch somefile\" )", String(c)
+    end
+
     def test_complete?
       c = Command.new(:whoami, raise_on_non_zero_exit: false)
       refute c.complete?

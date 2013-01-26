@@ -147,6 +147,9 @@ module SSHKit
         if options[:run_in_background]
           cs << 'nohup '
         end
+        if umask = SSHKit.config.umask
+          cs << "umask #{umask} && "
+        end
         cs << SSHKit.config.command_map[command.to_sym]
         if args.any?
           cs << ' '
