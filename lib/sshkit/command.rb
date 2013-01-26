@@ -173,7 +173,11 @@ module SSHKit
 
     def group(&block)
       return yield unless options[:group]
-      "sg #{options[:group]} -c \"%s\"" % yield
+      "sg #{options[:group]} -c \"%s\"" % escape_quotes(yield)
+    end
+
+    def escape_quotes(string)
+      string.gsub /"/, '\\"'
     end
 
     def to_s

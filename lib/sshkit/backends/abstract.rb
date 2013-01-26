@@ -87,7 +87,7 @@ module SSHKit
 
       def command(*args)
         options = args.extract_options!
-        SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user})])
+        SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user, group: @group})])
       end
 
       def connection

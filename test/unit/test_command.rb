@@ -83,12 +83,12 @@ module SSHKit
 
     def test_working_as_a_given_group
       c = Command.new(:whoami, group: :devvers)
-      assert_equal "sg devvers -c \"/usr/bin/env whoami\"", String(c)
+      assert_equal "sg devvers -c \\\"/usr/bin/env whoami\\\"", String(c)
     end
 
     def test_working_as_a_given_user_and_group
       c = Command.new(:whoami, user: :anotheruser, group: :devvers)
-      assert_equal "sudo su anotheruser -c \"sg devvers -c \"/usr/bin/env whoami\"\"", String(c)
+      assert_equal "sudo su anotheruser -c \"sg devvers -c \\\"/usr/bin/env whoami\\\"\"", String(c)
     end
 
     def test_backgrounding_a_task
