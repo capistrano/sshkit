@@ -158,7 +158,7 @@ module SSHKit
 
     def user(&block)
       return yield unless options[:user]
-      "sudo su #{options[:user]} -c \"%s\"" % yield
+      "sudo su #{options[:user]} -c \"%s\"" % %Q{#{yield}}
     end
 
     def in_background(&block)
@@ -173,11 +173,9 @@ module SSHKit
 
     def group(&block)
       return yield unless options[:group]
-      "sg #{options[:group]} -c \"%s\"" % escape_quotes(yield)
-    end
-
-    def escape_quotes(string)
-      string.gsub /"/, '\\"'
+      "sg #{options[:group]} -c \\\"%s\\\"" % %Q{#{yield}}
+      # We could also use the so-called heredoc format perhaps:
+      #"newgrp #{options[:group]} <<EOC \\\"%s\\\" EOC" % %Q{#{yield}}
     end
 
     def to_s
@@ -197,7 +195,6 @@ module SSHKit
           end
         end
       end
-
     end
 
     private
