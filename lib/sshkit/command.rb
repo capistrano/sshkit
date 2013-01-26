@@ -86,7 +86,10 @@ module SSHKit
       @finished_at = Time.now
       @exit_status = new_exit_status
       if options[:raise_on_non_zero_exit] && exit_status > 0
-        raise Failed, stderr.empty? ? "No messages written to stderr" : stderr.strip
+        message = ""
+        message += (stdout.strip.empty? ? "No messages written to stdout\n" : stdout.strip)
+        message += (stderr.strip.empty? ? "No messages written to stderr\n" : stderr.strip)
+        raise Failed, message
       end
     end
 

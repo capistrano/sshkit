@@ -159,7 +159,7 @@ module SSHKit
       error = assert_raises SSHKit::Command::Failed do
         Command.new(:whoami).exit_status = 1
       end
-      assert_equal "No messages written to stderr", error.message
+      assert_equal "No messages written to stdout\nNo messages written to stderr\n", error.message
     end
 
   end
