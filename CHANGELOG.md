@@ -3,6 +3,13 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.14
+
+ * Umasks can now be set on `Command` instances. It can be set globally with
+   `SSHKit.config.umask` (default, nil; meaning take the system default). This
+   can be used to set, for example a umask of `007` for allowing users with
+   the same primary group to share code without stepping on eachother's toes.
+
 ## 0.0.13
 
  * Correctly quote `as(user)` commands, previously it would expand to:
