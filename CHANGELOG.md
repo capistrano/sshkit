@@ -3,6 +3,12 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.12
+
+ * Also print anything the program wrote to stdout when the exit status is
+   non-zero and the command raises an error. (assits debugging badly behaved
+   programs that fail, and write their error output to stdout.)
+
 ## 0.0.11
 
  * Implementing confuguration objects on the backends (WIP, undocumented)
