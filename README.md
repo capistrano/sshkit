@@ -173,6 +173,16 @@ on it's implementation it will almost certainly override the implementation of
 `write()` (alias `<<()`) and query the objects it receives to determine what
 should be printed.
 
+## Verbosity
+
+By default calls to `capture()` and `test()` are not logged, they are used
+*so* frequently by backend tasks to check environmental settings that it
+produces a large amount of noise. They are tagged with a verbosity option on
+the `Command` instances of `Logger::DEBUG`. The default configuration for
+output verbosity is avaialble to override with `SSHKit.config.output_verbosity=`,
+and defaults to `Logger::INFO`.
+
+At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
 
 ## Known Issues
 

@@ -3,6 +3,20 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.15
+
+ * `Command` now takes a `verbosity` option. This defaults to `Logger::INFO`
+   and can be set to any of the Ruby logger level constants. You can also set
+   it to the symbol `:debug` (and friends) which will be expanded into the correct
+   constants.
+
+   The log verbosity level is set to Logger::INFO by default, and can be
+   overridden by setting `SSHKit.config.output_verbosity = Logger::{...}`,
+   pick a level that works for you.
+
+   By default `test()` and `capture()` calls are surpressed, and not printed
+   by the pretty logger as of this version.
+
 ## 0.0.14
 
  * Umasks can now be set on `Command` instances. It can be set globally with
