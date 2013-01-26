@@ -130,8 +130,8 @@ module SSHKit
             cs << k.to_s.upcase
             cs << "="
             cs << v.to_s.shellescape
+            cs << ' '
           end
-          cs << ' '
         end
         if options[:user]
           cs << "sudo su #{options[:user]} -c "
