@@ -121,7 +121,18 @@ module SSHKit
       options[:host]
     end
 
-    def to_s
+    def verbosity
+      if vb = options.has_key?([:verbosity])
+        case vb.class
+        when Symbol then Logger.const_get(vb.to_s.upcase)
+        when Fixnum then vb
+        end
+      else
+        Logger::INFO
+      end
+    end
+
+    def to_s(expanded=false)
       return command.to_s if command.match /\s/
       String.new.tap do |cs|
         if options[:in]

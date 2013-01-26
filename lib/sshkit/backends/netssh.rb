@@ -16,7 +16,10 @@ module SSHKit
       end
 
       def test(*args)
-        options = args.extract_options!.merge(raise_on_non_zero_exit: false)
+        options = args.extract_options!.merge(
+          raise_on_non_zero_exit: false,
+          verbosity: Logger::DEBUG
+        )
         _execute(*[*args, options]).success?
       end
 
@@ -30,7 +33,8 @@ module SSHKit
       end
 
       def capture(*args)
-        _execute(*args).stdout.strip
+        options = args.extract_options!.merge(verbosity: Logger::DEBUG)
+        _execute(*[*args, options]).success?
       end
 
       def configure

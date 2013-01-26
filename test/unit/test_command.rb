@@ -120,6 +120,18 @@ module SSHKit
       assert_equal "cd /var && ( A=b sudo su bob -c \"umask 007 && /usr/bin/env touch somefile\" )", String(c)
     end
 
+    def test_verbosity_defaults_to_logger_info
+      assert_equal Logger::INFO, Command.new(:ls).verbosity
+    end
+
+    def test_overriding_verbosity_level_with_a_constant
+      assert_equal Logger::DEBUG, Command.new(:ls, verbosity: Logger::DEBUG).verbosity
+    end
+
+    def test_overriding_verbosity_level_with_a_symbol
+      assert_equal Logger::DEBUG, Command.new(:ls, verbosity: :debug).verbosity
+    end
+
     def test_complete?
       c = Command.new(:whoami, raise_on_non_zero_exit: false)
       refute c.complete?
