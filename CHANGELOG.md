@@ -3,6 +3,13 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.13
+
+ * Correctly quote `as(user)` commands, previously it would expand to:
+   `sudo su user -c /usr/bin/env echo "Hello World"`, in which the command to
+   run was taken as simply `/usr/bin/env`. By quoting all arguments it should
+   now work as expected. `sudo su user -c "/usr/bin/env echo \""Hello World\""`
+
 ## 0.0.12
 
  * Also print anything the program wrote to stdout when the exit status is
