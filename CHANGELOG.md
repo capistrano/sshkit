@@ -3,6 +3,11 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.16
+
+ * Fixed a bug introduced in 0.0.15 where the capture() helper returned
+   boolean, discarding any output from the server.
+
 ## 0.0.15
 
  * `Command` now takes a `verbosity` option. This defaults to `Logger::INFO`
