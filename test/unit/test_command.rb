@@ -35,6 +35,11 @@ module SSHKit
       assert_equal "( RAILS_ENV=production FOO=bar /usr/bin/env rails server )", String(c)
     end
 
+    def test_including_the_env_doesnt_addressively_escape
+      c = Command.new(:rails, 'server', env: {path: '/example:$PATH'})
+      assert_equal "( PATH=/example:$PATH /usr/bin/env rails server )", String(c)
+    end
+
     def test_working_in_a_given_directory
       c = Command.new(:ls, '-l', in: "/opt/sites")
       assert_equal "cd /opt/sites && /usr/bin/env ls -l", String(c)

@@ -129,7 +129,7 @@ module SSHKit
           options[:env].each do |k,v|
             cs << k.to_s.upcase
             cs << "="
-            cs << v.to_s.shellescape
+            cs << v.to_s
             cs << ' '
           end
         end
