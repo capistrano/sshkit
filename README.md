@@ -207,3 +207,7 @@ should be printed.
 * Wrap all commands in a known shell, that is that `execute('uptime')` should
   be converted into `sh -c 'uptime'` to ensure that we have a consistent shell
   experience.
+* There's no suitable host parser that accepts `Host.new('user@ip:port')`, it
+  will decode a `user@hostname:port`, but IP addresses don't work.
+* If Net::SSH raises `IOError` (as it does when authentication fails) this
+  needs to be caught, and re-raised as some kind of ConnectionFailed error.
