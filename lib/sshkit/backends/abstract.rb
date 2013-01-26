@@ -63,17 +63,24 @@ module SSHKit
         remove_instance_variable(:@_env)
       end
 
-      def as(user, &block)
-        @user = user
+      def as(who, &block)
+        if who.is_a? Hash
+          @user  = who[:user]  || who["user"]
+          @group = who[:group] || who["group"]
+        else
+          @user  = who
+          @group = nil
+        end
         execute <<-EOTEST, verbosity: Logger::DEBUG
-          if ! sudo su #{user} -c whoami > /dev/null
-            then echo "You cannot switch to user '#{user}' using sudo, please check the sudoers file" 1>&2
+          if ! sudo su #{@user} -c whoami > /dev/null
+            then echo "You cannot switch to user '#{@user}' using sudo, please check the sudoers file" 1>&2
             false
           fi
         EOTEST
         yield
       ensure
         remove_instance_variable(:@user)
+        remove_instance_variable(:@group)
       end
 
       private
