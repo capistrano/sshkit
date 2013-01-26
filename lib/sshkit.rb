@@ -23,6 +23,10 @@ module SSHKit
     @@config ||= Configuration.new
   end
 
+  def self.reset_configuration!
+    @@config = nil
+  end
+
 end
 
 require_relative 'sshkit/all'

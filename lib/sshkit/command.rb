@@ -124,6 +124,11 @@ module SSHKit
         if options[:in]
           cs << sprintf("cd %s && ", options[:in])
         end
+        unless SSHKit.config.default_env.empty?
+          if options[:env].is_a? Hash
+            options[:env] = SSHKit.config.default_env.merge(options[:env])
+          end
+        end
         if options[:env]
           cs << '( '
           options[:env].each do |k,v|

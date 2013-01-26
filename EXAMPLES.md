@@ -8,6 +8,13 @@
       end
     end
 
+## Run with default environemntal variables
+
+    SSHKit.config.default_env = { path: '/usr/local/libexec/bin:$PATH' }
+    on hosts do |host|
+      puts capture(:env)
+    end
+
 ## Run a command in a different directory
 
     on hosts do |host|

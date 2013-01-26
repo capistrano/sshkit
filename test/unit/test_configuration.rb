@@ -13,7 +13,10 @@ module SSHKit
     def test_output
       assert SSHKit.config.output.is_a? SSHKit::Formatter::Pretty
       assert SSHKit.config.output = $stderr
-      assert_equal $stderr, SSHKit.config.output
+    end
+
+    def test_default_env
+      assert SSHKit.config.default_env
     end
 
     def test_backend

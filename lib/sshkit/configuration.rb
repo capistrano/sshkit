@@ -2,10 +2,14 @@ module SSHKit
 
   class Configuration
 
-    attr_writer :output, :backend, :command_map
+    attr_writer :output, :backend, :default_env, :command_map
 
     def output
-      @output ||= format=:pretty
+      @output ||= format=(:pretty)
+    end
+
+    def default_env
+      @default_env ||= {}
     end
 
     def backend

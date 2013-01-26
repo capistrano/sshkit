@@ -4,6 +4,10 @@ require 'sshkit'
 module SSHKit
   class TestCommand < UnitTest
 
+    def setup
+      SSHKit.reset_configuration!
+    end
+
     def test_maps_a_command
       c = Command.new('example')
       assert_equal '/usr/bin/env example', String(c)
@@ -26,18 +30,34 @@ module SSHKit
     end
 
     def test_including_the_env
+      SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {rails_env: :production})
       assert_equal "( RAILS_ENV=production /usr/bin/env rails server )", String(c)
     end
 
     def test_including_the_env_with_multiple_keys
+      SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {rails_env: :production, foo: 'bar'})
       assert_equal "( RAILS_ENV=production FOO=bar /usr/bin/env rails server )", String(c)
     end
 
     def test_including_the_env_doesnt_addressively_escape
+      SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {path: '/example:$PATH'})
       assert_equal "( PATH=/example:$PATH /usr/bin/env rails server )", String(c)
+    end
+
+    def test_global_env
+      SSHKit.config = nil
+      SSHKit.config.default_env = { default: 'env' }
+      c = Command.new(:rails, 'server', env: {})
+      assert_equal "( DEFAULT=env /usr/bin/env rails server )", String(c)
+    end
+
+    def test_default_env_is_overwritten_with_locally_defined
+      SSHKit.config.default_env = { foo: 'bar', over: 'under' }
+      c = Command.new(:rails, 'server', env: { over: 'write'})
+      assert_equal "( FOO=bar OVER=write /usr/bin/env rails server )", String(c)
     end
 
     def test_working_in_a_given_directory
