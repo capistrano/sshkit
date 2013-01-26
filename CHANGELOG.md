@@ -3,6 +3,16 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.11
+
+ * Implementing confuguration objects on the backends (WIP, undocumented)
+ * Implement `SSHKit.config.default_env`, a hash which can be modified and
+   will act as a global `with`.
+ * Fixed #9 (with(a: 'b', c: 'c') being parsed as `A=bC=d`. Now properly space
+   separated.
+ * Fixed #10 (overly aggressive shell escaping), one can now do:
+   `with(path: 'foo:$PATH') without the $ being escaped too early.
+
 ## 0.0.10
 
 * Include more attributes in `Command#to_hash`.
