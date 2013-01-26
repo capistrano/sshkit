@@ -15,6 +15,12 @@ module SSHKit
       assert SSHKit.config.output = $stderr
     end
 
+    def test_umask
+      assert SSHKit.config.umask.nil?
+      assert SSHKit.config.umask = '007'
+      assert_equal '007', SSHKit.config.umask
+    end
+
     def test_default_env
       assert SSHKit.config.default_env
     end

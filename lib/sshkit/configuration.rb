@@ -2,6 +2,7 @@ module SSHKit
 
   class Configuration
 
+    attr_accessor :umask
     attr_writer :output, :backend, :default_env, :command_map
 
     def output
