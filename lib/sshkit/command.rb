@@ -171,6 +171,11 @@ module SSHKit
       "umask #{SSHKit.config.umask} && %s" % yield
     end
 
+    def group(&block)
+      return yield unless options[:group]
+      "sg #{options[:group]} -c \"%s\"" % yield
+    end
+
     def to_s
 
       return command.to_s unless should_map?
@@ -180,7 +185,9 @@ module SSHKit
           user do
             in_background do
               umask do
-                [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+                group do
+                  [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+                end
               end
             end
           end

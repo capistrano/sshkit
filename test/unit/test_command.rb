@@ -81,6 +81,16 @@ module SSHKit
       assert_equal "sudo su anotheruser -c \"/usr/bin/env whoami\"", String(c)
     end
 
+    def test_working_as_a_given_group
+      c = Command.new(:whoami, group: :devvers)
+      assert_equal "sg devvers -c \"/usr/bin/env whoami\"", String(c)
+    end
+
+    def test_working_as_a_given_user_and_group
+      c = Command.new(:whoami, user: :anotheruser, group: :devvers)
+      assert_equal "sudo su anotheruser -c \"sg devvers -c \"/usr/bin/env whoami\"\"", String(c)
+    end
+
     def test_backgrounding_a_task
       c = Command.new(:sleep, 15, run_in_background: true)
       assert_equal "nohup /usr/bin/env sleep 15 > /dev/null &", String(c)
