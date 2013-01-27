@@ -12,7 +12,7 @@ module SSHKit
           return if obj.verbosity < SSHKit.config.output_verbosity
 
           unless obj.started?
-            original_output << "[#{c.green(obj.uuid)}] Running #{c.yellow(c.bold(String(obj)))} on #{c.yellow(obj.host.to_s)}\n"
+            original_output << level(obj) + "[#{c.green(obj.uuid)}] Running #{c.yellow(c.bold(String(obj)))} on #{c.yellow(obj.host.to_s)}\n"
           end
 
           if obj.complete? && !obj.stdout.empty?
@@ -28,7 +28,7 @@ module SSHKit
           end
 
           if obj.finished?
-            original_output << "[#{c.green(obj.uuid)}] Finished in #{sprintf('%5.3f seconds', obj.runtime)} command #{c.bold { obj.failure? ? c.red('failed') : c.green('successful') }}.\n"
+            original_output << level(obj) + "[#{c.green(obj.uuid)}] Finished in #{sprintf('%5.3f seconds', obj.runtime)} command #{c.bold { obj.failure? ? c.red('failed') : c.green('successful') }}.\n"
           end
 
         else
@@ -41,6 +41,20 @@ module SSHKit
 
       def c
         @c ||= Term::ANSIColor
+      end
+
+      def level(obj)
+        # Insane number here accounts for the control codes added
+        # by term-ansicolor
+        sprintf "%14s ", c.send(level_formatting(obj.verbosity), level_names(obj.verbosity))
+      end
+
+      def level_formatting(level_num)
+        %w{black blue yellow red red }[level_num]
+      end
+
+      def level_names(level_num)
+        %w{DEBUG INFO WARN ERROR FATAL}[level_num]
       end
 
     end
