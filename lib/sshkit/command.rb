@@ -183,10 +183,10 @@ module SSHKit
       return command.to_s unless should_map?
 
       within do
-        with do
-          user do
-            in_background do
-              umask do
+        umask do
+          with do
+            user do
+              in_background do
                 group do
                   [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
                 end

@@ -121,13 +121,13 @@ module SSHKit
     def test_umask_with_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', in: '/var', user: 'alice')
-      assert_equal "cd /var && sudo su alice -c \"umask 007 && /usr/bin/env touch somefile\"", String(c)
+      assert_equal "cd /var && umask 007 && sudo su alice -c \"/usr/bin/env touch somefile\"", String(c)
     end
 
     def test_umask_with_env_and_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var')
-      assert_equal "cd /var && ( A=b sudo su bob -c \"umask 007 && /usr/bin/env touch somefile\" )", String(c)
+      assert_equal "cd /var && umask 007 && ( A=b sudo su bob -c \"/usr/bin/env touch somefile\" )", String(c)
     end
 
     def test_verbosity_defaults_to_logger_info
