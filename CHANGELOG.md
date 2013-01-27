@@ -3,6 +3,57 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.18
+
+ * Enable `as()` to take either a string/symbol as previously, but also now
+   accepts a hash of `{user: ..., group: ...}`. In case that your host system
+   supports the command `sg` (`man 1 sg`) to switch your effective group ID
+   then one can work on files as a team group user.
+
+        on host do |host|
+          as user: :peter, group: griffin do
+            execute :touch, 'somefile'
+          end
+        end
+
+    will result in a file with the following permissions:
+
+        -rw-r--r-- 1 peter griffin 0 Jan 27 08:12 somefile
+
+    This should make it much easier to share deploy scripts between team
+    members.
+
+    **Note:** `sg` has some very strict user and group password requirements
+    (the user may not have a password (`passwd username -l` to lock an account
+    that already has a password), and the group may not have a password.)
+
+    Additionally, and unsurprisingly *the user must also be a member of the
+    group.*
+
+    `sg` was chosen over `newgrp` as it's easier to embed in a one-liner
+    command, `newgrp` could be used with a heredoc, but my research suggested
+    that it might be better to use sg, as it better represents my intention, a
+    temporary switch to a different effective group.
+
+ * Fixed a bug with environmental variables and umasking introduced in 0.0.14.
+   Since that version the environmental variables were being presented to the
+   umask command's subshell, and not to intended command's subshell.
+
+       incorrect: `ENV=var umask 002 && env`
+       correct:   `umask 002 && ENV=var env`
+
+ * Changed the exception handler, if a command returns with a non-zero exit
+   status then the output will be prefixed with the command name and which
+   channel any output was written to, for example:
+
+       Command.new("echo ping; false")
+       => echo stdout: ping
+          echo stderr: Nothing written
+
+   In this contrived example that's more or less useless, however with badly
+   behaved commands that write errors to stdout, and don't include their name
+   in the program output, it can help a lot with debugging.
+
 ## 0.0.17
 
  * Fixed a bug introduced in 0.0.16 where the capture() helper returned

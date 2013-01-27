@@ -50,6 +50,23 @@ This will output:
 **Note:** This example is a bit misleading, as the `www-data` user doesn't
 have a shell defined, one cannot switch to that user.
 
+## Run a command with a different effective group ID
+
+
+    on hosts do |host|
+      as user: 'www-data', group: 'project-group' do
+        in '/var/log' do
+          execute :touch, 'somefile'
+          execute :ls, '-l'
+        end
+      end
+
+One will see that the created file is owned by the user `www-data` and the
+group `project-group`.
+
+When combined with the `umask` configuration option, it is easy to share
+scripts for deployment between team members without sharing logins.
+
 ## Stack directory nestings
 
     on hosts do
