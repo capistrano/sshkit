@@ -62,13 +62,13 @@ module SSHKit
         end
       end
 
-      def test_execute_raises_on_non_zero_exit_status_and_captures_stderr
+      def test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr
         err = assert_raises SSHKit::Command::Failed do
           Netssh.new(a_host) do |host|
             execute :echo, "'Test capturing stderr' 1>&2; false"
           end.run
         end
-        assert_equal "No messages written to stdout\nTest capturing stderr", err.message
+        assert_equal "echo stdout: Nothing written\necho stderr: Test capturing stderr\n", err.message
       end
 
       def test_test_does_not_raise_on_non_zero_exit_status
