@@ -53,7 +53,7 @@ module SSHKit
           cmd.started = true
           ssh.open_channel do |chan|
             chan.request_pty if config.pty
-            chan.exec cmd.to_s do |ch, success|
+            chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
                 cmd.stdout += data
                 output << cmd

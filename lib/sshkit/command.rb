@@ -178,23 +178,25 @@ module SSHKit
       #"newgrp #{options[:group]} <<EOC \\\"%s\\\" EOC" % %Q{#{yield}}
     end
 
-    def to_s
-
+    def to_command
       return command.to_s unless should_map?
-
       within do
         umask do
           with do
             user do
               in_background do
                 group do
-                  [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+                  to_s
                 end
               end
             end
           end
         end
       end
+    end
+
+    def to_s
+      [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
     end
 
     private
