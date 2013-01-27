@@ -12,7 +12,7 @@ module SSHKit
           return if obj.verbosity < SSHKit.config.output_verbosity
 
           unless obj.started?
-            original_output << level(obj.verbosity) + uuid(obj) + "Running #{c.yellow(c.bold(String(obj)))} on #{c.yellow(obj.host.to_s)}\n"
+            original_output << level(obj.verbosity) + uuid(obj) + "Running #{c.yellow(c.bold(String(obj)))} on #{c.blue(obj.host.to_s)}\n"
             if SSHKit.config.output_verbosity = Logger::DEBUG
               original_output << level(Logger::DEBUG) + uuid(obj) + c.white("Command: #{c.blue(obj.to_command)}") + "\n"
             end
