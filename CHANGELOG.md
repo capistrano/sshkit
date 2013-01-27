@@ -3,6 +3,18 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.19
+
+ * Modified the `Pretty` formatter to include the log level in front of
+   executed commands.
+
+ * Modified the `Pretty` formatter not to print stdout and stderr by default,
+   the log level must be raised to Logger::DEBUG to see the command outputs.
+
+ * Modified the `Pretty` formatter to use `Command#to_s` when printing the
+   command, this prints the short form (without modifications/wrappers applied
+   to the command for users, groups, directories, umasks, etc).
+
 ## 0.0.18
 
  * Enable `as()` to take either a string/symbol as previously, but also now
