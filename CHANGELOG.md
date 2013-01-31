@@ -3,6 +3,11 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.20
+
+ * Fixed a bug where the log level would be assigned, not compared in the
+   pretty formatter, breaking the remainder of the output verbosity.
+
 ## 0.0.19
 
  * Modified the `Pretty` formatter to include the log level in front of
