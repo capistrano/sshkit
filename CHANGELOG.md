@@ -3,6 +3,14 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## HEAD
+
+  * Modified SSHKit.config.output_verbosity= to accept different objects:
+
+        SSHKit.config.output_verbosity = Logger::INFO
+        SSHKit.config.output_verbosity = :info
+        SSHKit.config.output_verbosity = 1
+
 ## 0.0.20
 
  * Fixed a bug where the log level would be assigned, not compared in the
