@@ -18,12 +18,15 @@ module SSHKit
     end
 
     def output_verbosity
-      @output_verbosity ||= Logger::INFO
+      @output_verbosity ||= logger(:info)
+    end
+
+    def output_verbosity=(verbosity)
+      @output_verbosity = logger(verbosity)
     end
 
     def format=(format)
-      formatter = SSHKit::Formatter.const_get(format.capitalize)
-      self.output = formatter.new($stdout)
+      self.output = formatter(format)
     end
 
     def command_map
@@ -36,6 +39,16 @@ module SSHKit
           end
         end
       end
+    end
+
+    private
+
+    def logger(verbosity)
+      verbosity.is_a?(Integer) ? verbosity : Logger.const_get(verbosity.upcase)
+    end
+
+    def formatter(format)
+      SSHKit::Formatter.const_get(format.capitalize).new($stdout)
     end
 
   end

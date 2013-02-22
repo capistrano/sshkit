@@ -23,7 +23,11 @@ module SSHKit
 
     def test_output_verbosity
       assert_equal Logger::INFO, SSHKit.config.output_verbosity
-      assert SSHKit.config.output_verbosity = Logger::DEBUG
+      assert SSHKit.config.output_verbosity = :debug
+      assert_equal Logger::DEBUG, SSHKit.config.output_verbosity
+      assert SSHKit.config.output_verbosity = Logger::INFO
+      assert_equal Logger::INFO, SSHKit.config.output_verbosity
+      assert SSHKit.config.output_verbosity = 0
       assert_equal Logger::DEBUG, SSHKit.config.output_verbosity
     end
 
