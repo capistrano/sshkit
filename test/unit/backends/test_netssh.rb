@@ -5,7 +5,7 @@ module SSHKit
     class TestNetssh < UnitTest
 
       def backend
-        @backend ||= Netssh.new(Host.new('example.com'))
+        @backend ||= Netssh
       end
 
       def test_net_ssh_configuration_options

@@ -37,12 +37,14 @@ module SSHKit
         _execute(*[*args, options]).stdout.strip
       end
 
-      def configure
-        yield config
-      end
+      class << self
+        def configure
+          yield config
+        end
 
-      def config
-        @config ||= Configuration.new
+        def config
+          @config ||= Configuration.new
+        end
       end
 
       private
@@ -52,7 +54,7 @@ module SSHKit
           output << cmd
           cmd.started = true
           ssh.open_channel do |chan|
-            chan.request_pty if config.pty
+            chan.request_pty if Netssh.config.pty
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
                 cmd.stdout += data
