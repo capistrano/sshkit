@@ -1,10 +1,10 @@
-![SSHKit Logo](https://raw.github.com/wacku/sshkit/master/assets/images/logo.png)
+![SSHKit Logo](https://raw.github.com/leehambley/sshkit/master/assets/images/logo.png)
 
 **SSHKit** is a toolkit for running commands in a structured way on one or
 more servers.
 
-[![Build Status](https://travis-ci.org/wacku/sshkit.png?branch=master)](https://travis-ci.org/wacku/sshkit)
-[![Dependency Status](https://gemnasium.com/wacku/sshkit.png)](https://gemnasium.com/wacku/sshkit)
+[![Build Status](https://travis-ci.org/leehambley/sshkit.png?branch=master)](https://travis-ci.org/leehambley/sshkit)
+[![Dependency Status](https://gemnasium.com/leehambley/sshkit.png)](https://gemnasium.com/leehambley/sshkit)
 
 ## How might it work?
 
@@ -158,7 +158,7 @@ first argument before attempting to find it in the *command map*.
 
 ## Output Handling
 
-![Example Output](https://raw.github.com/wacku/sshkit/master/assets/images/example_output.png)
+![Example Output](https://raw.github.com/leehambley/sshkit/master/assets/images/example_output.png)
 
 The output handling comprises two objects, first is the output itself, by
 default this is *$stdout*, but can be any object responding to a
