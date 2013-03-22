@@ -6,7 +6,7 @@ module SSHKit
     attr_writer :output, :backend, :default_env, :command_map
 
     def output
-      @output ||= format=(:pretty)
+      @output ||= formatter(:pretty)
     end
 
     def default_env
