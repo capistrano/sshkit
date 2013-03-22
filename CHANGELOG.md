@@ -3,8 +3,9 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
-## HEAD
+## 0.0.21
 
+  * Fixed an issue with default formatter
   * Modified SSHKit.config.output_verbosity= to accept different objects:
 
         SSHKit.config.output_verbosity = Logger::INFO
