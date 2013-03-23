@@ -20,7 +20,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency('term-ansicolor')
 
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
-  gem.add_development_dependency('autotest')
   gem.add_development_dependency('rake')
   gem.add_development_dependency('turn')
   gem.add_development_dependency('unindent')
