@@ -31,6 +31,20 @@
       end
     end
 
+## Print some arbitrary output with the logging methods
+
+    on hosts do |host|
+      f = '/some/file'
+      if test("[ -d #{f} ]")
+        execute :touch, f
+      else
+        info "#{f} already exists on #{host}!"
+      end
+    end
+
+The `debug()``, `info()`, `warn()`, `error()` and `fatal()` honor the current
+log level of `SSHKit.config.output_verbosity`
+
 ## Run a command in a different directory as a different user
 
     on hosts do |host|

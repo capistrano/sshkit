@@ -193,13 +193,13 @@ At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
 * No environment handling (sshkit might not need to care)
 * ~~No arbitrary `Host` properties (example storing `roles` on servers, or other
   metadata that might be useful in the `on()` block)~~
-* No log/warning facility (passing Log messages to the output would work)
+* ~~No log/warning facility (passing Log messages to the output would work)
   A log object could be made available globally which would emit a LogMessage
   type object which would be recognised by the formatters that need to care
-  about them.
-* No verbosity control, commands should have a `Logger::LEVEL` on them,
+  about them.~~
+* ~~No verbosity control, commands should have a `Logger::LEVEL` on them,
   user-generated should be at a high level, the commands auto-generated from
-  the guards and checks from as() and within() should have a lower level.
+  the guards and checks from as() and within() should have a lower level.~~
 * ~~Decide if `execute()` (and friends) should raise on non-zero exit statuses or
   not, perhaps a family of similarly named bang methods should be the ones to
   raise. (Perhaps `test()` should be a way to `execute()` without raising, and

@@ -1,4 +1,5 @@
 module SSHKit
+
   module Backend
 
     MethodUnavailableError = Class.new(SSHKit::StandardError)
@@ -15,6 +16,30 @@ module SSHKit
         raise "Must pass a Host object" unless host.is_a? Host
         @host  = host
         @block = block
+      end
+
+      def log(messages)
+        info(messages)
+      end
+
+      def fatal(messages)
+        output << LogMessage.new(Logger::FATAL, messages)
+      end
+
+      def error(messages)
+        output << LogMessage.new(Logger::ERROR, messages)
+      end
+
+      def warn(messages)
+        output << LogMessage.new(Logger::WARN, messages)
+      end
+
+      def info(messages)
+        output << LogMessage.new(Logger::INFO, messages)
+      end
+
+      def debug(messages)
+        output << LogMessage.new(Logger::DEBUG, messages)
       end
 
       def make(commands=[])
@@ -48,8 +73,8 @@ module SSHKit
             then echo "Directory does not exist '#{File.join(@pwd)}'" 1>&2
             false
           fi
-        EOTEST
-        yield
+          EOTEST
+          yield
       ensure
         @pwd.pop
       end
@@ -95,5 +120,7 @@ module SSHKit
       end
 
     end
+
   end
+
 end
