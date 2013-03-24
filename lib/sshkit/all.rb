@@ -8,6 +8,8 @@ require_relative 'command'
 require_relative 'configuration'
 require_relative 'coordinator'
 
+require_relative 'log_message'
+
 require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
 require_relative 'formatters/pretty'

@@ -1,6 +1,5 @@
 require 'helper'
 require 'sshkit'
-require 'sshkit/log_message'
 
 module SSHKit
   class TestPretty < UnitTest
