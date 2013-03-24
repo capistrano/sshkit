@@ -211,6 +211,8 @@ At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
 * No "trace" level debugging for internal stuff, the debug level should be
   reserved for client-level debugging, with trace being (int -1) used
   internally for logging about connection opening, closing, timing out, etc.
+* No method for uploading or downloading files, or the same for saving/loading
+  a string to/from a remote file.
 * No closing of connections, the abstract backend class should include a
   cleanup method which is empty but can be overriden by other implementations.
 * No conncetion pooling, the `connection` method of the NetSSH backend could
