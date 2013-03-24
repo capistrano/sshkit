@@ -208,8 +208,11 @@ At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
   have that method setter do the legwork of updating `SSHKit.config.output` to
   be an instance of the correct formatter class wrapping the existing output
   stream.~~
+* No "trace" level debugging for internal stuff, the debug level should be
+  reserved for client-level debugging, with trace being (int -1) used
+  internally for logging about connection opening, closing, timing out, etc.
 * No closing of connections, the abstract backend class should include a
-  cleanup method which is empty but can be overriden by
+  cleanup method which is empty but can be overriden by other implementations.
 * No conncetion pooling, the `connection` method of the NetSSH backend could
   easily be modified to look into some connection factory for it's objects,
   saving half a second when running lots of `on()` blocks.
