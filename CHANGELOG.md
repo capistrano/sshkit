@@ -3,10 +3,27 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.22
+
+  * Added naïve implementations of `upload!()` and `download!()` (syncoronous) to
+    the Net::SSH backend. See `EXAMPLES.md` for more extensive usage examples.
+
+    The `upload!()` method can take a filename, or an `IO`, this reflects the way
+    the underlying Net::SCP implementation works. The same is true of
+    `download!()`, when called with a single argument it captures the file's
+    contents, otherwise it downloads the file to the local disk.
+
+        on hosts do |host|
+          upload!(StringIO.new('some-data-here'), '~/.ssh/authorized_keys')
+          upload!('~/.ssh/id_rsa.pub', '~/.ssh/authorized_keys')
+          puts download!('/etc/monit/monitrc')
+          download!('/etc/monit/monitrc', '~/monitrc')
+        end
+
 ## 0.0.21
 
   * Fixed an issue with default formatter
-  * Modified SSHKit.config.output_verbosity= to accept different objects:
+  * Modified `SSHKit.config.output_verbosity=` to accept different objects:
 
         SSHKit.config.output_verbosity = Logger::INFO
         SSHKit.config.output_verbosity = :info

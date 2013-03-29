@@ -64,8 +64,39 @@ This will output:
 **Note:** This example is a bit misleading, as the `www-data` user doesn't
 have a shell defined, one cannot switch to that user.
 
-## Run a command with a different effective group ID
+## Upload a file from disk
 
+    on hosts do |host|
+      upload! '/config/database.yml', '/opt/my_project/shared/databse.yml'
+    end
+
+**Note:** The `upload!()` method doesn't honor the values of `in()`, `as()`
+etc, this will be improved as the library matures, but we're not there yet.
+
+## Upload a file from a stream
+
+    on hosts do |host|
+      file = File.open('/config/database.yml')
+      io   = StringIO.new(....)
+      upload! file, '/opt/my_project/shared/databse.yml'
+      upload! io,   '/opt/my_project/shared/io.io.io'
+    end
+
+The IO streaming is useful for uploading something rather than "cat"ing it,
+for example
+
+    on hosts do |host|
+      contents = StringIO.new('ALL ALL = (ALL) NOPASSWD: ALL')
+      upload! contents, '/etc/sudoers.d/yolo'
+    end
+
+This spares one from having to figure out the correct escaping sequences for
+something like "echo(:cat, '...?...', '> /etc/sudoers.d/yolo')".
+
+**Note:** The `upload!()` method doesn't honor the values of `in()`, `as()`
+etc, this will be improved as the library matures, but we're not there yet.
+
+## Run a command with a different effective group ID
 
     on hosts do |host|
       as user: 'www-data', group: 'project-group' do
@@ -74,6 +105,7 @@ have a shell defined, one cannot switch to that user.
           execute :ls, '-l'
         end
       end
+    end
 
 One will see that the created file is owned by the user `www-data` and the
 group `project-group`.
