@@ -95,9 +95,12 @@ module SSHKit
 
       def test_upload_file
         file_contents = ""
+        file_name = File.join("/tmp", SecureRandom.uuid)
+        File.open file_name, 'w+' do |f|
+          f.write 'example_file'
+        end
         Netssh.new(a_host) do
-          file_name = File.join("/tmp", SecureRandom.uuid)
-          upload!(StringIO.new('example_file'), file_name)
+          upload!(file_name, file_name)
           file_contents = capture(:cat, file_name)
         end.run
         assert_equal "example_file", file_contents
@@ -107,14 +110,14 @@ module SSHKit
         file_contents = ""
         Netssh.new(a_host) do |host|
           file_name = File.join("/tmp", SecureRandom.uuid)
-          upload!(StringIO.new('example_file'), file_name)
+          upload!(StringIO.new('example_io'), file_name)
           file_contents = download!(file_name)
         end.run
-        assert_equal "example_file", file_contents
+        assert_equal "example_io", file_contents
       end
 
       def test_upload_large_file
-        size      = 100
+        size      = 25
         fills     = SecureRandom.random_bytes(1024*1024)
         file_name = "/tmp/file-#{size}.txt"
         File.open(file_name, 'w') do |f|
