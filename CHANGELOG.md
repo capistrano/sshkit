@@ -3,6 +3,10 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.23
+
+  * Explicitly rely on `net-scp` gem.
+
 ## 0.0.22
 
   * Added naïve implementations of `upload!()` and `download!()` (syncoronous) to

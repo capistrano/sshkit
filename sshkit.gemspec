@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.version       = SSHKit::VERSION
 
   gem.add_dependency('net-ssh')
+  gem.add_dependency('net-scp')
   gem.add_dependency('term-ansicolor')
 
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
