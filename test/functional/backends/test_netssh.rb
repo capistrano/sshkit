@@ -1,4 +1,5 @@
 require 'helper'
+require 'securerandom'
 require 'benchmark'
 
 module SSHKit
@@ -90,6 +91,41 @@ module SSHKit
         end
         assert_operator time.real, :<, 1
         assert_match "sleep 5", process_list
+      end
+
+      def test_upload_file
+        file_contents = ""
+        Netssh.new(a_host) do
+          file_name = File.join("/tmp", SecureRandom.uuid)
+          upload!(StringIO.new('example_file'), file_name)
+          file_contents = capture(:cat, file_name)
+        end.run
+        assert_equal "example_file", file_contents
+      end
+
+      def test_upload_string_io
+        file_contents = ""
+        Netssh.new(a_host) do |host|
+          file_name = File.join("/tmp", SecureRandom.uuid)
+          upload!(StringIO.new('example_file'), file_name)
+          file_contents = download!(file_name)
+        end.run
+        assert_equal "example_file", file_contents
+      end
+
+      def test_upload_large_file
+        size      = 100
+        fills     = SecureRandom.random_bytes(1024*1024)
+        file_name = "/tmp/file-#{size}.txt"
+        File.open(file_name, 'w') do |f|
+          (size).times {f.write(fills) }
+        end
+        file_contents = ""
+        Netssh.new(a_host) do
+          upload!(file_name, file_name)
+          file_contents = download!(file_name)
+        end.run
+        assert_equal File.open(file_name).read, file_contents
       end
 
     end

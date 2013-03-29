@@ -37,6 +37,18 @@ module SSHKit
         _execute(*[*args, options]).stdout.strip
       end
 
+      def upload!(local, remote, options = {})
+        ssh.scp.upload!(local, remote, options) do
+          warn "Progress"
+        end
+      end
+
+      def download!(remote, local=nil, options = {})
+        ssh.scp.download!(remote, local, options) do
+          warn "Progress"
+        end
+      end
+
       class << self
         def configure
           yield config
