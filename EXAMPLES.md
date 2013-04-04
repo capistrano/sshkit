@@ -49,7 +49,7 @@ log level of `SSHKit.config.output_verbosity`
 
     on hosts do |host|
       as 'www-data' do
-        in '/var/log' do
+        within '/var/log' do
           puts capture(:whoami)
           puts capture(:pwd)
         end
@@ -70,7 +70,7 @@ have a shell defined, one cannot switch to that user.
       upload! '/config/database.yml', '/opt/my_project/shared/databse.yml'
     end
 
-**Note:** The `upload!()` method doesn't honor the values of `in()`, `as()`
+**Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
 etc, this will be improved as the library matures, but we're not there yet.
 
 ## Upload a file from a stream
@@ -93,14 +93,14 @@ for example
 This spares one from having to figure out the correct escaping sequences for
 something like "echo(:cat, '...?...', '> /etc/sudoers.d/yolo')".
 
-**Note:** The `upload!()` method doesn't honor the values of `in()`, `as()`
+**Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
 etc, this will be improved as the library matures, but we're not there yet.
 
 ## Run a command with a different effective group ID
 
     on hosts do |host|
       as user: 'www-data', group: 'project-group' do
-        in '/var/log' do
+        within '/var/log' do
           execute :touch, 'somefile'
           execute :ls, '-l'
         end
@@ -116,9 +116,9 @@ scripts for deployment between team members without sharing logins.
 ## Stack directory nestings
 
     on hosts do
-      in "/var" do
+      within "/var" do
         puts capture(:pwd)
-        in :log do
+        within :log do
           puts capture(:pwd)
         end
       end
@@ -138,7 +138,7 @@ joined according to the expectations of the machine receiving the commands.
 ## Running a task in the background
 
     on hosts do
-      in '/opt/sites/example.com' do
+      within '/opt/sites/example.com' do
         background :rails, :server
       end
     end
