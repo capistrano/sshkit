@@ -42,7 +42,7 @@
       end
     end
 
-The `debug()``, `info()`, `warn()`, `error()` and `fatal()` honor the current
+The `debug()`, `info()`, `warn()`, `error()` and `fatal()` honor the current
 log level of `SSHKit.config.output_verbosity`
 
 ## Run a command in a different directory as a different user
