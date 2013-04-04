@@ -38,14 +38,14 @@ module SSHKit
       end
 
       def upload!(local, remote, options = {})
-        ssh.scp.upload!(local, remote, options) do
-          warn "Progress"
+        ssh.scp.upload!(local, remote, options) do |ch, name, sent, total|
+          info "Uploading #{name} #{(sent.to_f * 100 / total.to_f).to_i}%"
         end
       end
 
       def download!(remote, local=nil, options = {})
-        ssh.scp.download!(remote, local, options) do
-          warn "Progress"
+        ssh.scp.download!(remote, local, options) do |ch, name, received, total|
+          info "Downloading #{name} #{(received.to_f * 100 / total.to_f).to_i}%"
         end
       end
 
