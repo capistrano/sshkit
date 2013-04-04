@@ -3,6 +3,15 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.25
+
+  * `upload!` and `download!` now log to different levels depending on
+    completion percentage. When the upload is 0 percent complete or a number
+    indivisible by 10, the message is logged to `Logger::DEBUG` otherwise the
+    message is logged to `Logger::INFO`, this should mean that normal users at
+    a sane log level should see upload progress jump to `100%` for small
+    files, and otherwise for larger files they'll see output every `10%`.
+
 ## 0.0.24
 
   * Pretty output now streams stdout and stderr. Previous versions would
