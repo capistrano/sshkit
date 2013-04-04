@@ -1,4 +1,5 @@
 require 'net/ssh'
+require 'net/scp'
 
 module SSHKit
   module Backend
