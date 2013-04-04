@@ -3,6 +3,28 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.24
+
+  * Pretty output now streams stdout and stderr. Previous versions would
+    append (`+=`) chunks of data written by the remote host to the `Command`
+    instance, and the `Pretty` formatter would only print stdout/stderr if the
+    command was `#complete?`. Historically this lead to issues where the
+    remote process was blocking for input, had written the prompt to stdout,
+    but it was not visible on the client side.
+
+    Now each time the command is passed to the output stream, the
+    stdout/stderr are replaced with the lines returned from the remote server
+    in this chunk. (i.e were yielded to the callback block). Commands now have
+    attribute accessors for `#full_stdout` and `#full_stderr` which are appended
+    in the way that `#stdout` and `#stderr` were previously.
+
+    This should be considered a private API, and one should beware of relying
+    on `#full_stdout` or `#full_stderr`, they will likely be replaced with a
+    cleaner soltion eventually.
+
+  * `upload!` and `download!` now print progress reports at the `Logger::INFO`
+     verbosity level.
+
 ## 0.0.23
 
   * Explicitly rely on `net-scp` gem.
