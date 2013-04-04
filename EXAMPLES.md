@@ -96,6 +96,15 @@ something like "echo(:cat, '...?...', '> /etc/sudoers.d/yolo')".
 **Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
 etc, this will be improved as the library matures, but we're not there yet.
 
+## Upload a directory of files
+
+    on hosts do |host|
+      upload! '.', '/tmp/mypwd', recursive: true
+    end
+
+In this case the `recursive: true` option mirrors the same options which are
+available to `Net::{SCP,SFTP}`.
+
 ## Run a command with a different effective group ID
 
     on hosts do |host|
