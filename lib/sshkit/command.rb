@@ -36,6 +36,7 @@ module SSHKit
     attr_reader :command, :args, :options, :started_at, :started, :exit_status
 
     attr_accessor :stdout, :stderr
+    attr_accessor :full_stdout, :full_stderr
 
     # Initialize a new Command object
     #
@@ -52,6 +53,7 @@ module SSHKit
       @options.symbolize_keys!
       sanitize_command!
       @stdout, @stderr = String.new, String.new
+      @full_stdout, @full_stderr = String.new, String.new
     end
 
     def complete?

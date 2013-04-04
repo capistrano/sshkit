@@ -35,7 +35,7 @@ module SSHKit
 
       def capture(*args)
         options = args.extract_options!.merge(verbosity: Logger::DEBUG)
-        _execute(*[*args, options]).stdout.strip
+        _execute(*[*args, options]).full_stdout.strip
       end
 
       def upload!(local, remote, options = {})
@@ -71,10 +71,12 @@ module SSHKit
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
                 cmd.stdout = data
+                cmd.full_stdout += data
                 output << cmd
               end
               chan.on_extended_data do |ch, type, data|
                 cmd.stderr = data
+                cmd.full_stderr += data
                 output << cmd
               end
               chan.on_request("exit-status") do |ch, data|
