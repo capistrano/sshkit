@@ -28,13 +28,13 @@ module SSHKit
         end
 
         if SSHKit.config.output_verbosity == Logger::DEBUG
-          if command.complete? && !command.stdout.empty?
+          unless command.stdout.empty?
             command.stdout.lines.each do |line|
               original_output << level(Logger::DEBUG) + uuid(command) + c.green("\t" + line)
             end
           end
 
-          if command.complete? && !command.stderr.empty?
+          unless command.stderr.empty?
             command.stderr.lines.each do |line|
               original_output << level(Logger::DEBUG) + uuid(command) + c.red("\t" + line)
             end
