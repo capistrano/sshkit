@@ -1,3 +1,5 @@
+Logger::TRACE = -1
+
 module SSHKit
 
   module Backend
@@ -40,6 +42,10 @@ module SSHKit
 
       def debug(messages)
         output << LogMessage.new(Logger::DEBUG, messages)
+      end
+
+      def trace(messages)
+        output << LogMessage.new(Logger::TRACE, messages)
       end
 
       def make(commands=[])
