@@ -1,5 +1,3 @@
-Logger::TRACE = -1
-
 module SSHKit
 
   module Backend
