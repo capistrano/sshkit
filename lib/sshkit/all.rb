@@ -8,6 +8,7 @@ require_relative 'command'
 require_relative 'configuration'
 require_relative 'coordinator'
 
+require_relative 'logger'
 require_relative 'log_message'
 
 require_relative 'formatters/abstract'
