@@ -1,3 +1,4 @@
+require 'etc'
 require 'ostruct'
 
 module SSHKit
@@ -6,34 +7,58 @@ module SSHKit
 
   class Host
 
-    attr_reader :hostname, :port, :username
+    attr_accessor :password, :hostname, :port, :user
 
-    attr_accessor :password
+    def key=(new_key)
+      @keys = [new_key]
+    end
 
-    def initialize(host_string)
+    def keys=(new_keys)
+      @keys = new_keys
+    end
 
-      suitable_parsers = [
-        SimpleHostParser,
-        HostWithPortParser,
-        IPv6HostWithPortParser,
-        HostWithUsernameParser,
-        HostWithUsernameAndPortParser
-      ].select do |p|
-        p.suitable?(host_string)
-      end
+    def keys
+      Array(@keys)
+    end
 
-      if suitable_parsers.any?
-        suitable_parsers.first.tap do |parser|
-          @username, @hostname, @port = parser.new(host_string).attributes
+    def initialize(host_string_or_options_hash)
+
+      unless host_string_or_options_hash.is_a?(Hash)
+        suitable_parsers = [
+          SimpleHostParser,
+          HostWithPortParser,
+          HostWithUsernameAndPortParser,
+          IPv6HostWithPortParser,
+          HostWithUsernameParser,
+          HostWithUsernameAndPortParser
+        ].select do |p|
+          p.suitable?(host_string_or_options_hash)
+        end
+
+        if suitable_parsers.any?
+          suitable_parsers.first.tap do |parser|
+            @user, @hostname, @port = parser.new(host_string_or_options_hash).attributes
+          end
+        else
+          raise UnparsableHostStringError, "Cannot parse host string #{host_string_or_options_hash}"
         end
       else
-        raise UnparsableHostStringError, "Cannot parse host string #{host_string}"
+        host_string_or_options_hash.each do |key, value|
+          if self.respond_to?("#{key}=")
+            send("#{key}=", value)
+          else
+            raise ArgumentError, "Unknown host property #{key}"
+          end
+        end
       end
-
     end
 
     def hash
-      username.hash ^ hostname.hash ^ port.hash
+      user.hash ^ hostname.hash ^ port.hash
+    end
+
+    def username
+      user
     end
 
     def eql?(other_host)
@@ -48,6 +73,15 @@ module SSHKit
 
     def to_s
       sprintf("%s@%s:%d", username, hostname, port)
+    end
+
+    def netssh_options
+      {
+        keys:     keys,
+        port:     port,
+        user:     user,
+        password: password
+      }
     end
 
     def properties
@@ -69,7 +103,7 @@ module SSHKit
     end
 
     def username
-      `whoami`.chomp
+      Etc.getlogin
     end
 
     def port
@@ -88,6 +122,26 @@ module SSHKit
 
   # @private
   # :nodoc:
+  class HostWithUsernameAndPortParser < SimpleHostParser
+
+    def self.suitable?(host_string)
+      !host_string.match /.*@.*\:.*/
+    end
+
+    def username
+      @host_string.split('@').last.to_i
+    end
+
+    def port
+      @host_string.split(':').last.to_i
+    end
+
+    def hostname
+      @host_string.split(/@|\:/)[1]
+    end
+
+  end
+
   class HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)

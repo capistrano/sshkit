@@ -145,8 +145,7 @@ module SSHKit
           Net::SSH.start(
             host.hostname,
             host.username,
-            port: host.port,
-            password: host.password,
+            host.netssh_options
           )
         end
       end

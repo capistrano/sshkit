@@ -17,6 +17,13 @@ module SSHKit
       assert_equal 'example.com',  h.hostname
     end
 
+    def test_ipv4_with_username_and_port
+      h = Host.new 'user@127.0.0.1:2222'
+      assert_equal 2222,        h.port
+      assert_equal 'user',      h.username
+      assert_equal '127.0.0.1', h.hostname
+    end
+
     def test_host_with_port
       h = Host.new 'example.com:2222'
       assert_equal 2222,          h.port
@@ -65,6 +72,31 @@ module SSHKit
       assert_equal nil, h.properties.roles
       assert h.properties.roles = [:web, :app]
       assert_equal [:web, :app], h.properties.roles
+    end
+
+    def test_setting_up_a_host_with_a_hash
+      h = Host.new(hostname: 'example.com', port: 1234, key: "~/.ssh/example_com.key")
+      assert_equal "example.com", h.hostname
+      assert_equal 1234, h.port
+      assert_equal "~/.ssh/example_com.key", h.keys.first
+    end
+
+    def test_setting_up_a_host_with_a_hash_raises_on_unknown_keys
+      assert_raises ArgumentError do
+        Host.new({this_key_doesnt_exist: nil})
+      end
+    end
+
+    def test_turning_a_host_into_ssh_options
+      Host.new('someuser@example.com:2222').tap do |host|
+        host.password = "andthisdoesntevenmakeanysense"
+        host.keys     = ["~/.ssh/some_key_here"]
+        host.netssh_options.tap do |sho|
+          assert_equal 2222, sho.fetch(:port)
+          assert_equal 'andthisdoesntevenmakeanysense', sho.fetch(:password)
+          assert_equal ['~/.ssh/some_key_here'], sho.fetch(:keys)
+        end
+      end
     end
 
   end
