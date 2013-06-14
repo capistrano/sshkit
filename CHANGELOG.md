@@ -3,6 +3,21 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.26
+
+  * Pretty output no longer prints white text. ("Command.....")
+  * Fixed a double-output bug, where upon receiving the exit status from a
+    remote command, the last data packet that it sent would be re-printed
+    by the pretty formatter.
+  * Integration tests now use an Ubuntu Precise 64 Vagrant base box.
+  * Additional host declaration syntax, `SSHKit::Host` can now take a hash of
+    host properties in addition to a number of new (common sense) DSN type
+    syntaxes.
+  * Changes to the constants used for logging, we no longer re-define a
+    `Logger::TRACE` constant on the global `Logger` class, rather everyhing
+    now uses `SSHKit::Logger` (Thanks to Rafa Garcia)
+  * Various syntax and documentation fixes.
+
 ## 0.0.25
 
   * `upload!` and `download!` now log to different levels depending on
@@ -34,7 +49,7 @@ appear at the top.
   * `upload!` and `download!` now print progress reports at the `Logger::INFO`
      verbosity level.
 
-## 0.0.23
+## 0.0.23
 
   * Explicitly rely on `net-scp` gem.
 
@@ -166,7 +181,7 @@ appear at the top.
    can be used to set, for example a umask of `007` for allowing users with
    the same primary group to share code without stepping on eachother's toes.
 
-## 0.0.13
+## 0.0.13
 
  * Correctly quote `as(user)` commands, previously it would expand to:
    `sudo su user -c /usr/bin/env echo "Hello World"`, in which the command to
@@ -220,7 +235,7 @@ descriptors and redirecting them. Programs that re-open, or otherwise
 manipulate their own file descriptors may lock up when the SSH session is
 disconnected, often they block writing to, or reading from stdin/out.
 
-## 0.0.7
+## 0.0.7
 
 * DSL method `execute()` will now raise `SSHKit::Command::Failed` when the
   exit status is non-zero. The message of the exception will be whatever the
@@ -314,7 +329,7 @@ version `0.0.5`.
 
 * Refactor the runner classes into an abstract heirarchy.
 
-## 0.0.2
+## 0.0.2
 
 * Include a *Pretty* formatter
 * Modify example to use Pretty formatter.
