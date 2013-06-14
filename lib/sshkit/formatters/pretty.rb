@@ -23,7 +23,7 @@ module SSHKit
         unless command.started?
           original_output << level(command.verbosity) + uuid(command) + "Running #{c.yellow(c.bold(String(command)))} on #{c.blue(command.host.to_s)}\n"
           if SSHKit.config.output_verbosity == Logger::DEBUG
-            original_output << level(Logger::DEBUG) + uuid(command) + c.white("Command: #{c.blue(command.to_command)}") + "\n"
+            original_output << level(Logger::DEBUG) + uuid(command) + "Command: #{c.blue(command.to_command)}" + "\n"
           end
         end
 
