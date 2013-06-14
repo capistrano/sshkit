@@ -111,8 +111,9 @@ module SSHKit
                 output << cmd
               end
               chan.on_request("exit-status") do |ch, data|
-                exit_status = data.read_long
-                cmd.exit_status = exit_status
+                cmd.stdout = ''
+                cmd.stderr = ''
+                cmd.exit_status = data.read_long
                 output << cmd
               end
               #chan.on_request("exit-signal") do |ch, data|
