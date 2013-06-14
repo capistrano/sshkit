@@ -3,6 +3,12 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.27
+
+  * Don't clobber SSH options with empty values. This allows Net::SSH to
+    do the right thing most of the time, and look into the SSH configuration
+    files.
+
 ## 0.0.26
 
   * Pretty output no longer prints white text. ("Command.....")
