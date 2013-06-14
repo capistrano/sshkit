@@ -1,4 +1,3 @@
-require 'etc'
 require 'ostruct'
 
 module SSHKit
@@ -67,21 +66,17 @@ module SSHKit
     alias :== :eql?
     alias :equal? :eql?
 
-    def to_key
-      to_s.to_sym
-    end
-
     def to_s
-      sprintf("%s@%s:%d", username, hostname, port)
+      hostname
     end
 
     def netssh_options
-      {
-        keys:     keys,
-        port:     port,
-        user:     user,
-        password: password
-      }
+      {}.tap do |sho|
+        sho[:keys]     = keys     if keys.any?
+        sho[:port]     = port     if port
+        sho[:user]     = user     if user
+        sho[:password] = password if password
+      end
     end
 
     def properties
@@ -103,11 +98,11 @@ module SSHKit
     end
 
     def username
-      Etc.getlogin
+
     end
 
     def port
-      22
+
     end
 
     def hostname

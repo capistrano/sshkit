@@ -32,11 +32,6 @@ module SSHKit
       Coordinator.new %w{1.example.com 2.example.com 3.example.com}
     end
 
-    def test_connection_manager_removes_duplicates_after_resolving_hosts
-      cm = Coordinator.new %w{user@1.example.com:22 user@1.example.com}
-      assert_equal ['user@1.example.com:22'], cm.hosts.map(&:to_s)
-    end
-
     def test_the_connection_manager_yields_the_host_to_each_connection_instance
       spy = lambda do |host|
         execute "echo #{host.hostname}"

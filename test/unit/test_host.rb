@@ -12,8 +12,6 @@ module SSHKit
 
     def test_regular_hosts
       h = Host.new 'example.com'
-      assert_equal 22,             h.port
-      assert_equal `whoami`.chomp, h.username
       assert_equal 'example.com',  h.hostname
     end
 
@@ -49,12 +47,8 @@ module SSHKit
       assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
     end
 
-    def testing_host_casting_to_a_key
-      assert_equal :"user@example.com:1234", Host.new('user@example.com:1234').to_key
-    end
-
     def testing_host_casting_to_a_string
-      assert_equal "user@example.com:1234", Host.new('user@example.com:1234').to_s
+      assert_equal "example.com", Host.new('user@example.com:1234').to_s
     end
 
     def test_assert_hosts_hash_equally
@@ -95,6 +89,17 @@ module SSHKit
           assert_equal 2222, sho.fetch(:port)
           assert_equal 'andthisdoesntevenmakeanysense', sho.fetch(:password)
           assert_equal ['~/.ssh/some_key_here'], sho.fetch(:keys)
+        end
+      end
+    end
+
+    def test_host_ssh_options_are_simply_missing_when_they_have_no_value
+      Host.new('my_config_is_in_the_ssh_config_file').tap do |host|
+        host.netssh_options.tap do |sho|
+          refute sho.has_key?(:port)
+          refute sho.has_key?(:password)
+          refute sho.has_key?(:keys)
+          refute sho.has_key?(:user)
         end
       end
     end
