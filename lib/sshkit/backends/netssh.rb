@@ -144,7 +144,7 @@ module SSHKit
       def ssh
         @ssh ||= begin
           Net::SSH.start(
-            host.hostname,
+            String(host.hostname),
             host.username,
             host.netssh_options
           )
