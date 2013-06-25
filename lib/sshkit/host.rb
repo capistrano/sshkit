@@ -72,10 +72,11 @@ module SSHKit
 
     def netssh_options
       {}.tap do |sho|
-        sho[:keys]     = keys     if keys.any?
-        sho[:port]     = port     if port
-        sho[:user]     = user     if user
-        sho[:password] = password if password
+        sho[:keys]          = keys     if keys.any?
+        sho[:port]          = port     if port
+        sho[:user]          = user     if user
+        sho[:password]      = password if password
+        sho[:forward_agent] = true
       end
     end
 
