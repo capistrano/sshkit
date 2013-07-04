@@ -31,14 +31,14 @@ module SSHKit
           unless command.stdout.empty?
             command.stdout.lines.each do |line|
               original_output << level(Logger::DEBUG) + uuid(command) + c.green("\t" + line)
-              original_output << "\n" unless unless line[-1] == "\n"
+              original_output << "\n" unless line[-1] == "\n"
             end
           end
 
           unless command.stderr.empty?
             command.stderr.lines.each do |line|
               original_output << level(Logger::DEBUG) + uuid(command) + c.red("\t" + line)
-              original_output << "\n" unless unless line[-1] == "\n"
+              original_output << "\n" unless line[-1] == "\n"
             end
           end
         end
