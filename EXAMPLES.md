@@ -8,7 +8,7 @@
       end
     end
 
-## Run with default environemntal variables
+## Run with default environmental variables
 
     SSHKit.config.default_env = { path: '/usr/local/libexec/bin:$PATH' }
     on hosts do |host|
