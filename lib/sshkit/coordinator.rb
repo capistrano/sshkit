@@ -6,7 +6,7 @@ module SSHKit
 
     def initialize(raw_hosts)
       @raw_hosts = Array(raw_hosts)
-      raise NoValidHosts unless Array(raw_hosts).any?
+      raise SSHKit::NoValidHosts unless Array(raw_hosts).any?
       resolve_hosts!
     end
 
