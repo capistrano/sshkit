@@ -3,6 +3,12 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.32
+
+  * Lots of small changes since 0.0.27.
+  * Particularly working around a possible NaN issue when uploading
+    comparatively large files.
+
 ## 0.0.27
 
   * Don't clobber SSH options with empty values. This allows Net::SSH to
