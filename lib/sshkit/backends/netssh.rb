@@ -61,11 +61,15 @@ module SSHKit
 
       def upload!(local, remote, options = {})
         ssh.scp.upload!(local, remote, options) do |ch, name, sent, total|
-          percentage = (sent.to_f * 100 / total.to_f).to_i
-          if percentage > 0 && percentage % 10 == 0
-            info "Uploading #{name} #{percentage}%"
+          percentage = (sent.to_f * 100 / total.to_f)
+          unless percentage.nan?
+            if percentage > 0 && percentage % 10 == 0
+              info "Uploading #{name} #{percentage}%"
+            else
+              debug "Uploading #{name} #{percentage}%"
+            end
           else
-            debug "Uploading #{name} #{percentage}%"
+            warn "Error calculating percentage #{percentage} is NaN"
           end
         end
       end
