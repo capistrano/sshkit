@@ -29,6 +29,11 @@ module SSHKit
 
       class Configuration
         attr_accessor :connection_timeout, :pty
+        attr_writer :ssh_options
+
+        def ssh_options
+          @ssh_options || {}
+        end
       end
 
       include SSHKit::CommandHelper
@@ -147,6 +152,7 @@ module SSHKit
 
       def ssh
         @ssh ||= begin
+          host.ssh_options ||= Netssh.config.ssh_options
           Net::SSH.start(
             String(host.hostname),
             host.username,

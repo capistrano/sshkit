@@ -6,7 +6,7 @@ module SSHKit
 
   class Host
 
-    attr_accessor :password, :hostname, :port, :user
+    attr_accessor :password, :hostname, :port, :user, :ssh_options
 
     def key=(new_key)
       @keys = [new_key]
@@ -78,6 +78,7 @@ module SSHKit
         sho[:password]      = password if password
         sho[:forward_agent] = true
       end
+      .merge(ssh_options || {})
     end
 
     def properties
