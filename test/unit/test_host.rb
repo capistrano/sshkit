@@ -104,6 +104,27 @@ module SSHKit
       end
     end
 
+    def test_turning_a_host_into_ssh_options_when_extra_options_are_set
+      ssh_options = {
+        port: 3232,
+        keys: %w(/home/user/.ssh/id_rsa),
+        forward_agent: false,
+        auth_methods: %w(publickey password)
+      }
+      Host.new('someuser@example.com:2222').tap do |host|
+        host.password = "andthisdoesntevenmakeanysense"
+        host.keys     = ["~/.ssh/some_key_here"]
+        host.ssh_options = ssh_options
+        host.netssh_options.tap do |sho|
+          assert_equal 3232,                             sho.fetch(:port)
+          assert_equal 'andthisdoesntevenmakeanysense',  sho.fetch(:password)
+          assert_equal %w(/home/user/.ssh/id_rsa),       sho.fetch(:keys)
+          assert_equal false,                            sho.fetch(:forward_agent)
+          assert_equal %w(publickey password),           sho.fetch(:auth_methods)
+        end
+      end
+    end
+
   end
 
 end
