@@ -69,9 +69,9 @@ module SSHKit
           percentage = (sent.to_f * 100 / total.to_f)
           unless percentage.nan?
             if percentage > 0 && percentage % 10 == 0
-              info "Uploading #{name} #{percentage}%"
+              info "Uploading #{name} #{percentage.round(2)}%"
             else
-              debug "Uploading #{name} #{percentage}%"
+              debug "Uploading #{name} #{percentage.round(2)}%"
             end
           else
             warn "Error calculating percentage #{percentage} is NaN"

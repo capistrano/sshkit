@@ -3,6 +3,12 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 0.0.34
+
+  * Allow the setting of global SSH options on the `backend.ssh` as a hash,
+    these options are the same as Net::SSH configure expects. Thanks to Rafał
+    @lisukorin Lisowski
+
 ## 0.0.32
 
   * Lots of small changes since 0.0.27.
