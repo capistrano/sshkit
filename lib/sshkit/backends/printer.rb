@@ -10,12 +10,20 @@ module SSHKit
       end
 
       def execute(*args)
-        output << command(*args).to_command + "\n"
+        command(*args).tap do |cmd|
+          output << cmd
+        end
       end
+      alias :upload! :execute
+      alias :download! :execute
+      alias :test :execute
+      alias :invoke :execute
 
-      def capture(command, args=[])
-        raise MethodUnavailableError
+      def capture(*args)
+        String.new.tap { execute(*args) }
       end
+      alias :capture! :capture
+
 
       private
 
