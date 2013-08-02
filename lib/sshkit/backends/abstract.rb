@@ -112,6 +112,16 @@ module SSHKit
         remove_instance_variable(:@group)
       end
 
+      class << self
+        def config
+          @config ||= OpenStruct.new
+        end
+
+        def configure
+          yield config
+        end
+      end
+
       private
 
       def command(*args)
