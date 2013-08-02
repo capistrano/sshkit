@@ -8,6 +8,10 @@ module SSHKit
       Coordinator.new(hosts).each(options, &block)
     end
 
+    def run_locally(&block)
+      Backend::Local.new(&block).run
+    end
+
   end
 
 end

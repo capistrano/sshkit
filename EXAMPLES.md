@@ -338,3 +338,14 @@ Implemented since `v0.0.6`
 The `SSHKit::Host#properties` is an [`OpenStruct`](http://ruby-doc.org/stdlib-1.9.3/libdoc/ostruct/rdoc/OpenStruct.html)
 which is not verified or validated in any way, it is up to you, or your
 library to attach meanings or conventions to this mechanism.
+
+## Running local commands
+
+Replace `on` with `run_locally`
+
+    run_locally do
+      within '/tmp' do
+        execute :whoami
+      end
+    end
+
