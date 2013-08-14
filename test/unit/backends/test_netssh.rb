@@ -26,6 +26,11 @@ module SSHKit
         assert_equal %w(/home/user/.ssh/id_rsa),  backend.config.ssh_options[:keys]
         assert_equal false,                       backend.config.ssh_options[:forward_agent]
         assert_equal %w(publickey password),      backend.config.ssh_options[:auth_methods]
+
+      end
+
+      def test_netssh_ext
+        assert_includes  Net::SSH::Config.default_files, "#{Dir.pwd}/.ssh/config"
       end
     end
   end
