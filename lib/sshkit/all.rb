@@ -1,7 +1,6 @@
 require_relative '../core_ext/array'
 require_relative '../core_ext/hash'
 
-require_relative 'dsl'
 require_relative 'host'
 
 require_relative 'command'
