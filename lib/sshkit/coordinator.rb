@@ -6,19 +6,22 @@ module SSHKit
 
     def initialize(raw_hosts)
       @raw_hosts = Array(raw_hosts)
-      raise "No matching hosts!" unless Array(raw_hosts).any?
-      resolve_hosts!
+      resolve_hosts! if Array(raw_hosts).any?
     end
 
     def each(options={}, &block)
-      options = default_options.merge(options)
-      case options[:in]
-      when :parallel then Runner::Parallel
-      when :sequence then Runner::Sequential
-      when :groups   then Runner::Group
+      if hosts
+        options = default_options.merge(options)
+        case options[:in]
+        when :parallel then Runner::Parallel
+        when :sequence then Runner::Sequential
+        when :groups   then Runner::Group
+        else
+          raise RuntimeError, "Don't know how to handle run style #{options[:in].inspect}"
+        end.new(hosts, &block).execute
       else
-        raise RuntimeError, "Don't know how to handle run style #{options[:in].inspect}"
-      end.new(hosts, &block).execute
+        Runner::Null.new(hosts, &block).execute
+      end
     end
 
     private
