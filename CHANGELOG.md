@@ -3,6 +3,11 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 1.0.0
+
+  * The gem now supports a run_locally, although it's nothing to do with SSH,
+    it makes a nice API. There are examples in the EXAMPLES.md.
+
 ## 0.0.34
 
   * Allow the setting of global SSH options on the `backend.ssh` as a hash,
