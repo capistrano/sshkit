@@ -222,8 +222,8 @@ which will cause the command to abort.
 
 ## Make a test, or run a command which may fail without raising an error:
 
-    on hosts do |host
-      if test "[ -d /opt/sites ]" do
+    on hosts do |host|
+      if test "[ -d /opt/sites ]"
         within "/opt/sites" do
           execute :git, :pull
         end
