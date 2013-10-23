@@ -14,6 +14,7 @@ require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
 require_relative 'formatters/pretty'
 require_relative 'formatters/dot'
+require_relative 'formatters/plain'
 
 require_relative 'runners/abstract'
 require_relative 'runners/sequential'
