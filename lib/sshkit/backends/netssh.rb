@@ -120,8 +120,6 @@ module SSHKit
                 output << cmd
               end
               chan.on_request("exit-status") do |ch, data|
-                cmd.stdout = ''
-                cmd.stderr = ''
                 cmd.exit_status = data.read_long
                 output << cmd
               end
