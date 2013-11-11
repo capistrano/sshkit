@@ -29,7 +29,6 @@ module SSHKit
           HostWithUsernameAndPortParser,
           IPv6HostWithPortParser,
           HostWithUsernameParser,
-          HostWithUsernameAndPortParser
         ].select do |p|
           p.suitable?(host_string_or_options_hash)
         end
@@ -117,28 +116,6 @@ module SSHKit
 
   end
 
-  # @private
-  # :nodoc:
-  class HostWithUsernameAndPortParser < SimpleHostParser
-
-    def self.suitable?(host_string)
-      !host_string.match /.*@.*\:.*/
-    end
-
-    def username
-      @host_string.split('@').last.to_i
-    end
-
-    def port
-      @host_string.split(':').last.to_i
-    end
-
-    def hostname
-      @host_string.split(/@|\:/)[1]
-    end
-
-  end
-
   class HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
@@ -153,6 +130,23 @@ module SSHKit
       @host_string.split(':').first
     end
 
+  end
+
+  # @private
+  # :nodoc:
+  class HostWithUsernameAndPortParser < SimpleHostParser
+    def self.suitable?(host_string)
+      host_string.match /@.*:\d+/
+    end
+    def username
+      @host_string.split(/:|@/)[0]
+    end
+    def hostname
+      @host_string.split(/:|@/)[1]
+    end
+    def port
+      @host_string.split(/:|@/)[2].to_i
+    end
   end
 
   # @private
@@ -185,23 +179,6 @@ module SSHKit
     end
     def hostname
       @host_string.split('@').last
-    end
-  end
-
-  # @private
-  # :nodoc:
-  class HostWithUsernameAndPortParser < SimpleHostParser
-    def self.suitable?(host_string)
-      host_string.match /@.*:\d+/
-    end
-    def username
-      @host_string.split(/:|@/)[0]
-    end
-    def hostname
-      @host_string.split(/:|@/)[1]
-    end
-    def port
-      @host_string.split(/:|@/)[2].to_i
     end
   end
 
