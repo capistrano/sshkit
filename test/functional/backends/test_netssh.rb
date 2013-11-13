@@ -69,7 +69,7 @@ module SSHKit
             execute :echo, "'Test capturing stderr' 1>&2; false"
           end.run
         end
-        assert_equal "echo stdout: Nothing written\necho stderr: Test capturing stderr\n", err.message
+        assert_equal "echo exit status: 1\necho stdout: Nothing written\necho stderr: Test capturing stderr\n", err.message
       end
 
       def test_test_does_not_raise_on_non_zero_exit_status
