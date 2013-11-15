@@ -3,6 +3,10 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## 1.1.0 (not released yet)
+
+  * Improved command map with prefix feature
+
 ## 1.0.0
 
   * The gem now supports a run_locally, although it's nothing to do with SSH,
