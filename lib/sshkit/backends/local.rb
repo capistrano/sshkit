@@ -13,8 +13,21 @@ module SSHKit
         instance_exec(&@block)
       end
 
+      def test(*args)
+        options = args.extract_options!.merge(
+          raise_on_non_zero_exit: false,
+          verbosity: Logger::DEBUG
+        )
+        _execute(*[*args, options]).success?
+      end
+
       def execute(*args)
         _execute(*args).success?
+      end
+
+      def capture(*args)
+        options = args.extract_options!.merge(verbosity: Logger::DEBUG)
+        _execute(*[*args, options]).full_stdout.strip
       end
 
       private
