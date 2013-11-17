@@ -14,6 +14,12 @@ module SSHKit
       end
 
       def execute(*args)
+        _execute(*args).success?
+      end
+
+      private
+
+      def _execute(*args)
         command(*args).tap do |cmd|
           output << cmd
 
