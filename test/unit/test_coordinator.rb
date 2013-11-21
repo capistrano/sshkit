@@ -60,6 +60,15 @@ module SSHKit
       assert_operator results.first.to_i, :<, results.last.to_i
     end
 
+    def test_the_connection_manager_can_run_things_in_sequence_with_wait
+      start = Time.now
+      SSHKit.capture_output @s do
+        Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, wait: 10, &block_to_run
+      end
+      stop = Time.now
+      assert_operator (stop.to_i - start.to_i), :>=, 10
+    end
+
     def test_the_connection_manager_can_run_things_in_groups
       SSHKit.capture_output @s do
         Coordinator.new(%w{1.example.com 2.example.com 3.example.com
