@@ -49,6 +49,10 @@ end
 
 class UnitTest < MiniTest::Unit::TestCase
 
+  def setup
+    SSHKit.reset_configuration!
+  end
+
 end
 
 class FunctionalTest < MiniTest::Unit::TestCase

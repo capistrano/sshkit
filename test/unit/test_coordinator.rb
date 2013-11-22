@@ -6,6 +6,7 @@ module SSHKit
   class TestCoordinator < UnitTest
 
     def setup
+      super
       @s = String.new
       SSHKit.config.backend = SSHKit::Backend::Printer
     end
@@ -40,7 +41,7 @@ module SSHKit
         SSHKit.capture_output str do
           Coordinator.new(%w{1.example.com}).each &spy
         end
-        assert_equal "echo 1.example.com", str.strip
+        assert_equal "/usr/bin/env echo 1.example.com", str.strip
       end
     end
 
