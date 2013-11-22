@@ -63,8 +63,16 @@ module SSHKit
 
     def test_the_connection_manager_can_run_things_in_groups
       SSHKit.capture_output @s do
-        Coordinator.new(%w{1.example.com 2.example.com 3.example.com
-                                 4.example.com 5.example.com 6.example.com}).each in: :groups, &block_to_run
+        Coordinator.new(
+          %w{
+            1.example.com
+            2.example.com
+            3.example.com
+            4.example.com 
+            5.example.com 
+            6.example.com
+          }
+        ).each in: :groups, &block_to_run
       end
       assert_equal 6, results.length
       assert_equal *results[0..1].map(&:to_i)
