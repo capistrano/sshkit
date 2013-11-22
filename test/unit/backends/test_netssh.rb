@@ -31,6 +31,25 @@ module SSHKit
       def test_netssh_ext
         assert_includes  Net::SSH::Config.default_files, "#{Dir.pwd}/.ssh/config"
       end
+
+      def test_transfer_summarizer
+        netssh = Netssh.new(Host.new('fake'))
+
+        summarizer = netssh.send(:transfer_summarizer,'Transferring')
+
+        [
+         [1,    100, :debug, 'Transferring afile 1.0%'],
+         [1,    3,   :debug, 'Transferring afile 33.33%'],
+         [0,    1,   :debug, 'Transferring afile 0.0%'],
+         [1,    2,   :info,  'Transferring afile 50.0%'],
+         [0,    0,   :warn,  'percentage 0/0'],
+         [1023, 343, :debug, 'Transferring'],
+        ].each do |transferred,total,method,substring|
+          netssh.expects(method).with { |msg| msg.include?(substring) }
+          summarizer.call(nil,'afile',transferred,total)
+        end
+      end
+
     end
   end
 end

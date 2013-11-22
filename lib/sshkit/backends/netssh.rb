@@ -77,29 +77,13 @@ module SSHKit
       end
 
       def upload!(local, remote, options = {})
-        ssh.scp.upload!(local, remote, options) do |ch, name, sent, total|
-          percentage = (sent.to_f * 100 / total.to_f)
-          unless percentage.nan?
-            if percentage > 0 && percentage % 10 == 0
-              info "Uploading #{name} #{percentage.round(2)}%"
-            else
-              debug "Uploading #{name} #{percentage.round(2)}%"
-            end
-          else
-            warn "Error calculating percentage #{percentage} is NaN"
-          end
-        end
+        summarizer = transfer_summarizer('Uploading')
+        ssh.scp.upload!(local, remote, options, &summarizer)
       end
 
       def download!(remote, local=nil, options = {})
-        ssh.scp.download!(remote, local, options) do |ch, name, received, total|
-          percentage = (received.to_f * 100 / total.to_f).to_i
-          if percentage > 0 && percentage % 10 == 0
-            info "Downloading #{name} #{percentage}%"
-          else
-            debug "Downloading #{name} #{percentage}%"
-          end
-        end
+        summarizer = transfer_summarizer('Downloading')
+        ssh.scp.download!(remote, local, options, &summarizer)
       end
 
       class << self
@@ -113,6 +97,23 @@ module SSHKit
       end
 
       private
+
+      def transfer_summarizer(action)
+        proc do |ch, name, transferred, total|
+          percentage = (transferred.to_f * 100 / total.to_f)
+          unless percentage.nan?
+            message = "#{action} #{name} #{percentage.round(2)}%"
+            if percentage > 0 && percentage.round % 10 == 0
+              info message
+            else
+              debug message
+            end
+          else
+            warn "Error calculating percentage #{transferred}/#{total}, " <<
+              "is #{name} empty?"
+          end
+        end
+      end
 
       def _execute(*args)
         command(*args).tap do |cmd|
