@@ -26,7 +26,7 @@ module SSHKit
           printer.run
         end
         result.rewind
-        assert_equal '/usr/bin/env ls -l /some/directory', result.read
+        assert_equal "/usr/bin/env ls -l /some/directory\n", result.read
       end
 
     end
