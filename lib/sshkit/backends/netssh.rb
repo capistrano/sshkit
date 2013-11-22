@@ -1,6 +1,18 @@
 require 'net/ssh'
 require 'net/scp'
 
+module Net
+  module SSH
+    class Config
+      class << self
+        def default_files
+          @@default_files + [File.join(Dir.pwd, '.ssh/config')]
+        end
+      end
+    end
+  end
+end
+
 module SSHKit
 
   class Logger
