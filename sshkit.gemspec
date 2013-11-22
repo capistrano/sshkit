@@ -16,9 +16,9 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = SSHKit::VERSION
 
-  gem.add_dependency('net-ssh')
-  gem.add_dependency('net-scp')
-  gem.add_dependency('term-ansicolor')
+  gem.add_runtime_dependency('net-ssh')
+  gem.add_runtime_dependency('net-scp', '>= 1.1.2')
+  gem.add_runtime_dependency('term-ansicolor')
 
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
   gem.add_development_dependency('rake')
