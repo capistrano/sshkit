@@ -12,7 +12,7 @@ module SSHKit
       end
       private
       def wait_interval
-        @wait_interval ||= 2
+        @wait_interval || options[:wait] || 2
       end
     end
 

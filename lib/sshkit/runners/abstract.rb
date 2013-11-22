@@ -4,10 +4,11 @@ module SSHKit
 
     class Abstract
 
-      attr_reader :hosts, :block
+      attr_reader :hosts, :options, :block
 
-      def initialize(hosts, &block)
+      def initialize(hosts, options = nil, &block)
         @hosts       = Array(hosts)
+        @options     = options || {}
         @block       = block
       end
 

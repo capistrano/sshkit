@@ -18,9 +18,9 @@ module SSHKit
         when :groups   then Runner::Group
         else
           raise RuntimeError, "Don't know how to handle run style #{options[:in].inspect}"
-        end.new(hosts, &block).execute
+        end.new(hosts, options, &block).execute
       else
-        Runner::Null.new(hosts, &block).execute
+        Runner::Null.new(hosts, options, &block).execute
       end
     end
 
