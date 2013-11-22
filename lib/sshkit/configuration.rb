@@ -3,7 +3,7 @@ module SSHKit
   class Configuration
 
     attr_accessor :umask, :output_verbosity
-    attr_writer :output, :backend, :default_env, :command_map
+    attr_writer :output, :backend, :default_env
 
     def output
       @output ||= formatter(:pretty)
@@ -30,15 +30,11 @@ module SSHKit
     end
 
     def command_map
-      @command_map ||= begin
-        Hash.new do |hash, command|
-          if %w{if test time}.include? command.to_s
-            hash[command] = command.to_s
-          else
-            hash[command] = "/usr/bin/env #{command}"
-          end
-        end
-      end
+      @command_map ||= SSHKit::CommandMap.new
+    end
+
+    def command_map=(value)
+      @command_map = SSHKit::CommandMap.new(value)
     end
 
     private

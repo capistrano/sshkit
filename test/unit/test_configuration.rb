@@ -42,11 +42,12 @@ module SSHKit
     end
 
     def test_command_map
+      assert_equal SSHKit.config.command_map.is_a?(SSHKit::CommandMap), true
+
       cm = Hash.new { |h,k| h[k] = "/opt/sites/example/current/bin #{k}"}
-      assert_equal Hash.new, SSHKit.config.command_map
-      assert_equal "/usr/bin/env ruby", SSHKit.config.command_map[:ruby]
+
       assert SSHKit.config.command_map = cm
-      assert_equal cm, SSHKit.config.command_map
+      assert_equal SSHKit.config.command_map.is_a?(SSHKit::CommandMap), true
       assert_equal "/opt/sites/example/current/bin ruby", SSHKit.config.command_map[:ruby]
     end
 

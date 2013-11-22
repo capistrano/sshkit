@@ -142,6 +142,16 @@ One can override the hash map for individual commands:
     puts SSHKit.config.command_map[:rake]
     # => /usr/local/rbenv/shims/rake
 
+Another oportunity is to add command prefixes:
+
+    SSHKit.config.command_map.prefix[:rake].push("bundle exec")
+    puts SSHKit.config.command_map[:rake]
+    # => bundle exec rake
+
+    SSHKit.config.command_map.prefix[:rake].unshift("/usr/local/rbenv/bin exec")
+    puts SSHKit.config.command_map[:rake]
+    # => /usr/local/rbenv/bin exec bundle exec rake
+
 One can also override the command map completely, this may not be wise, but it
 would be possible, for example:
 
