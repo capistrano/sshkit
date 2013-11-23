@@ -25,10 +25,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('turn')
   gem.add_development_dependency('unindent')
   gem.add_development_dependency('mocha')
-  gem.add_development_dependency('debugger')
-  gem.add_development_dependency('vagrant')
-
-  gem.add_development_dependency('yard')
-  gem.add_development_dependency('redcarpet')
 
 end

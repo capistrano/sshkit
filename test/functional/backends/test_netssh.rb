@@ -28,7 +28,7 @@ module SSHKit
       end
 
       def a_host
-        vm_hosts.first
+        VagrantWrapper.hosts["one"]
       end
 
       def printer
@@ -56,9 +56,9 @@ module SSHKit
           SSHKit.capture_output(dnull) do
             captured_command_result = ""
             Netssh.new(a_host) do |host|
-              captured_command_result = capture(:hostname)
+              captured_command_result = capture(:uname)
             end.run
-            assert_equal "lucid32", captured_command_result
+            assert_equal "Linux", captured_command_result
           end
         end
       end

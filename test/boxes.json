@@ -1,0 +1,14 @@
+[
+  {
+    "name": "one",
+    "port": 3001
+  },
+  {
+    "name": "two",
+    "port": 3002
+  },
+  {
+    "name": "three",
+    "port": 3003
+  }
+]
