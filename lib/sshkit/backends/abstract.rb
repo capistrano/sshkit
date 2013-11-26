@@ -70,6 +70,10 @@ module SSHKit
         raise MethodUnavailableError
       end
 
+      def full_capture(command,args=[])
+        raise MethodUnavailableError
+      end
+
       def within(directory, &block)
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST, verbosity: Logger::DEBUG

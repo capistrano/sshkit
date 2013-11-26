@@ -30,6 +30,15 @@ module SSHKit
         _execute(*[*args, options]).full_stdout.strip
       end
 
+      def full_capture(*args)
+        options = args.extract_options!.merge(
+          raise_on_non_zero_exit: false,
+          verbosity: Logger::DEBUG
+        )
+        cmd=_execute(*[*args, options])
+        [cmd.exit_status,cmd.full_stdout.strip,cmd.full_stderr.strip]
+      end
+
       private
 
       def _execute(*args)
