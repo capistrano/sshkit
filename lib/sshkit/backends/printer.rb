@@ -24,7 +24,6 @@ module SSHKit
       end
       alias :capture! :capture
 
-
       private
 
       def output
