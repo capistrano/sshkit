@@ -59,6 +59,10 @@ module SSHKit
               captured_command_result = capture(:hostname)
             end.run
             assert_equal "lucid32", captured_command_result
+            assert(captured_command_result.respond_to?(:stdout), "No stdout.")
+            assert_equal(captured_command_result.to_s, captured_command_result.stdout)
+            assert(captured_command_result.respond_to?(:stderr), "No stderr.")
+            assert(captured_command_result.respond_to?(:exit_status), "No exit_status.")
           end
         end
       end

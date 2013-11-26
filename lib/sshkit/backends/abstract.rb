@@ -4,6 +4,10 @@ module SSHKit
 
     MethodUnavailableError = Class.new(SSHKit::StandardError)
 
+    module Result
+      attr_accessor :exit_status,:stderr,:stdout
+    end
+    
     class Abstract
 
       attr_reader :host
@@ -70,10 +74,6 @@ module SSHKit
         raise MethodUnavailableError
       end
 
-      def full_capture(command,args=[])
-        raise MethodUnavailableError
-      end
-
       def within(directory, &block)
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST, verbosity: Logger::DEBUG
@@ -137,6 +137,14 @@ module SSHKit
         raise "No Connection Pool Implementation"
       end
 
+      def result(r,cmd)
+        r.tap do |res|
+          res.extend(SSHKit::Backend::Result)
+          res.exit_status=cmd.exit_status
+          res.stdout=cmd.full_stdout.strip
+          res.stderr=cmd.full_stderr.strip
+        end
+      end
     end
 
   end
