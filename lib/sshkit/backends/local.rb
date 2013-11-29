@@ -33,27 +33,23 @@ module SSHKit
       private
 
       def _execute(*args, &block)
-
-
-
         command(*args).tap do |cmd|
           output << cmd
 
           cmd.started = Time.now
 
-          stderr, stdout, exit_status = '', '', nil
+          stderr, stdout, exit_status = '', '', 0
 
           Open3.popen3(cmd.to_command) do |sin, sout, serr, wait_thr|
 
             if block_given?
-              sout.each_char {|c| block.call(sin, c)}
+              block.call(sin, sout, serr)
             else
               stdout = sout.read
+              stderr = serr.read
             end
 
             exit_status = wait_thr.value
-
-            stderr = serr.read
           end
 
           cmd.stdout = stdout

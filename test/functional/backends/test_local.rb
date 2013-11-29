@@ -46,19 +46,15 @@ module SSHKit
       end
 
       def test_exectute_interecative_console
-        outputs = []
+        output = nil
         Local.new do
-          row = ''
-          execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |stdin, data|
-            row += data
-            next if !data.include?("\n") && row != 'Input value: '
-
-            outputs << row
-            row = ''
-            stdin.puts 'hello'
+          execute(:tee) do |stdin, stdout, stderr|
+            stdin.write('hello')
+            stdin.close
+            output = stdout.gets
           end
         end.run
-        assert_equal ['Input value: ', "hello\n"], outputs
+        assert_equal 'hello', output
       end
 
     end
