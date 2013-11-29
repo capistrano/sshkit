@@ -43,7 +43,7 @@ module SSHKit
           Open3.popen3(cmd.to_command) do |sin, sout, serr, wait_thr|
 
             if block_given?
-              block.call(sin, sout, serr)
+              Thread.new { while data = sout.readpartial(4096); block.call(sin, data); end }
             else
               stdout = sout.read
               stderr = serr.read
