@@ -21,8 +21,8 @@ module SSHKit
         _execute(*[*args, options]).success?
       end
 
-      def execute(*args)
-        _execute(*args).success?
+      def execute(*args, &block)
+        _execute(*args, &block).success?
       end
 
       def capture(*args)
@@ -32,7 +32,10 @@ module SSHKit
 
       private
 
-      def _execute(*args)
+      def _execute(*args, &block)
+
+
+
         command(*args).tap do |cmd|
           output << cmd
 
@@ -41,8 +44,15 @@ module SSHKit
           stderr, stdout, exit_status = '', '', nil
 
           Open3.popen3(cmd.to_command) do |sin, sout, serr, wait_thr|
+
+            if block_given?
+              sout.each_char {|c| block.call(sin, c)}
+            else
+              stdout = sout.read
+            end
+
             exit_status = wait_thr.value
-            stdout = sout.read
+
             stderr = serr.read
           end
 

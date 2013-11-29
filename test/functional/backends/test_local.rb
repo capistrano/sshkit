@@ -45,16 +45,21 @@ module SSHKit
         assert result
       end
 
-      #def test_exectute_interecative_console
-      #  Local.new do
-      #    execute(:echo, :text) do |channel, stream, data|
-      #      next if data.chomp == input.chomp || data.chomp == ''
-      #      print data
-      #      channel.send_data(input = $stdin.gets) if data =~ /^(>|\?)>/
-      #    end
-      #    #execute('read line; echo "$line"', {verbosity: Logger::DEBUG})
-      #  end.run
-      #end
+      def test_exectute_interecative_console
+        outputs = []
+        Local.new do
+          row = ''
+          execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |stdin, data|
+            row += data
+            next if !data.include?("\n") && row != 'Input value: '
+
+            outputs << row
+            row = ''
+            stdin.puts 'hello'
+          end
+        end.run
+        assert_equal ['Input value: ', "hello\n"], outputs
+      end
 
     end
   end
