@@ -35,6 +35,27 @@ module SSHKit
         assert_equal true,  succeeded_test_result
         assert_equal false, failed_test_result
       end
+
+      def test_execute_command_with_success
+        result = false
+        local = Local.new do
+          result = execute(:echo, :text)
+        end
+        assert local.run
+        assert result
+      end
+
+      def test_exectute_interecative_console
+        outputs = []
+        Local.new do
+          execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |stdin, data|
+            outputs << data
+            stdin.puts('hello')
+          end
+        end.run
+        assert_equal ['Input value: ', "hello\n"], outputs
+      end
+
     end
   end
 end

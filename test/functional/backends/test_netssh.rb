@@ -28,7 +28,7 @@ module SSHKit
       end
 
       def a_host
-        vm_hosts.first
+        vm_hosts.first || Host.new("#{ENV['USER']}@localhost")
       end
 
       def printer
@@ -131,6 +131,16 @@ module SSHKit
         assert_equal File.open(file_name).read, file_contents
       end
 
+      def test_exectute_interecative_console
+        outputs = []
+        Netssh.new(a_host) do
+          execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |stdin, data|
+            outputs << data
+            stdin.send_data("hello\n")
+          end
+        end.run
+        assert_equal ['Input value: ', "hello\n"], outputs
+      end
     end
 
   end
