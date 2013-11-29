@@ -132,11 +132,14 @@ module SSHKit
       end
 
       def test_exectute_interecative_console
-        output = nil
+        outputs = []
         Netssh.new(a_host) do
-          execute(:echo, '-n', '"Input value: "; read line; echo "$line"')
+          execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |stdin, data|
+            outputs << data
+            stdin.send_data("hello\n")
+          end
         end.run
-        assert_equal 'hello', output.chop!
+        assert_equal ['Input value: ', "hello\n"], outputs
       end
     end
 

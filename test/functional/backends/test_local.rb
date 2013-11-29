@@ -46,14 +46,14 @@ module SSHKit
       end
 
       def test_exectute_interecative_console
-        output = nil
+        outputs = []
         Local.new do
           execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |stdin, data|
-            output = data
+            outputs << data
             stdin.puts('hello')
           end
         end.run
-        assert_equal 'hello', output.chop!
+        assert_equal ['Input value: ', "hello\n"], outputs
       end
 
     end
