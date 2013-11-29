@@ -65,6 +65,8 @@ class FunctionalTest < MiniTest::Unit::TestCase
       warn "#{name} (of #{venv.vms.size}) needs to be booted, please wait" unless vm.state == :running
     end
     venv.cli "up"
+  rescue NoMethodError => e
+    warn e
   end
 
   private

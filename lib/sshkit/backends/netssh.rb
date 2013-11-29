@@ -123,9 +123,13 @@ module SSHKit
             chan.request_pty if Netssh.config.pty
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
-                cmd.stdout = data
-                cmd.full_stdout += data
-                output << cmd
+                if block_given?
+                  block.call(ch, data)
+                else
+                  cmd.stdout = data
+                  cmd.full_stdout += data
+                  output << cmd
+                end
               end
               chan.on_extended_data do |ch, type, data|
                 cmd.stderr = data
