@@ -1,7 +1,10 @@
 [
   {
     "name": "one",
-    "port": 3001
+    "port": 3001,
+    "user": "vagrant",
+    "password": "vagrant",
+    "hostname": "localhost"
   },
   {
     "name": "two",

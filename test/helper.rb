@@ -12,41 +12,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'sshkit'
 
-class VagrantWrapper
-  class << self
-    def hosts
-      @vm_hosts ||= begin
-        result = {}
-        boxes_list.each do |vm|
-          host = SSHKit::Host.new("vagrant@localhost:#{vm["port"]}").tap do |h|
-            h.password = 'vagrant'
-          end
-
-          result[vm["name"]] = host
-        end
-
-        result
-      end
-    end
-
-    def running?
-      @running ||= begin
-        status = `#{vagrant_binary} status`
-        status.include?('running')
-      end
-    end
-
-    def boxes_list
-      json_config_path = File.join("test", "boxes.json")
-      boxes = File.open(json_config_path).read
-      JSON.parse(boxes)
-    end
-
-    def vagrant_binary
-      'vagrant'
-    end
-  end
-end
+Dir[File.expand_path('test/support/*.rb')].each { |file| require file }
 
 class UnitTest < MiniTest::Unit::TestCase
 
@@ -60,7 +26,7 @@ class FunctionalTest < MiniTest::Unit::TestCase
 
   def setup
     unless VagrantWrapper.running?
-      raise "Vagrant VMs are not running. Please, start it manually with `vagrant up`"
+      warn "Vagrant VMs are not running. Please, start it manually with `vagrant up`"
     end
   end
 
