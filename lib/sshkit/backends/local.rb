@@ -38,7 +38,13 @@ module SSHKit
 
           cmd.started = Time.now
 
-          stdout, stderr, exit_status = Open3.capture3(cmd.to_command)
+          stderr, stdout, exit_status = '', '', nil
+
+          Open3.popen3(cmd.to_command) do |sin, sout, serr, wait_thr|
+            exit_status = wait_thr.value
+            stdout = sout.read
+            stderr = serr.read
+          end
 
           cmd.stdout = stdout
           cmd.full_stdout += stdout

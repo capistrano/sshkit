@@ -35,6 +35,27 @@ module SSHKit
         assert_equal true,  succeeded_test_result
         assert_equal false, failed_test_result
       end
+
+      def test_execute_command_with_success
+        result = false
+        local = Local.new do
+          result = execute(:echo, :text)
+        end
+        assert local.run
+        assert result
+      end
+
+      #def test_exectute_interecative_console
+      #  Local.new do
+      #    execute(:echo, :text) do |channel, stream, data|
+      #      next if data.chomp == input.chomp || data.chomp == ''
+      #      print data
+      #      channel.send_data(input = $stdin.gets) if data =~ /^(>|\?)>/
+      #    end
+      #    #execute('read line; echo "$line"', {verbosity: Logger::DEBUG})
+      #  end.run
+      #end
+
     end
   end
 end
