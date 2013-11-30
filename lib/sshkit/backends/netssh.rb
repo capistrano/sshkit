@@ -54,16 +54,16 @@ module SSHKit
         instance_exec(host, &@block)
       end
 
-      def test(*args)
+      def test(*args, &block)
         options = args.extract_options!.merge(
           raise_on_non_zero_exit: false,
           verbosity: Logger::DEBUG
         )
-        _execute(*[*args, options]).success?
+        _execute(*[*args, options], &block).success?
       end
 
-      def execute(*args)
-        _execute(*args).success?
+      def execute(*args, &block)
+        _execute(*args, &block).success?
       end
 
       def background(*args)
@@ -115,7 +115,7 @@ module SSHKit
         end
       end
 
-      def _execute(*args)
+      def _execute(*args, &block)
         command(*args).tap do |cmd|
           output << cmd
           cmd.started = true
@@ -123,9 +123,13 @@ module SSHKit
             chan.request_pty if Netssh.config.pty
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
-                cmd.stdout = data
-                cmd.full_stdout += data
-                output << cmd
+                if block_given?
+                  block.call(ch, data)
+                else
+                  cmd.stdout = data
+                  cmd.full_stdout += data
+                  output << cmd
+                end
               end
               chan.on_extended_data do |ch, type, data|
                 cmd.stderr = data
