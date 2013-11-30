@@ -131,6 +131,17 @@ module SSHKit
         assert_equal File.open(file_name).read, file_contents
       end
 
+      def test_exectute_interecative_command
+        outputs = []
+        Netssh.new(a_host) do
+          execute(:echo, '-n', '"Input value: "; read line; echo "$line"') do |channel, data|
+            outputs << data
+            channel.send_data("hello\n")
+          end
+        end.run
+        assert_equal ['Input value: ', "hello\n"], outputs
+      end
+
     end
 
   end
