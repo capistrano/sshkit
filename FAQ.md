@@ -5,7 +5,7 @@ a toolkit for performing structured commands on groups of servers in a
 repeatable way.
 
 It provides concurrency handling, sane error checking and control flow that
-would otherwise be difficult to achive with pure *Net::SSH*.
+would otherwise be difficult to achieve with pure *Net::SSH*.
 
 Since *Capistrano v3.0*, *SSHKit* is used by *Capistrano* to communicate with
 backend servers. Whilst Capistrano provides the structure for repeatable
@@ -24,7 +24,7 @@ descriptors which no longer exist.
 
 The following resources are worth a read to better understand what a process
 must do in order to daemonize reliably, not all processes perform all of the
-steps necassary:
+steps necessary:
 
 * [http://stackoverflow.com/questions/881388/what-is-the-reason-for-performing-a-double-fork-when-creating-a-daemon]
 
