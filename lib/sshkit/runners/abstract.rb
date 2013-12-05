@@ -15,7 +15,10 @@ module SSHKit
       private
 
       def backend(host, &block)
-        SSHKit.config.backend.new(host, &block)
+        @_backends ||= Hash.new do |hash, key|
+          hash[key] = SSHKit.config.backend.new(host, &block)
+        end
+        @_backends[host.hash]
       end
 
     end
