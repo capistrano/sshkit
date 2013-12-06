@@ -3,29 +3,35 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
+## (Unreleased)
+
+* Connection pooling. SSH connections are reused across multiple invocations
+  of `on()`, which can result in significant performance gains. See:
+  https://github.com/capistrano/sshkit/pull/70.
+
 ## 1.2.0
 
   * Support picking up a project local SSH config file, if a SSH config file
     exists at ./.ssh/config it will be merged with the ~/.ssh/config. This is
-    ideal for defining project-local proxies/gateways, etc. Thanks to Alex 
+    ideal for defining project-local proxies/gateways, etc. Thanks to Alex
     @0rca Vzorov.
-  * Tests and general improvements to the Printer backends (mostly used 
+  * Tests and general improvements to the Printer backends (mostly used
     internally). Thanks to Michael @miry Nikitochkin.
-  * Update the net-scp dependency version. Thanks again to Michael @miry 
+  * Update the net-scp dependency version. Thanks again to Michael @miry
     Nikitochkin.
   * Improved command map. This feature allows mapped variables to be pushed
     and unshifted onto the mapping so that the Capistrano extensions for
     rbenv and bundler, etc can work together. For discussion about the reasoning
-    see https://github.com/capistrano/capistrano/issues/639 and 
+    see https://github.com/capistrano/capistrano/issues/639 and
     https://github.com/capistrano/sshkit/pull/45. A big thanks to Kir @kirs
     Shatrov.
   * `test()` and `capture()` now behave as expected inside a `run_locally` block
     meaning that they now run on your local machine, rather than erring out. Thanks
     to Kentaro @kentaroi Imai.
-  * The `:wait` option is now successfully passed to the runner now. Previously the 
+  * The `:wait` option is now successfully passed to the runner now. Previously the
     `:wait` option was ignored. Thanks to Jordan @jhollinger Hollinger for catching
     the mistake in our test coverage.
-  * Fixes and general improvements to the `download()` method which until now was 
+  * Fixes and general improvements to the `download()` method which until now was
     quite naïve. Thanks to @chqr.
 
 ## 1.1.0

@@ -194,6 +194,29 @@ and defaults to `Logger::INFO`.
 
 At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
 
+## Connection Pooling
+
+SSHKit uses a simple connection pool (enabled by default) to reduce the
+cost of negotiating a new SSH connection for every `on()` block. Depending on
+usage and network conditions, this can add up to a significant time savings.
+In one test, a basic `cap deploy` ran 15-20 seconds faster thanks to the
+connection pooling added in recent versions of SSHKit.
+
+To prevent connections from "going stale", an existing pooled connection will
+be replaced with a new connection if it hasn't been used for more than 30
+seconds. This timeout can be changed as follows:
+
+```ruby
+SSHKit::Backend::Netssh.pool.idle_timeout = 60 # seconds
+```
+
+If you suspect the connection pooling is causing problems, you can disable the
+pooling behavior entirely by setting the idle_timeout to zero:
+
+```ruby
+SSHKit::Backend::Netssh.pool.idle_timeout = 0 # disabled
+```
+
 ## Known Issues
 
 * No handling of slow / timed out connections
@@ -225,9 +248,9 @@ At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
   a string to/from a remote file.
 * No closing of connections, the abstract backend class should include a
   cleanup method which is empty but can be overriden by other implementations.
-* No conncetion pooling, the `connection` method of the NetSSH backend could
+* ~~No conncetion pooling, the `connection` method of the NetSSH backend could
   easily be modified to look into some connection factory for it's objects,
-  saving half a second when running lots of `on()` blocks.
+  saving half a second when running lots of `on()` blocks.~~
 * Documentation! (YARD style)
 * Wrap all commands in a known shell, that is that `execute('uptime')` should
   be converted into `sh -c 'uptime'` to ensure that we have a consistent shell
