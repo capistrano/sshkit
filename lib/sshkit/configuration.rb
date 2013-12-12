@@ -44,7 +44,9 @@ module SSHKit
     end
 
     def formatter(format)
-      SSHKit::Formatter.const_get(format.capitalize).new($stdout)
+      SSHKit::Formatter.constants.each do |const|
+        return SSHKit::Formatter.const_get(const).new($stdout) if const.downcase.eql?(format.downcase)
+      end
     end
 
   end
