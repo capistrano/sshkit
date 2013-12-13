@@ -55,13 +55,13 @@ Helpers such as `runner()` and `rake()` which expand to `execute(:rails, "runner
 Notice on the `on()` call the `in: :sequence` option, the following will do
 what you might expect:
 
-    on(in: :parallel, limit: 2) { ...}
+    on(in: :parallel) { ... }
     on(in: :sequence, wait: 5) { ... }
     on(in: :groups, limit: 2, wait: 5) { ... }
 
-The default is to run `in: :parallel` with no limit, if you have 400 servers,
-this might be a problem, and you might better look at changing that to run in
-groups, or sequence.
+The default is to run `in: :parallel` which has no limit. If you have 400 servers,
+this might be a problem and you might better look at changing that to run in
+`groups`, or `sequence`.
 
 Groups were designed in this case to relieve problems (mass Git checkouts)
 where you rely on a contested resource that you don't want to DDOS by hitting
