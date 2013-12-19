@@ -1,5 +1,5 @@
 *.gem
 .yardoc
-.vagrant
+.vagrant*
 test/tmp
 Gemfile.lock
