@@ -5,9 +5,18 @@ appear at the top.
 
 ## (Unreleased)
 
-* Connection pooling. SSH connections are reused across multiple invocations
-  of `on()`, which can result in significant performance gains. See:
-  https://github.com/capistrano/sshkit/pull/70.
+  * Add your entries here, remember to credit yourself however you want to be
+    credited!
+
+## 1.3.0
+
+  * Connection pooling. SSH connections are reused across multiple invocations
+    of `on()`, which can result in significant performance gains. See:
+    https://github.com/capistrano/sshkit/pull/70. Matt @mbrictson Brictson.
+  * Fixes to the Formatter::Dot and to the formatter class name resolver. @hab287:w
+  * Added the license to the Gemspec. @anatol.
+  * Fix :limit handling for the `in: :groups` run mode. Phil @phs Smith
+  * Doc fixes @seanhandley, @sergey-alekseev.
 
 ## 1.2.0
 
