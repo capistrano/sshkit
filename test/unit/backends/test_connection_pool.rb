@@ -39,7 +39,7 @@ module SSHKit
         assert_equal conn1, conn2
       end
 
-      def test_zero_idle_timeout_disables_resuse
+      def test_zero_idle_timeout_disables_reuse
         pool.idle_timeout = 0
 
         conn1 = pool.create_or_reuse_connection("conn", &connect)
