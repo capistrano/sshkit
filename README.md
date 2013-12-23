@@ -82,7 +82,7 @@ For example:
 
     # Let's simulate a backup task, assuming that some servers take longer
     # then others to complete
-    on servers do |host|
+    on all_servers do |host|
       in site_dir do
         execute :tar, '-czf', "backup-#{host.hostname}.tar.gz", 'current'
         # Will run: "/usr/bin/env tar -czf backup-one.example.com.tar.gz current"
@@ -92,7 +92,7 @@ For example:
     # Now we can do something with those backups, safe in the knowledge that
     # they will all exist (all tar commands exited with a success status, or
     # that we will have raised an exception if one of them failed.
-    on servers do |host|
+    on all_servers do |host|
       in site_dir do
         backup_filename = "backup-#{host.hostname}.tar.gz"
         target_filename = "backups/#{Time.now.utc.iso8601}/#{host.hostname}.tar.gz"
