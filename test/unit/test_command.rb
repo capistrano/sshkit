@@ -205,7 +205,7 @@ module SSHKit
       error = assert_raises SSHKit::Command::Failed do
         Command.new(:whoami).exit_status = 1
       end
-      assert_equal "whoami stdout: Nothing written\nwhoami stderr: Nothing written\n", error.message
+      assert_equal "whoami exit status: 1\nwhoami stdout: Nothing written\nwhoami stderr: Nothing written\n", error.message
     end
 
   end
