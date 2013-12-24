@@ -28,3 +28,5 @@ require_relative 'backends/printer'
 require_relative 'backends/netssh'
 require_relative 'backends/local'
 require_relative 'backends/skipper'
+
+require_relative 'utils/capture_output_methods'

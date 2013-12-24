@@ -9,6 +9,7 @@ module SSHKit
   def self.capture_output(io, &block)
     original_io = config.output
     config.output = io
+    config.output.extend(SSHKit::Utils::CaptureOutputMethods)
     yield
   ensure
     config.output = original_io

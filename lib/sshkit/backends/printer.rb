@@ -11,7 +11,7 @@ module SSHKit
 
       def execute(*args)
         command(*args).tap do |cmd|
-          output << sprintf("%s\n", cmd)
+          output << cmd
         end
       end
       alias :upload! :execute
