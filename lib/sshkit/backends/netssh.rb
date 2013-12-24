@@ -39,6 +39,8 @@ module SSHKit
 
     class Netssh < Printer
 
+      AuthenticationError = Class.new(SSHKit::StandardError)
+
       class Configuration
         attr_accessor :connection_timeout, :pty
         attr_writer :ssh_options
@@ -176,6 +178,8 @@ module SSHKit
             host.netssh_options,
             &Net::SSH.method(:start)
           )
+        rescue Net::SSH::AuthenticationFailed
+          raise AuthenticationError, "Authentication error while connecting to #{host.hostname}"
         end
       end
 
