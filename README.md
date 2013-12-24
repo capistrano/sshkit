@@ -81,7 +81,6 @@ for all servers to complete before it returns.
 
 For example:
 
-<<<<<<< HEAD
 ```ruby
 all_servers = %w{one.example.com two.example.com three.example.com}
 site_dir    = '/opt/sites/example.com'
