@@ -154,7 +154,7 @@ puts SSHKit.config.command_map[:rake]
 # => /usr/local/rbenv/shims/rake
 ```
 
-Another oportunity is to add command prefixes:
+Another opportunity is to add command prefixes:
 
 ```ruby
 SSHKit.config.command_map.prefix[:rake].push("bundle exec")
@@ -207,7 +207,7 @@ By default calls to `capture()` and `test()` are not logged, they are used
 *so* frequently by backend tasks to check environmental settings that it
 produces a large amount of noise. They are tagged with a verbosity option on
 the `Command` instances of `Logger::DEBUG`. The default configuration for
-output verbosity is avaialble to override with `SSHKit.config.output_verbosity=`,
+output verbosity is available to override with `SSHKit.config.output_verbosity=`,
 and defaults to `Logger::INFO`.
 
 At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
@@ -229,7 +229,7 @@ SSHKit::Backend::Netssh.pool.idle_timeout = 60 # seconds
 ```
 
 If you suspect the connection pooling is causing problems, you can disable the
-pooling behavior entirely by setting the idle_timeout to zero:
+pooling behaviour entirely by setting the idle_timeout to zero:
 
 ```ruby
 SSHKit::Backend::Netssh.pool.idle_timeout = 0 # disabled
@@ -265,8 +265,8 @@ SSHKit::Backend::Netssh.pool.idle_timeout = 0 # disabled
 * No method for uploading or downloading files, or the same for saving/loading
   a string to/from a remote file.
 * No closing of connections, the abstract backend class should include a
-  cleanup method which is empty but can be overriden by other implementations.
-* ~~No conncetion pooling, the `connection` method of the NetSSH backend could
+  cleanup method which is empty but can be overridden by other implementations.
+* ~~No connection pooling, the `connection` method of the NetSSH backend could
   easily be modified to look into some connection factory for it's objects,
   saving half a second when running lots of `on()` blocks.~~
 * Documentation! (YARD style)
