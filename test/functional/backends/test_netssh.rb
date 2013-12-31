@@ -28,7 +28,7 @@ module SSHKit
       end
 
       def a_host
-        VagrantWrapper.hosts["one"]
+        VagrantWrapper.hosts['one']
       end
 
       def printer
@@ -54,11 +54,13 @@ module SSHKit
       def test_capture
         File.open('/dev/null', 'w') do |dnull|
           SSHKit.capture_output(dnull) do
-            captured_command_result = ""
+            captured_command_result = nil
             Netssh.new(a_host) do |host|
               captured_command_result = capture(:uname)
             end.run
-            assert_equal "Linux", captured_command_result
+
+            assert captured_command_result
+            assert_match captured_command_result, /Linux|Darwin/
           end
         end
       end
@@ -130,7 +132,6 @@ module SSHKit
         end.run
         assert_equal File.open(file_name).read, file_contents
       end
-
     end
 
   end
