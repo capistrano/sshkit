@@ -64,7 +64,7 @@ This will output:
 **Note:** This example is a bit misleading, as the `www-data` user doesn't
 have a shell defined, one cannot switch to that user.
 
-## Upload a file from disk
+## Upload a file from disk
 
     on hosts do |host|
       upload! '/config/database.yml', '/opt/my_project/shared/databse.yml'
@@ -73,7 +73,7 @@ have a shell defined, one cannot switch to that user.
 **Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
 etc, this will be improved as the library matures, but we're not there yet.
 
-## Upload a file from a stream
+## Upload a file from a stream
 
     on hosts do |host|
       file = File.open('/config/database.yml')
@@ -119,7 +119,7 @@ individual hosts:
       }
     end
 
-## Run a command with a different effective group ID
+## Run a command with a different effective group ID
 
     on hosts do |host|
       as user: 'www-data', group: 'project-group' do
@@ -294,7 +294,7 @@ An extension of the behaviour above, if you write a command like this:
 known test cases, it works. The key thing is that `if` is not mapped to
 `/usr/bin/env if`, which would break with a syntax error.
 
-## Using with Rake
+## Using with Rake
 
 Into the `Rakefile` simply put something like:
 
