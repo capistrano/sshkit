@@ -36,5 +36,21 @@ module SSHKit
       assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
     end
 
+    def test_indifferent_setter
+      map = CommandMap.new
+      map[:rake] = "/usr/local/rbenv/shims/rake"
+      map["rake"] = "/usr/local/rbenv/shims/rake2"
+
+      assert_equal "/usr/local/rbenv/shims/rake2", map[:rake]
+    end
+
+    def test_indifferent_prefix
+      map = CommandMap.new
+      map.prefix[:rake].push("/home/vagrant/.rbenv/bin/rbenv exec")
+      map.prefix["rake"].push("bundle exec")
+
+      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
+    end
+    
   end
 end
