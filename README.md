@@ -19,6 +19,7 @@ on %w{1.example.com 2.example.com}, in: :sequence, wait: 5 do
       with rails_env: :production do
         rake   "assets:precompile"
         runner "S3::Sync.notify"
+        execute "node", "socket_server.js"
       end
     end
   end
