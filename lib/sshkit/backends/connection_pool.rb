@@ -10,7 +10,6 @@ module SSHKit
 
       def initialize
         self.idle_timeout = 30
-        @connections = {}
         @monitor = Monitor.new
       end
 
@@ -31,12 +30,16 @@ module SSHKit
 
       private
 
+      def connections
+        Thread.current[:sshkit_pool] ||= {}
+      end
+
       def find_and_reject_invalid(key, &block)
         synchronize do
-          entry = @connections[key]
+          entry = connections[key]
           invalid = entry && yield(entry)
 
-          @connections.delete(entry) if invalid
+          connections.delete(entry) if invalid
 
           invalid ? nil : entry
         end
@@ -44,7 +47,7 @@ module SSHKit
 
       def store_entry(key, connection)
         synchronize do
-          @connections[key] = Entry.new(connection)
+          connections[key] = Entry.new(connection)
         end
       end
 
