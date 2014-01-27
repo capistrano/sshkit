@@ -11,11 +11,6 @@ Since *Capistrano v3.0*, *SSHKit* is used by *Capistrano* to communicate with
 backend servers. Whilst Capistrano provides the structure for repeatable
 deployments.
 
-## Production Ready?
-
-It's in private Beta use, and the documentation could use more work, but this
-is open source, that's more or less how it works.
-
 ## Why does <something> stop responding after I started it with `background()`?
 
 The answer is complicated, but it can be summed up by saying that under
