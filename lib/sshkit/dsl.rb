@@ -1,5 +1,3 @@
-require_relative '../sshkit'
-
 module SSHKit
 
   module DSL
