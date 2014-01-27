@@ -1,8 +1,29 @@
 module SSHKit
   class CommandMap
+    class CommandHash
+      def initialize(defaults = {})
+        @storage = {}
+        @defaults = defaults
+      end
+
+      def [](key)
+        @storage[normalize_key(key)] ||= @defaults[key]
+      end
+
+      def []=(key, value)
+        @storage[normalize_key(key)] = value
+      end
+
+      private
+
+      def normalize_key(key)
+        key.to_sym
+      end
+    end
+
     class PrefixProvider
       def initialize
-        @storage = {}
+        @storage = CommandHash.new
       end
 
       def [](command)
@@ -13,7 +34,7 @@ module SSHKit
     end
 
     def initialize(value = nil)
-      @map = value || defaults
+      @map = CommandHash.new(value || defaults)
     end
 
     def [](command)
@@ -35,7 +56,7 @@ module SSHKit
     end
 
     def clear
-      @map = defaults
+      @map = CommandHash.new(defaults)
     end
 
     def defaults
