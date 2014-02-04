@@ -106,6 +106,11 @@ module SSHKit
       assert_equal "( A=b sudo su anotheruser -c \"( nohup /usr/bin/env sleep 15 > /dev/null & )\" )", c.to_command
     end
 
+    def test_backgrounding_a_task_with_working_directory
+      c = Command.new(:sleep, 15, run_in_background: true, in: '/opt')
+      assert_equal "cd /opt && ( nohup /usr/bin/env sleep 15 > /dev/null & )", c.to_command
+    end
+
     def test_umask
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile')
