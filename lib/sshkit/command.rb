@@ -169,7 +169,7 @@ module SSHKit
 
     def in_background(&block)
       return yield unless options[:run_in_background]
-      "nohup %s > /dev/null &" % yield
+      "( nohup %s > /dev/null & )" % yield
     end
 
     def umask(&block)
