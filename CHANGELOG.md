@@ -8,6 +8,11 @@ appear at the top.
   * Add your entries here, remember to credit yourself however you want to be
     credited!
 
+## 1.4.0
+
+  * Removed `invoke` alias for [`SSHKit::Backend::Printer.execute`](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/backends/printer.rb#L20). This is to prevent collisions with
+  methods in capistrano with similar names, and to provide a cleaner API. See [capistrano issue 912](https://github.com/capistrano/capistrano/issues/912) and [issue 107](https://github.com/capistrano/sshkit/issues/107) for more details.
+  
 ## 1.3.0
 
   * Connection pooling. SSH connections are reused across multiple invocations
