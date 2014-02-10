@@ -12,6 +12,11 @@ appear at the top.
 
   * Removed `invoke` alias for [`SSHKit::Backend::Printer.execute`](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/backends/printer.rb#L20). This is to prevent collisions with
   methods in capistrano with similar names, and to provide a cleaner API. See [capistrano issue 912](https://github.com/capistrano/capistrano/issues/912) and [issue 107](https://github.com/capistrano/sshkit/issues/107) for more details.
+  * Connection pooling now uses a thread local to store connection pool, giving each thread its own connection pool. Thank you @mcbriston see [#101](https://github.com/capistrano/sshkit/pull/101) for more.
+  * Command map indifferent towards strings and symbols thanks to @thomasfedb see [#91](https://github.com/capistrano/sshkit/pull/91)
+  * Moved vagrant wrapper to `support` directory, added ability to run tests with vagrant using ssh. @miry see [#64](https://github.com/capistrano/sshkit/pull/64)
+  * Removed unnecessary require `require_relative '../sshkit'` in `lib/sshkit/dsl.rb` prevents warnings thanks @brabic.
+  * Doc fixes thanks @seanhandley @vojto
   
 ## 1.3.0
 

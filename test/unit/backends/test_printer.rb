@@ -61,7 +61,7 @@ module SSHKit
       end
       
       def test_invoke_raises_no_method_error
-        err = assert_raises NoMethodError do
+        assert_raises NoMethodError do
           printer.invoke :echo
         end
       end
