@@ -233,7 +233,7 @@ which will cause the command to abort.
     end
 
 The `test()` command behaves exactly the same as execute however will return
-false if the command exits with a non-zero exit (as `man 1 test` does). As ti
+false if the command exits with a non-zero exit (as `man 1 test` does). As it
 returns boolean it can be used to direct the control flow within the block.
 
 ## Do something different on one host, or another depending on a host property
