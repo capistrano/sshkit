@@ -20,6 +20,11 @@ class UnitTest < MiniTest::Unit::TestCase
     SSHKit.reset_configuration!
   end
 
+  SSHKit::Backend::ConnectionPool.class_eval do
+    def flush_connections
+      Thread.current[:sshkit_pool] = {}
+    end
+  end
 end
 
 class FunctionalTest < MiniTest::Unit::TestCase
