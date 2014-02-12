@@ -9,7 +9,7 @@ module SSHKit
         threads = []
         hosts.each do |host|
           threads << Thread.new(host) do |h|
-            backend(host, &block).run
+            backend(h, &block).run
           end
         end
         threads.map(&:join)
