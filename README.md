@@ -129,6 +129,21 @@ Will execute:
 
     ( PATH=/usr/local/bin/rbenv/shims:$PATH /usr/bin/env ruby --version )
 
+By contrast, the following won't modify the command at al:
+
+
+```ruby
+with path: '/usr/local/bin/rbenv/shims:$PATH' do
+  execute 'ruby--version'
+end
+```
+
+Will execute, without mapping the environmental variables, or querying the command map:
+
+    ruby --version
+
+(this behaviour is sometimes considered confusing, but it has mostly to do with shell escaping, in the case of whitespace in your command, or newlines, we have no way of reliably composing a correct shell command from the input given.)
+
 **Often more preferable is to use the *command map*.**
 
 The *command map* is used by default when instantiating a *Command* object
