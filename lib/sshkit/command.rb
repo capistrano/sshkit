@@ -151,7 +151,7 @@ module SSHKit
       (SSHKit.config.default_env || {}).merge(options[:env] || {})
     end
 
-    def envivonment_string
+    def environment_string
       environment_hash.collect do |key,value|
         "#{key.to_s.upcase}=#{value}"
       end.join(' ')
@@ -159,7 +159,7 @@ module SSHKit
 
     def with(&block)
       return yield unless environment_hash.any?
-      "( #{envivonment_string} %s )" % yield
+      "( #{environment_string} %s )" % yield
     end
 
     def user(&block)
