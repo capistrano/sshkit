@@ -67,7 +67,7 @@ have a shell defined, one cannot switch to that user.
 ## Upload a file from disk
 
     on hosts do |host|
-      upload! '/config/database.yml', '/opt/my_project/shared/databse.yml'
+      upload! '/config/database.yml', '/opt/my_project/shared/database.yml'
     end
 
 **Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
@@ -78,7 +78,7 @@ etc, this will be improved as the library matures, but we're not there yet.
     on hosts do |host|
       file = File.open('/config/database.yml')
       io   = StringIO.new(....)
-      upload! file, '/opt/my_project/shared/databse.yml'
+      upload! file, '/opt/my_project/shared/database.yml'
       upload! io,   '/opt/my_project/shared/io.io.io'
     end
 
