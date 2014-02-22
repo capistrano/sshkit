@@ -109,12 +109,12 @@ end
 
 ## The Command Map
 
-It's often a problem that programatic SSH sessions don't share the same environmental
-variables as sessions that are started interactively.
+It's often a problem that programmatic SSH sessions don't have the same environment
+variables as interactive sessions.
 
-This problem often comes when calling out to executables, expected to be on
-the `$PATH` which, under conditions without dotfiles or other environmental
-configuration are not where they are expected to be.
+A problem often arises when calling out to executables expected to be on
+the `$PATH`.  Under conditions without dotfiles or other environmental
+configuration, `$PATH` may not be set as expected, and thus executables are not found where expected.
 
 To try and solve this there is the `with()` helper which takes a hash of variables and makes them
 available to the environment.
@@ -129,12 +129,12 @@ Will execute:
 
     ( PATH=/usr/local/bin/rbenv/shims:$PATH /usr/bin/env ruby --version )
 
-By contrast, the following won't modify the command at al:
+By contrast, the following won't modify the command at all:
 
 
 ```ruby
 with path: '/usr/local/bin/rbenv/shims:$PATH' do
-  execute 'ruby--version'
+  execute 'ruby --version'
 end
 ```
 
@@ -142,7 +142,7 @@ Will execute, without mapping the environmental variables, or querying the comma
 
     ruby --version
 
-(this behaviour is sometimes considered confusing, but it has mostly to do with shell escaping, in the case of whitespace in your command, or newlines, we have no way of reliably composing a correct shell command from the input given.)
+(This behaviour is sometimes considered confusing, but it has mostly to do with shell escaping: in the case of whitespace in your command, or newlines, we have no way of reliably composing a correct shell command from the input given.)
 
 **Often more preferable is to use the *command map*.**
 
@@ -157,10 +157,9 @@ puts SSHKit.config.command_map[:ruby]
 # => /usr/bin/env ruby
 ```
 
-The `/usr/bin/env` prefix is applied to all commands, to make clear that the
-environment is being deferred to to make the decision, this is what happens
-anyway when one would simply attempt to execute `ruby`, however by making it
-explicit, it was hoped that it might lead people to explore the documentation.
+To make clear the environment is being deferred to, the `/usr/bin/env` prefix is applied to all commands.
+Although this is what happens anyway when one would simply attempt to execute `ruby`, making it
+explicit hopefully leads people to explore the documentation.
 
 One can override the hash map for individual commands:
 
