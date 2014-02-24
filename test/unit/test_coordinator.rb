@@ -45,7 +45,7 @@ module SSHKit
       end
     end
 
-    def test_the_connection_manaager_runs_things_in_parallel_by_default
+    def test_the_connection_manager_runs_things_in_parallel_by_default
       SSHKit.capture_output @s do
         Coordinator.new(%w{1.example.com 2.example.com}).each &block_to_run
       end
@@ -89,6 +89,22 @@ module SSHKit
       assert_equal *results[4..5].map(&:to_i)
       assert_operator results[0].to_i, :<, results[2].to_i
       assert_operator results[3].to_i, :<, results[4].to_i
+    end
+
+    def test_the_connection_manager_runs_things_with_different_backend
+      actual_backend = nil
+      Coordinator.new(%w{1.example.com 2.example.com}).each backend: SSHKit::Backend::Netssh do
+        actual_backend = self.class
+      end
+      assert_equal SSHKit::Backend::Netssh, actual_backend
+    end
+
+    def test_the_connection_manager_runs_things_with_default_backend
+      actual_backend = nil
+      Coordinator.new(%w{1.example.com 2.example.com}).each do
+        actual_backend = self.class
+      end
+      assert_equal SSHKit::Backend::Printer, actual_backend
     end
 
     private

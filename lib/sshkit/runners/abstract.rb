@@ -15,9 +15,12 @@ module SSHKit
       private
 
       def backend(host, &block)
-        SSHKit.config.backend.new(host, &block)
+        backend_factory.new(host, &block)
       end
 
+      def backend_factory
+        @options[:backend] || SSHKit.config.backend
+      end
     end
 
   end
