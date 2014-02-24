@@ -201,22 +201,21 @@ first argument before attempting to find it in the *command map*.
 
 ![Example Output](https://raw.github.com/leehambley/sshkit/master/assets/images/example_output.png)
 
-The output handling comprises two objects, first is the output itself, by
-default this is *$stdout*, but can be any object responding to a
-*StringIO*-like interface. The second part is the *formatter*.
-
-The *formatter* and *output* have a strange relationship:
+By default, the output format is set to `:pretty`: 
 
 ```ruby
-SSHKit.config.output = SSHKit.config.formatter.new($stdout)
+SSHKit.config.format = :pretty
 ```
 
-The *formatter* will typically delegate all calls to the *output*, depending
-on it's implementation it will almost certainly override the implementation of
-`write()` (alias `<<()`) and query the objects it receives to determine what
-should be printed.
+However, if you prefer minimal output, `:dot` format will simply output red or green dots based on the success or failure of operations. 
 
-## Verbosity
+To output directly to $stdout without any formatting, you can use: 
+
+```ruby
+SSHKit.config.output = $stdout
+```
+
+## Output Verbosity
 
 By default calls to `capture()` and `test()` are not logged, they are used
 *so* frequently by backend tasks to check environmental settings that it
