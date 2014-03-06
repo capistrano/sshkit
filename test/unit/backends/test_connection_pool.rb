@@ -59,6 +59,8 @@ module SSHKit
       end
 
       def test_closed_connection_is_not_reused
+        # Ensure there aren't any other open connections
+        pool.flush_connections()
         conn1 = pool.create_or_reuse_connection("conn", &connect_and_close)
         conn2 = pool.create_or_reuse_connection("conn", &connect)
 
