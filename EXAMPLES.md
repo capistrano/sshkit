@@ -220,6 +220,17 @@ circumstances the program will hang anyway when the SSH session exits.
 This will raise `SSHKit::Command:Failed` with the `#message` "Example Message!"`
 which will cause the command to abort.
 
+## Access stdout, stderr and exit status from captured output
+
+    on hosts do |host|
+      out=capture(:echo, '"Example Message!" 1>&2; false',{:raise_on_non_zero_exit => false})
+      puts out.stdout
+      puts out.stderr
+      puts out.exit_status
+    end
+
+The string returned by capture() is extended to provide the raw stdout, stderr content and the exit status.
+
 ## Make a test, or run a command which may fail without raising an error:
 
     on hosts do |host|
