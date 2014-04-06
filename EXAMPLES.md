@@ -110,7 +110,7 @@ available to `Net::{SCP,SFTP}`.
 Setting global SSH options, these will be overwritten by options set on the
 individual hosts:
 
-    Netssh.configure do |ssh|
+    SSHKit::Backend::Netssh.configure do |ssh|
       ssh.connection_timeout = 30
       ssh.ssh_options = {
         keys: %w(/home/user/.ssh/id_rsa),
