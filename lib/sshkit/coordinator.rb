@@ -6,7 +6,7 @@ module SSHKit
 
     def initialize(raw_hosts)
       @raw_hosts = Array(raw_hosts)
-      resolve_hosts! if Array(raw_hosts).any?
+      @hosts = @raw_hosts.any? ? resolve_hosts : []
     end
 
     def each(options={}, &block)
@@ -32,8 +32,8 @@ module SSHKit
         { in: :parallel }
       end
 
-      def resolve_hosts!
-        @hosts = @raw_hosts.collect { |rh| rh.is_a?(Host) ? rh : Host.new(rh) }.uniq
+      def resolve_hosts
+        @raw_hosts.collect { |rh| rh.is_a?(Host) ? rh : Host.new(rh) }.uniq
       end
 
   end
