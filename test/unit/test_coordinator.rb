@@ -21,6 +21,12 @@ module SSHKit
       end
     end
 
+    def test_the_connection_manager_handles_empty_argument
+      Coordinator.new([]).each do
+        raise "This should not be executed"
+      end
+    end
+
     def test_connection_manager_handles_a_single_argument
       h = Host.new('1.example.com')
       Host.expects(:new).with('1.example.com').once().returns(h)
