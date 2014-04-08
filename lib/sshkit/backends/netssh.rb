@@ -72,7 +72,7 @@ module SSHKit
       end
 
       def capture(*args)
-        options = args.extract_options!.merge(verbosity: Logger::DEBUG)
+        options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
         _execute(*[*args, options]).full_stdout.strip
       end
 
