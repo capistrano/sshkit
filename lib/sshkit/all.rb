@@ -13,6 +13,7 @@ require_relative 'log_message'
 
 require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
+require_relative 'formatters/simple_text'
 require_relative 'formatters/pretty'
 require_relative 'formatters/dot'
 
