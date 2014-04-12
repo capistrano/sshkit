@@ -76,6 +76,11 @@ module SSHKit
         _execute(*[*args, options]).full_stdout.strip
       end
 
+      def stream(*args, &block)
+        raise ArgumentError, "no block given" unless block_given?
+        _execute(*args, &block).success?
+      end
+
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading')
         ssh.scp.upload!(local, remote, options, &summarizer)
@@ -119,7 +124,7 @@ module SSHKit
         end
       end
 
-      def _execute(*args)
+      def _execute(*args, &block)
         command(*args).tap do |cmd|
           output << cmd
           cmd.started = true
@@ -127,11 +132,13 @@ module SSHKit
             chan.request_pty if Netssh.config.pty
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
+                block.call(:stdout, data) if block
                 cmd.stdout = data
                 cmd.full_stdout += data
                 output << cmd
               end
               chan.on_extended_data do |ch, type, data|
+                block.call(:stderr, data) if block
                 cmd.stderr = data
                 cmd.full_stderr += data
                 output << cmd

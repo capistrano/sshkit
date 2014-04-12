@@ -65,6 +65,20 @@ module SSHKit
         end
       end
 
+      def test_stream
+        command = "echo 1; echo 2 >&2; sleep 0.5; echo 3"
+        output  = Hash.new { |h,k| h[k] = "" }
+
+        Netssh.new(a_host) { |host|
+          stream(command) do |type, data|
+            output[type] << data
+          end
+        }.run
+
+        assert_equal "1\n3\n", output[:stdout]
+        assert_equal "2\n", output[:stderr]
+      end
+
       def test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr
         err = assert_raises SSHKit::Command::Failed do
           Netssh.new(a_host) do |host|
