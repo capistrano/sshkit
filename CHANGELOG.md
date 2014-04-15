@@ -10,6 +10,8 @@ appear at the top.
 
 ## 1.4.0
 
+https://github.com/capistrano/sshkit/compare/v1.3.0...v1.4.0
+
   * Removed `invoke` alias for [`SSHKit::Backend::Printer.execute`](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/backends/printer.rb#L20). This is to prevent collisions with
   methods in capistrano with similar names, and to provide a cleaner API. See [capistrano issue 912](https://github.com/capistrano/capistrano/issues/912) and [issue 107](https://github.com/capistrano/sshkit/issues/107) for more details.
   * Connection pooling now uses a thread local to store connection pool, giving each thread its own connection pool. Thank you @mbrictson see [#101](https://github.com/capistrano/sshkit/pull/101) for more.
@@ -20,6 +22,8 @@ appear at the top.
 
 ## 1.3.0
 
+https://github.com/capistrano/sshkit/compare/v1.2.0...v1.3.0
+
   * Connection pooling. SSH connections are reused across multiple invocations
     of `on()`, which can result in significant performance gains. See:
     https://github.com/capistrano/sshkit/pull/70. Matt @mbrictson Brictson.
@@ -29,6 +33,8 @@ appear at the top.
   * Doc fixes @seanhandley, @sergey-alekseev.
 
 ## 1.2.0
+
+https://github.com/capistrano/sshkit/compare/v1.1.0...v1.2.0
 
   * Support picking up a project local SSH config file, if a SSH config file
     exists at ./.ssh/config it will be merged with the ~/.ssh/config. This is
@@ -54,6 +60,8 @@ appear at the top.
     quite naïve. Thanks to @chqr.
 
 ## 1.1.0
+
+https://github.com/capistrano/sshkit/compare/v1.0.0...v1.1.0
 
   * Please see the Git history. `git rebase` ate our changelog (we should have been
     more careful)
