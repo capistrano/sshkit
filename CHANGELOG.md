@@ -17,7 +17,7 @@ appear at the top.
   * Moved vagrant wrapper to `support` directory, added ability to run tests with vagrant using ssh. @miry see [#64](https://github.com/capistrano/sshkit/pull/64)
   * Removed unnecessary require `require_relative '../sshkit'` in `lib/sshkit/dsl.rb` prevents warnings thanks @brabic.
   * Doc fixes thanks @seanhandley @vojto
-  
+
 ## 1.3.0
 
   * Connection pooling. SSH connections are reused across multiple invocations
