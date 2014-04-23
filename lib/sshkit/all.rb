@@ -3,6 +3,7 @@ require_relative '../core_ext/hash'
 
 require_relative 'host'
 
+require_relative 'color'
 require_relative 'command'
 require_relative 'command_map'
 require_relative 'configuration'
