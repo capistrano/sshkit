@@ -1,5 +1,3 @@
-require 'term/ansicolor'
-
 module SSHKit
 
   module Formatter
@@ -53,7 +51,7 @@ module SSHKit
       end
 
       def c
-        @c ||= Term::ANSIColor
+        @c ||= Color
       end
 
       def uuid(obj)
@@ -61,9 +59,7 @@ module SSHKit
       end
 
       def level(verbosity)
-        # Insane number here accounts for the control codes added
-        # by term-ansicolor
-        sprintf "%14s ", c.send(level_formatting(verbosity), level_names(verbosity))
+        c.send(level_formatting(verbosity), level_names(verbosity))
       end
 
       def level_formatting(level_num)

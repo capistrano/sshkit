@@ -1,5 +1,3 @@
-require 'term/ansicolor'
-
 module SSHKit
 
   module Formatter
@@ -17,7 +15,7 @@ module SSHKit
       private
 
       def c
-        @c ||= Term::ANSIColor
+        @c ||= Color
       end
 
     end
