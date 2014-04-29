@@ -217,7 +217,7 @@ circumstances the program will hang anyway when the SSH session exits.
       execute!(:echo, '"Example Message!" 1>&2; false')
     end
 
-This will raise `SSHKit::Command:Failed` with the `#message` "Example Message!"`
+This will raise `SSHKit::Command:Failed` with the `#message` "Example Message!"
 which will cause the command to abort.
 
 ## Make a test, or run a command which may fail without raising an error:
