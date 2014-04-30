@@ -11,27 +11,30 @@ module SSHKit
       def initialize
         self.idle_timeout = 30
         @monitor = Monitor.new
+        @connections = {}
       end
 
       def create_or_reuse_connection(*new_connection_args, &block)
         # Optimization: completely bypass the pool if idle_timeout is zero.
         return yield(*new_connection_args) if idle_timeout == 0
+        entry=nil
+        @monitor.synchronize do
+          key = new_connection_args.to_s
+          entry = find_and_reject_invalid(key) { |e| e.expired? || e.closed? }
 
-        key = new_connection_args.to_s
-        entry = find_and_reject_invalid(key) { |e| e.expired? || e.closed? }
+          if entry.nil?
+            entry = store_entry(key, yield(*new_connection_args))
+          end
 
-        if entry.nil?
-          entry = store_entry(key, yield(*new_connection_args))
+          entry.expires_at = Time.now + idle_timeout if idle_timeout
+          entry.connection
         end
-
-        entry.expires_at = Time.now + idle_timeout if idle_timeout
-        entry.connection
       end
 
       private
 
       def connections
-        Thread.current[:sshkit_pool] ||= {}
+         @connections
       end
 
       def find_and_reject_invalid(key, &block)

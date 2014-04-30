@@ -1,5 +1,6 @@
 require 'net/ssh'
 require 'net/scp'
+require 'net/ssh/gateway'
 
 module Net
   module SSH
@@ -42,10 +43,12 @@ module SSHKit
       class Configuration
         attr_accessor :connection_timeout, :pty
         attr_writer :ssh_options
+        attr_accessor :gateway
 
         def ssh_options
           @ssh_options || {}
         end
+
       end
 
       include SSHKit::CommandHelper
@@ -125,6 +128,7 @@ module SSHKit
           cmd.started = true
           ssh.open_channel do |chan|
             chan.request_pty if Netssh.config.pty
+
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
                 cmd.stdout = data
@@ -170,15 +174,31 @@ module SSHKit
       def ssh
         @ssh ||= begin
           host.ssh_options ||= Netssh.config.ssh_options
-          self.class.pool.create_or_reuse_connection(
-            String(host.hostname),
-            host.username,
-            host.netssh_options,
-            &Net::SSH.method(:start)
-          )
+          host.gateway ||= Netssh.config.gateway
+
+          if (!host.gateway.nil?)
+            gateway = SSHKit::Host.new(host.gateway)
+            gateway.ssh_options ||= {}
+            self.class.pool.create_or_reuse_connection(
+              String(gateway.hostname),
+              gateway.user,
+              gateway.netssh_options,
+              &Net::SSH::Gateway.method(:new)
+            ).ssh(
+              String(host.hostname),
+              host.username,
+              host.netssh_options,
+            )
+          else
+            self.class.pool.create_or_reuse_connection(
+              String(host.hostname),
+              host.username,
+              host.netssh_options,
+              &Net::SSH.method(:start)
+            )
+          end
         end
       end
-
     end
   end
 

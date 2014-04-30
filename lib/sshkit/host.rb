@@ -6,7 +6,7 @@ module SSHKit
 
   class Host
 
-    attr_accessor :password, :hostname, :port, :user, :ssh_options
+    attr_accessor :password, :hostname, :port, :user, :ssh_options, :gateway
 
     def key=(new_key)
       @keys = [new_key]

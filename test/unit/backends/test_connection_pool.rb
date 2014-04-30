@@ -39,6 +39,17 @@ module SSHKit
         assert_equal conn1, conn2
       end
 
+      def test_connections_are_reused_threads
+        conn1 = nil
+        conn2 = nil
+        thr1 = Thread.new {conn1 = pool.create_or_reuse_connection("conn", &connect)}
+        thr2 = Thread.new {conn2 =  pool.create_or_reuse_connection("conn", &connect)}
+        thr1.join
+        thr2.join
+        refute_nil  conn1
+        assert_equal conn1, conn2
+      end
+
       def test_zero_idle_timeout_disables_reuse
         pool.idle_timeout = 0
 

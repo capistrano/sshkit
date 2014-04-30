@@ -363,3 +363,52 @@ Replace `on` with `run_locally`
       end
     end
 
+## Using a gateway
+
+SSHKit allow you to use gateway(s). 
+All subsequent connections will be tunneled through the gateway(s) (using SSH forwarded ports). To tell SSHKit about your gateways you can either :
+
+* define a global gateway
+
+```ruby
+SSHKit.config.backend.configure do |ssh|
+    ssh.gateway = "user@my-gateway"
+end
+```
+
+The gateway definition follows the same syntax as host definition. This means you can define your global gateway like this:
+
+```ruby
+SSHKit.config.backend.configure do |ssh|
+    ssh.gateway = {
+        hostname: "my-gateway",
+        user: "user",
+        ssh_options: {
+        ...
+        }
+    }
+end
+```
+
+    
+* or define a per host gateway.   
+
+```ruby
+host = SSHKit::Host.new(
+    :hostname => "private.server", 
+    :user => "internal.user", 
+    :gateway => "user@my-gateway") 
+```
+
+or
+
+```ruby
+host = SSHKit::Host.new(
+    :hostname => "private.server", 
+    :user => "internal.user", 
+    :gateway => {
+        :hostname => "my-gateway", 
+        :user => "user", 
+        :ssh_options => {...}
+    })
+```
