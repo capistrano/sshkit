@@ -1,4 +1,4 @@
-require "monitor"
+require "thread"
 
 module SSHKit
 
@@ -10,46 +10,47 @@ module SSHKit
 
       def initialize
         self.idle_timeout = 30
-        @monitor = Monitor.new
+        @mutex = Mutex.new
+        @pool = {}
       end
 
-      def create_or_reuse_connection(*new_connection_args, &block)
+      def checkout(*new_connection_args, &block)
         # Optimization: completely bypass the pool if idle_timeout is zero.
         return yield(*new_connection_args) if idle_timeout == 0
 
         key = new_connection_args.to_s
-        entry = find_and_reject_invalid(key) { |e| e.expired? || e.closed? }
+        find_live_entry(key) || create_new_entry(new_connection_args, key, &block)
+      end
 
-        if entry.nil?
-          entry = store_entry(key, yield(*new_connection_args))
+      def checkin(entry)
+        @mutex.synchronize do
+          @pool[entry.key] ||= []
+          @pool[entry.key] << entry
         end
-
-        entry.expires_at = Time.now + idle_timeout if idle_timeout
-        entry.connection
       end
 
       private
 
-      def connections
-        Thread.current[:sshkit_pool] ||= {}
+      def find_live_entry(key)
+        @mutex.synchronize do
+          return nil unless @pool.key?(key)
+          while entry = @pool[key].shift
+            return entry if entry.live?
+          end
+        end
+        nil
       end
 
-      def find_and_reject_invalid(key, &block)
-        entry = connections[key]
-        invalid = entry && yield(entry)
-
-        connections.delete(entry) if invalid
-
-        invalid ? nil : entry
+      def create_new_entry(args, key, &block)
+        Entry.new block.call(*args), key
       end
 
-      def store_entry(key, connection)
-        connections[key] = Entry.new(connection)
-      end
-
-
-      Entry = Struct.new(:connection) do
+      Entry = Struct.new(:connection, :key) do
         attr_accessor :expires_at
+
+        def live?
+          !expired? && !closed?
+        end
 
         def expired?
           expires_at && Time.now > expires_at
@@ -61,6 +62,5 @@ module SSHKit
       end
 
     end
-
   end
 end
