@@ -5,6 +5,10 @@ module SSHKit
   module Backend
     class TestConnectionPool < UnitTest
 
+      def setup
+        pool.flush_connections
+      end
+
       def pool
         @pool ||= SSHKit::Backend::ConnectionPool.new
       end
@@ -72,6 +76,8 @@ module SSHKit
         pool.idle_timeout = 0
 
         conn1 = pool.checkout("conn", &connect)
+        pool.checkin conn1
+
         conn2 = pool.checkout("conn", &connect)
 
         refute_equal conn1, conn2
@@ -81,6 +87,7 @@ module SSHKit
         pool.idle_timeout = 0.1
 
         conn1 = pool.checkout("conn", &connect)
+        pool.checkin conn1
         sleep(pool.idle_timeout)
         conn2 = pool.checkout("conn", &connect)
 
@@ -88,9 +95,8 @@ module SSHKit
       end
 
       def test_closed_connection_is_not_reused
-        # Ensure there aren't any other open connections
-        pool.flush_connections()
         conn1 = pool.checkout("conn", &connect_and_close)
+        pool.checkin conn1
         conn2 = pool.checkout("conn", &connect)
 
         refute_equal conn1, conn2
@@ -98,6 +104,7 @@ module SSHKit
 
       def test_connections_with_different_args_are_not_reused
         conn1 = pool.checkout("conn1", &connect)
+        pool.checkin conn1
         conn2 = pool.checkout("conn2", &connect)
 
         refute_equal conn1, conn2
