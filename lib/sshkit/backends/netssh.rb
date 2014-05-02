@@ -181,9 +181,11 @@ module SSHKit
           host.netssh_options,
           &Net::SSH.method(:start)
         )
-        result = yield conn.connection
-        self.class.pool.checkin conn
-        result
+        begin
+          yield conn.connection
+        ensure
+          self.class.pool.checkin conn
+        end
       end
 
     end
