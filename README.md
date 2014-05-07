@@ -201,15 +201,15 @@ first argument before attempting to find it in the *command map*.
 
 ![Example Output](https://raw.github.com/leehambley/sshkit/master/assets/images/example_output.png)
 
-By default, the output format is set to `:pretty`: 
+By default, the output format is set to `:pretty`:
 
 ```ruby
 SSHKit.config.format = :pretty
 ```
 
-However, if you prefer minimal output, `:dot` format will simply output red or green dots based on the success or failure of operations. 
+However, if you prefer minimal output, `:dot` format will simply output red or green dots based on the success or failure of operations.
 
-To output directly to $stdout without any formatting, you can use: 
+To output directly to $stdout without any formatting, you can use:
 
 ```ruby
 SSHKit.config.output = $stdout

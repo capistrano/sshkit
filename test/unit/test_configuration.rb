@@ -55,7 +55,7 @@ module SSHKit
       assert SSHKit.config.format = :dot
       assert SSHKit.config.output.is_a? SSHKit::Formatter::Dot
     end
-    
+
     def test_setting_formatter_to_blackhole
       assert SSHKit.config.format = :BlackHole
       assert SSHKit.config.output.is_a? SSHKit::Formatter::BlackHole

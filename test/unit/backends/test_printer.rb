@@ -59,7 +59,7 @@ module SSHKit
         assert_equal false,                       backend.config.ssh_options[:forward_agent]
         assert_equal %w(publickey password),      backend.config.ssh_options[:auth_methods]
       end
-      
+
       def test_invoke_raises_no_method_error
         assert_raises NoMethodError do
           printer.invoke :echo
