@@ -26,8 +26,6 @@ module SSHKit
 
     private
 
-      attr_accessor :cooldown
-
       def default_options
         { in: :parallel }
       end
