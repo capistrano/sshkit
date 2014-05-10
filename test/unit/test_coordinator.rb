@@ -83,8 +83,8 @@ module SSHKit
             1.example.com
             2.example.com
             3.example.com
-            4.example.com 
-            5.example.com 
+            4.example.com
+            5.example.com
             6.example.com
           }
         ).each in: :groups, &block_to_run

@@ -3,7 +3,7 @@ module SSHKit
   StandardError = Class.new(::StandardError)
 
   class << self
-    
+
     attr_accessor :config
 
     def capture_output(io, &block)
@@ -27,7 +27,7 @@ module SSHKit
     def reset_configuration!
       @@config = nil
     end
-    
+
   end
 
 end

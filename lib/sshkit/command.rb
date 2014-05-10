@@ -1,4 +1,3 @@
-require 'shellwords'
 require 'digest/sha1'
 require 'securerandom'
 

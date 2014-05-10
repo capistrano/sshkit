@@ -51,6 +51,6 @@ module SSHKit
 
       assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
     end
-    
+
   end
 end

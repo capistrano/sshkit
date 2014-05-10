@@ -48,8 +48,6 @@ class VagrantWrapper
           port: vm['port'] || '22'
       }
 
-
-
       SSHKit::Host.new(host_options)
     end
   end

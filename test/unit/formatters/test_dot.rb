@@ -46,14 +46,14 @@ module SSHKit
       dot << SSHKit::LogMessage.new(Logger::DEBUG, "Test")
       assert_equal "", output.strip
     end
-    
+
     def test_command_success
       command = SSHKit::Command.new(:ls)
       command.exit_status = 0
       dot << command
       assert_equal "\e[0;32;49m.\e[0m", output.strip
     end
-    
+
     def test_command_failure
       command = SSHKit::Command.new(:ls, {raise_on_non_zero_exit: false})
       command.exit_status = 1
