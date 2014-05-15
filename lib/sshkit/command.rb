@@ -164,7 +164,7 @@ module SSHKit
 
     def user(&block)
       return yield unless options[:user]
-      "sudo su #{options[:user]} -c \"%s\"" % %Q{#{yield}}
+      "sudo su #{options[:user]} -c '%s'" % %Q{#{yield}}
     end
 
     def in_background(&block)
