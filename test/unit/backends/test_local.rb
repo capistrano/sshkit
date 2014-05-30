@@ -8,6 +8,10 @@ module SSHKit
         @local ||= Local.new
       end
 
+      def test_host
+        assert_equal 'localhost', local.host.to_s
+      end
+
       def test_execute
         assert_equal true, local.execute('uname -a')
         assert_equal true, local.execute
