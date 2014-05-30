@@ -8,6 +8,21 @@ appear at the top.
   * Add your entries here, remember to credit yourself however you want to be
     credited!
 
+## 1.5.0
+
+  * Deprecate background helper - too many badly behaved pseudo-daemons. Lee Hambley
+  * Don't colourize unless $stdout is a tty. Lee Hambley
+  * Remove out of date "Known Issues" section from README. Lee Hambley
+  * Dealy variable interpolation inside `as()` block. Nick Townsend
+  * Fixes for functional tests under modern Vagrant. Lewis Marshal
+  * Fixes for connection pooling. Chris Heald
+  * Add `localhost` hostname to local backend. Adam Mckaig
+  * Wrap execptions to include hostname. Brecht Hoflack
+  * Remove `shellwords` stdlib dependency Bruno Sutic
+  * Remove unused `cooldown` accessor. Bruno Sutic
+  * Replace Term::ANSIColor with a lighter solution. Tom Clements
+  * Documentation fixes. Matt Brictson
+
 ## 1.4.0
 
 https://github.com/capistrano/sshkit/compare/v1.3.0...v1.4.0
