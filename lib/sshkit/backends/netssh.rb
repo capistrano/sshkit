@@ -78,12 +78,16 @@ module SSHKit
 
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading')
-        ssh.scp.upload!(local, remote, options, &summarizer)
+        with_ssh do |ssh|
+          ssh.scp.upload!(local, remote, options, &summarizer)
+        end
       end
 
       def download!(remote, local=nil, options = {})
         summarizer = transfer_summarizer('Downloading')
-        ssh.scp.download!(remote, local, options, &summarizer)
+        with_ssh do |ssh|
+          ssh.scp.download!(remote, local, options, &summarizer)
+        end
       end
 
       @pool = SSHKit::Backend::ConnectionPool.new
@@ -123,59 +127,64 @@ module SSHKit
         command(*args).tap do |cmd|
           output << cmd
           cmd.started = true
-          ssh.open_channel do |chan|
-            chan.request_pty if Netssh.config.pty
-            chan.exec cmd.to_command do |ch, success|
-              chan.on_data do |ch, data|
-                cmd.stdout = data
-                cmd.full_stdout += data
-                output << cmd
+          with_ssh do |ssh|
+            ssh.open_channel do |chan|
+              chan.request_pty if Netssh.config.pty
+              chan.exec cmd.to_command do |ch, success|
+                chan.on_data do |ch, data|
+                  cmd.stdout = data
+                  cmd.full_stdout += data
+                  output << cmd
+                end
+                chan.on_extended_data do |ch, type, data|
+                  cmd.stderr = data
+                  cmd.full_stderr += data
+                  output << cmd
+                end
+                chan.on_request("exit-status") do |ch, data|
+                  cmd.stdout = ''
+                  cmd.stderr = ''
+                  cmd.exit_status = data.read_long
+                  output << cmd
+                end
+                #chan.on_request("exit-signal") do |ch, data|
+                #  # TODO: This gets called if the program is killed by a signal
+                #  # might also be a worthwhile thing to report
+                #  exit_signal = data.read_string.to_i
+                #  warn ">>> " + exit_signal.inspect
+                #  output << cmd
+                #end
+                chan.on_open_failed do |ch|
+                  # TODO: What do do here?
+                  # I think we should raise something
+                end
+                chan.on_process do |ch|
+                  # TODO: I don't know if this is useful
+                end
+                chan.on_eof do |ch|
+                  # TODO: chan sends EOF before the exit status has been
+                  # writtend
+                end
               end
-              chan.on_extended_data do |ch, type, data|
-                cmd.stderr = data
-                cmd.full_stderr += data
-                output << cmd
-              end
-              chan.on_request("exit-status") do |ch, data|
-                cmd.stdout = ''
-                cmd.stderr = ''
-                cmd.exit_status = data.read_long
-                output << cmd
-              end
-              #chan.on_request("exit-signal") do |ch, data|
-              #  # TODO: This gets called if the program is killed by a signal
-              #  # might also be a worthwhile thing to report
-              #  exit_signal = data.read_string.to_i
-              #  warn ">>> " + exit_signal.inspect
-              #  output << cmd
-              #end
-              chan.on_open_failed do |ch|
-                # TODO: What do do here?
-                # I think we should raise something
-              end
-              chan.on_process do |ch|
-                # TODO: I don't know if this is useful
-              end
-              chan.on_eof do |ch|
-                # TODO: chan sends EOF before the exit status has been
-                # writtend
-              end
+              chan.wait
             end
-            chan.wait
+            ssh.loop
           end
-          ssh.loop
         end
       end
 
-      def ssh
-        @ssh ||= begin
-          host.ssh_options ||= Netssh.config.ssh_options
-          self.class.pool.create_or_reuse_connection(
-            String(host.hostname),
-            host.username,
-            host.netssh_options,
-            &Net::SSH.method(:start)
-          )
+      def with_ssh
+        host.ssh_options ||= Netssh.config.ssh_options
+        conn = self.class.pool.checkout(
+          String(host.hostname),
+          host.username,
+          host.netssh_options,
+          &Net::SSH.method(:start)
+        )
+        begin
+          yield conn.connection
+        ensure
+          self.class.pool.checkin conn
         end
       end
 
