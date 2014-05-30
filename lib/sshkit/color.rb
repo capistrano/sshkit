@@ -6,7 +6,7 @@ module Color
     instance_eval %{
     def #{style}(string='')
       string = yield if block_given?
-      string.colorize(:#{style})
+      $stdout.tty? ? string.colorize(:#{style}) : string
     end
     }
   end
