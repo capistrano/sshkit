@@ -9,7 +9,12 @@ module SSHKit
         threads = []
         hosts.each do |host|
           threads << Thread.new(host) do |h|
-            backend(h, &block).run
+            begin
+              backend(h, &block).run
+            rescue Exception => e
+              e2 = ExecuteError.new e
+              raise e2, "Exception while executing on host #{host}: #{e.message}" 
+            end
           end
         end
         threads.map(&:join)
