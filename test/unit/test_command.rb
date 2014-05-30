@@ -78,7 +78,7 @@ module SSHKit
 
     def test_working_as_a_given_user
       c = Command.new(:whoami, user: :anotheruser)
-      assert_equal "sudo su anotheruser -c \"/usr/bin/env whoami\"", c.to_command
+      assert_equal "sudo su anotheruser -c '/usr/bin/env whoami'", c.to_command
     end
 
     def test_working_as_a_given_group
@@ -88,7 +88,7 @@ module SSHKit
 
     def test_working_as_a_given_user_and_group
       c = Command.new(:whoami, user: :anotheruser, group: :devvers)
-      assert_equal "sudo su anotheruser -c \"sg devvers -c \\\"/usr/bin/env whoami\\\"\"", c.to_command
+      assert_equal "sudo su anotheruser -c 'sg devvers -c \\\"/usr/bin/env whoami\\\"'", c.to_command
     end
 
     def test_backgrounding_a_task
@@ -98,12 +98,12 @@ module SSHKit
 
     def test_backgrounding_a_task_as_a_given_user
       c = Command.new(:sleep, 15, run_in_background: true, user: :anotheruser)
-      assert_equal "sudo su anotheruser -c \"( nohup /usr/bin/env sleep 15 > /dev/null & )\"", c.to_command
+      assert_equal "sudo su anotheruser -c '( nohup /usr/bin/env sleep 15 > /dev/null & )'", c.to_command
     end
 
     def test_backgrounding_a_task_as_a_given_user_with_env
       c = Command.new(:sleep, 15, run_in_background: true, user: :anotheruser, env: {a: :b})
-      assert_equal "( A=b sudo su anotheruser -c \"( nohup /usr/bin/env sleep 15 > /dev/null & )\" )", c.to_command
+      assert_equal "( A=b sudo su anotheruser -c '( nohup /usr/bin/env sleep 15 > /dev/null & )' )", c.to_command
     end
 
     def test_backgrounding_a_task_with_working_directory
@@ -126,13 +126,13 @@ module SSHKit
     def test_umask_with_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', in: '/var', user: 'alice')
-      assert_equal "cd /var && umask 007 && sudo su alice -c \"/usr/bin/env touch somefile\"", c.to_command
+      assert_equal "cd /var && umask 007 && sudo su alice -c '/usr/bin/env touch somefile'", c.to_command
     end
 
     def test_umask_with_env_and_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var')
-      assert_equal "cd /var && umask 007 && ( A=b sudo su bob -c \"/usr/bin/env touch somefile\" )", c.to_command
+      assert_equal "cd /var && umask 007 && ( A=b sudo su bob -c '/usr/bin/env touch somefile' )", c.to_command
     end
 
     def test_verbosity_defaults_to_logger_info
