@@ -45,7 +45,8 @@ class VagrantWrapper
       host_options = {
           user: vm['user'] || 'vagrant',
           hostname: vm['hostname'] || 'localhost',
-          port: vm['port'] || '22'
+          port: vm['port'] || '22',
+          password: vm['password'] || 'vagrant'
       }
 
       SSHKit::Host.new(host_options)
