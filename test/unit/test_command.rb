@@ -91,26 +91,6 @@ module SSHKit
       assert_equal "sudo su anotheruser -c 'sg devvers -c \\\"/usr/bin/env whoami\\\"'", c.to_command
     end
 
-    def test_backgrounding_a_task
-      c = Command.new(:sleep, 15, run_in_background: true)
-      assert_equal "( nohup /usr/bin/env sleep 15 > /dev/null & )", c.to_command
-    end
-
-    def test_backgrounding_a_task_as_a_given_user
-      c = Command.new(:sleep, 15, run_in_background: true, user: :anotheruser)
-      assert_equal "sudo su anotheruser -c '( nohup /usr/bin/env sleep 15 > /dev/null & )'", c.to_command
-    end
-
-    def test_backgrounding_a_task_as_a_given_user_with_env
-      c = Command.new(:sleep, 15, run_in_background: true, user: :anotheruser, env: {a: :b})
-      assert_equal "( A=b sudo su anotheruser -c '( nohup /usr/bin/env sleep 15 > /dev/null & )' )", c.to_command
-    end
-
-    def test_backgrounding_a_task_with_working_directory
-      c = Command.new(:sleep, 15, run_in_background: true, in: '/opt')
-      assert_equal "cd /opt && ( nohup /usr/bin/env sleep 15 > /dev/null & )", c.to_command
-    end
-
     def test_umask
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile')

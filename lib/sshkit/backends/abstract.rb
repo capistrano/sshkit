@@ -54,10 +54,6 @@ module SSHKit
         raise MethodUnavailableError
       end
 
-      def background(command, args=[])
-        raise MethodUnavailableError
-      end
-
       def test(command, args=[])
         raise MethodUnavailableError
       end

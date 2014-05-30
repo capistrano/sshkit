@@ -80,21 +80,6 @@ module SSHKit
         end.run
       end
 
-      def test_backgrounding_a_process
-        #SSHKit.config.output = SSHKit::Formatter::Pretty.new($stdout)
-        process_list = ""
-        time = Benchmark.measure do
-          Netssh.new(a_host) do
-            background :sleep, 5
-          end.run
-          Netssh.new(a_host) do
-            process_list = capture :ps, "aux | grep sleep | grep -v grep; true"
-          end.run
-        end
-        assert_operator time.real, :<, 1
-        assert_match "sleep 5", process_list
-      end
-
       def test_upload_file
         file_contents = ""
         file_name = File.join("/tmp", SecureRandom.uuid)
