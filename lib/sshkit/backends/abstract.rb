@@ -97,7 +97,7 @@ module SSHKit
           @group = nil
         end
         execute <<-EOTEST, verbosity: Logger::DEBUG
-          if ! sudo su #{@user} -c whoami > /dev/null
+          if ! sudo -u #{@user} whoami > /dev/null
             then echo "You cannot switch to user '#{@user}' using sudo, please check the sudoers file" 1>&2
             false
           fi
