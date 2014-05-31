@@ -8,6 +8,10 @@ appear at the top.
   * Add your entries here, remember to credit yourself however you want to be
     credited!
 
+## 1.5.1
+
+  * Use `sudo -u` rather than `sudo su` to switch users. Mat Trudel
+
 ## 1.5.0
 
   * Deprecate background helper - too many badly behaved pseudo-daemons. Lee Hambley
