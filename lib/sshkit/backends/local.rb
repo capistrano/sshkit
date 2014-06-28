@@ -34,7 +34,8 @@ module SSHKit
       private
 
       def _execute(*args)
-        command(*args).tap do |cmd|
+        options = { skip_command_map: true }.merge(args.extract_options!)
+        command(*[*args, options]).tap do |cmd|
           output << cmd
 
           cmd.started = Time.now

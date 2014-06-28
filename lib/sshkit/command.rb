@@ -201,7 +201,11 @@ module SSHKit
     end
 
     def to_s
-      [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+      if @options[:skip_command_map]
+      then command_string = command.to_s
+      else command_string = SSHKit.config.command_map[command.to_sym]
+      end
+      [command_string, *Array(args)].join(' ')
     end
 
     private
