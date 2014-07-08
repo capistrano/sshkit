@@ -152,7 +152,7 @@ module SSHKit
 
     def environment_string
       environment_hash.collect do |key,value|
-        "#{key.to_s.upcase}=#{value}"
+        "#{key.to_s.upcase}=\"#{value.to_s.gsub(/"/, "\\\"")}\""
       end.join(' ')
     end
 
