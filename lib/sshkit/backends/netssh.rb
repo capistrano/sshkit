@@ -80,14 +80,14 @@ module SSHKit
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading')
         with_ssh do |ssh|
-          ssh.scp.upload!(local, remote, options, &summarizer)
+          ssh.scp.upload!(local, scp_path(remote), options, &summarizer)
         end
       end
 
       def download!(remote, local=nil, options = {})
         summarizer = transfer_summarizer('Downloading')
         with_ssh do |ssh|
-          ssh.scp.download!(remote, local, options, &summarizer)
+          ssh.scp.download!(scp_path(remote), local, options, &summarizer)
         end
       end
 
@@ -122,6 +122,10 @@ module SSHKit
               "is #{name} empty?"
           end
         end
+      end
+
+      def scp_path(path)
+        @pwd ? File.join(@pwd, path) : path
       end
 
       def _execute(*args)
