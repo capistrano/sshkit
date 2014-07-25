@@ -47,7 +47,7 @@ module SSHKit
       end
 
       def write_log_message(log_message)
-        original_output << level(log_message.verbosity) + log_message.to_s + "\n"
+        original_output << "%6s %s\n" % [level(log_message.verbosity), log_message.to_s]
       end
 
       def c
