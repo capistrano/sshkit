@@ -8,6 +8,10 @@ module SSHKit
         @local ||= Local.new
       end
 
+      def test_with_param
+        Local.new(Host.new('127.0.0.1'))
+      end
+
       def test_host
         assert_equal 'localhost', local.host.to_s
       end

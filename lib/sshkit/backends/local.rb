@@ -5,9 +5,8 @@ module SSHKit
 
     class Local < Printer
 
-      def initialize(&block)
-        @host = Host.new(hostname: 'localhost') # just for logging
-        @block = block
+      def initialize(host=Host.new(hostname: 'localhost'), &block)
+        super
       end
 
       def run
