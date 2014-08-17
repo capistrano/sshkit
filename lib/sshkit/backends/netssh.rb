@@ -108,12 +108,17 @@ module SSHKit
       private
 
       def transfer_summarizer(action)
+        last_name = nil
+        last_percentage = nil
         proc do |ch, name, transferred, total|
           percentage = (transferred.to_f * 100 / total.to_f)
           unless percentage.nan?
             message = "#{action} #{name} #{percentage.round(2)}%"
-            if percentage > 0 && percentage.round % 10 == 0
+            percentage_r = (percentage / 10).truncate * 10
+            if percentage_r > 0 && (last_name != name || last_percentage != percentage_r)
               info message
+              last_name = name
+              last_percentage = percentage_r
             else
               debug message
             end

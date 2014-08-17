@@ -38,12 +38,15 @@ module SSHKit
         summarizer = netssh.send(:transfer_summarizer,'Transferring')
 
         [
-         [1,    100, :debug, 'Transferring afile 1.0%'],
-         [1,    3,   :debug, 'Transferring afile 33.33%'],
-         [0,    1,   :debug, 'Transferring afile 0.0%'],
-         [1,    2,   :info,  'Transferring afile 50.0%'],
-         [0,    0,   :warn,  'percentage 0/0'],
-         [1023, 343, :debug, 'Transferring'],
+         [1,    1000, :debug, 'Transferring afile 0.1%'],
+         [1,    100,  :debug, 'Transferring afile 1.0%'],
+         [99,   1000, :debug, 'Transferring afile 9.9%'],
+         [15,   100,  :info,  'Transferring afile 15.0%'],
+         [1,    3,    :info,  'Transferring afile 33.33%'],
+         [0,    1,    :debug, 'Transferring afile 0.0%'],
+         [1,    2,    :info,  'Transferring afile 50.0%'],
+         [0,    0,    :warn,  'percentage 0/0'],
+         [1023, 343,  :info,  'Transferring'],
         ].each do |transferred,total,method,substring|
           netssh.expects(method).with { |msg| msg.include?(substring) }
           summarizer.call(nil,'afile',transferred,total)
