@@ -248,3 +248,9 @@ pooling behaviour entirely by setting the idle_timeout to zero:
 ```ruby
 SSHKit::Backend::Netssh.pool.idle_timeout = 0 # disabled
 ```
+
+## SSHKit Related Blog Posts
+
+[SSHKit Gem Basics](http://www.rubyplus.com/articles/591)
+[SSHKit Gem Part 2](http://www.rubyplus.com/articles/601)
+[Embedded Capistrano with SSHKit](http://ryandoyle.net/posts/embedded-capistrano-with-sshkit/)
