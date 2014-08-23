@@ -6,7 +6,11 @@ module Color
     instance_eval %{
     def #{style}(string='')
       string = yield if block_given?
-      $stdout.tty? ? string.colorize(:#{style}) : string
+      colorize? ? string.colorize(:#{style}) : string
+    end
+
+    def colorize?
+      ENV['SSHKIT_COLOR'] || $stdout.tty?
     end
     }
   end
