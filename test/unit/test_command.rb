@@ -41,6 +41,12 @@ module SSHKit
       assert_equal "( RAILS_ENV=production FOO=bar /usr/bin/env rails server )", c.to_command
     end
 
+    def test_including_the_env_with_string_keys
+      SSHKit.config = nil
+      c = Command.new(:rails, 'server', env: {'FACTER_env' => :production, foo: 'bar'})
+      assert_equal "( FACTER_env=production FOO=bar /usr/bin/env rails server )", c.to_command
+    end
+
     def test_including_the_env_doesnt_addressively_escape
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {path: '/example:$PATH'})

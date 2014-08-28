@@ -152,7 +152,11 @@ module SSHKit
 
     def environment_string
       environment_hash.collect do |key,value|
-        "#{key.to_s.upcase}=#{value}"
+        if key.is_a? Symbol
+          "#{key.to_s.upcase}=#{value}"
+        else
+          "#{key.to_s}=#{value}"
+        end
       end.join(' ')
     end
 
