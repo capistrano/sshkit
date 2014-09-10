@@ -5,6 +5,8 @@ module SSHKit
 
   class TestCoordinator < UnitTest
 
+    CloseEnough = 0.01; # 10 msec
+
     def setup
       super
       @s = String.new
@@ -17,7 +19,7 @@ module SSHKit
 
     def block_to_run
       lambda do |host|
-        execute "echo #{Time.now}"
+        execute "echo #{Time.now.to_f}"
       end
     end
 
@@ -56,7 +58,7 @@ module SSHKit
         Coordinator.new(%w{1.example.com 2.example.com}).each &block_to_run
       end
       assert_equal 2, results.length
-      assert_equal *results.map(&:to_i)
+      assert_in_delta *results, CloseEnough
     end
 
     def test_the_connection_manager_can_run_things_in_sequence
@@ -64,7 +66,7 @@ module SSHKit
         Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, &block_to_run
       end
       assert_equal 2, results.length
-      assert_operator results.first.to_i, :<, results.last.to_i
+      assert_operator (results.last - results.first), :>, 1.0
     end
 
     def test_the_connection_manager_can_run_things_in_sequence_with_wait
@@ -73,7 +75,7 @@ module SSHKit
         Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, wait: 10, &block_to_run
       end
       stop = Time.now
-      assert_operator (stop.to_i - start.to_i), :>=, 10
+      assert_operator (stop - start), :>=, 10.0
     end
 
     def test_the_connection_manager_can_run_things_in_groups
@@ -90,18 +92,18 @@ module SSHKit
         ).each in: :groups, &block_to_run
       end
       assert_equal 6, results.length
-      assert_equal *results[0..1].map(&:to_i)
-      assert_equal *results[2..3].map(&:to_i)
-      assert_equal *results[4..5].map(&:to_i)
-      assert_operator results[0].to_i, :<, results[2].to_i
-      assert_operator results[3].to_i, :<, results[4].to_i
+      assert_in_delta *results[0..1], CloseEnough
+      assert_in_delta *results[2..3], CloseEnough
+      assert_in_delta *results[4..5], CloseEnough
+      assert_operator (results[2] - results[1]), :>, 1.0
+      assert_operator (results[4] - results[3]), :>, 1.0
     end
 
     private
 
     def results
       @s.lines.collect do |line|
-        Time.parse(line.split[1..-1].join(' '))
+        line.split(' ').last.to_f
       end
     end
 
