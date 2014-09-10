@@ -14,7 +14,7 @@ module SSHKit
         Local.new do
           captured_command_result = capture(:echo, 'foo')
         end.run
-        assert_equal 'foo', captured_command_result
+        assert_equal "foo\n", captured_command_result
       end
 
       def test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr

@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries here, remember to credit yourself however you want to be
     credited!
+  * Remove strip from capture to preserve whitespace. Nick Townsend
+  * Add vmware_fusion Vagrant provider. Nick Townsend
+  * Add some padding to the pretty log formatter
 
 ## 1.5.1
 
