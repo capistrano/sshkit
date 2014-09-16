@@ -21,7 +21,7 @@ module SSHKit
         backend(host, &block).run
       rescue Exception => e
         e2 = ExecuteError.new e
-        raise e2, "Exception while executing on host #{host}: #{e.message}"
+        raise e2, "Exception while executing #{host.user ? "as #{host.user}@" : "on host "}#{host}: #{e.message}"
       end
 
       def wait_interval
