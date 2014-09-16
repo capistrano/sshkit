@@ -20,7 +20,7 @@ module SSHKit
 
       def write_command(command)
         unless command.started?
-          original_output << "Running #{String(command)} on #{command.host.to_s}\n"
+          original_output << "Running #{String(command)} #{command.host.user ? "as #{command.host.user}@" : "on "}#{command.host}\n"
           if SSHKit.config.output_verbosity == Logger::DEBUG
             original_output << "Command: #{command.to_command}" + "\n"
           end
