@@ -103,7 +103,7 @@ etc, this will be improved as the library matures, but we're not there yet.
     end
 
 In this case the `recursive: true` option mirrors the same options which are
-available to `Net::{SCP,SFTP}`.
+available to [`Net::{SCP,SFTP}`](http://net-ssh.github.io/net-scp/).
 
 ## Setting global SSH options
 
