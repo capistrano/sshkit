@@ -39,7 +39,8 @@ module SSHKit
 
     def [](command)
       if prefix[command].any?
-        prefixes = prefix[command].join(" ")
+        prefixes = prefix[command].map{ |prefix| prefix.respond_to?(:call) ? prefix.call : prefix }
+        prefixes = prefixes.join(" ")
 
         "#{prefixes} #{command}"
       else
