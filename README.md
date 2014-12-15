@@ -89,7 +89,7 @@ site_dir    = '/opt/sites/example.com'
 # Let's simulate a backup task, assuming that some servers take longer
 # then others to complete
 on all_servers do |host|
-  in site_dir do
+  within site_dir do
     execute :tar, '-czf', "backup-#{host.hostname}.tar.gz", 'current'
     # Will run: "/usr/bin/env tar -czf backup-one.example.com.tar.gz current"
   end
