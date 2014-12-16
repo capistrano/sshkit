@@ -5,6 +5,7 @@ appear at the top.
 
 ## (Unreleased)
 
+  * Add transparent support for old and new colorize gem API @sponomarev
   * Add your entries here, remember to credit yourself however you want to be
     credited!
   * Remove strip from capture to preserve whitespace. Nick Townsend
