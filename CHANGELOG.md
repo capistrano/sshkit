@@ -10,6 +10,11 @@ appear at the top.
 
 ## 1.6.0
 
+  * Fix colorize to use the correct API (@fazibear)
+  * Lock colorize (sorry guys) version at >= 0.7.0
+
+## 1.6.0 (Yanked, because of colorize.)
+
   * Force dependency on colorize v0.6.0
   * Add your entries here, remember to credit yourself however you want to be
     credited!
