@@ -1,4 +1,5 @@
 require 'helper'
+require 'etc'
 
 module SSHKit
 
@@ -39,6 +40,14 @@ module SSHKit
       assert_equal 123,           h.port
       assert_equal 'user',        h.username
       assert_equal 'example.com', h.hostname
+    end
+
+    def test_host_local
+      h = Host.new :local
+      assert       h.local?
+      assert_nil   h.port
+      assert_equal Etc.getpwuid.name, h.username
+      assert_equal 'localhost',       h.hostname
     end
 
     def test_does_not_confuse_ipv6_hosts_with_port_specification

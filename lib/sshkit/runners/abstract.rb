@@ -15,7 +15,11 @@ module SSHKit
       private
 
       def backend(host, &block)
-        SSHKit.config.backend.new(host, &block)
+        if host.local?
+          SSHKit::Backend::Local.new(&block)
+        else
+          SSHKit.config.backend.new(host, &block)
+        end
       end
 
     end

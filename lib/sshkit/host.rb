@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'etc'
 
 module SSHKit
 
@@ -22,7 +23,11 @@ module SSHKit
 
     def initialize(host_string_or_options_hash)
 
-      unless host_string_or_options_hash.is_a?(Hash)
+      if host_string_or_options_hash == :local
+        @local = true
+        @hostname = "localhost"
+        @user = Etc.getpwuid.name
+      elsif !host_string_or_options_hash.is_a?(Hash)
         suitable_parsers = [
           SimpleHostParser,
           HostWithPortParser,
@@ -49,6 +54,10 @@ module SSHKit
           end
         end
       end
+    end
+
+    def local?
+      @local
     end
 
     def hash
