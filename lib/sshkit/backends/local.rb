@@ -1,4 +1,5 @@
 require 'open3'
+require 'fileutils'
 module SSHKit
 
   module Backend
@@ -6,12 +7,12 @@ module SSHKit
     class Local < Printer
 
       def initialize(&block)
-        @host = Host.new(hostname: 'localhost') # just for logging
+        @host = Host.new(:local) # just for logging
         @block = block
       end
 
       def run
-        instance_exec(&@block)
+        instance_exec(@host, &@block)
       end
 
       def test(*args)
@@ -29,6 +30,26 @@ module SSHKit
       def capture(*args)
         options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
         _execute(*[*args, options]).full_stdout
+      end
+
+      def upload!(local, remote, options = {})
+        if local.is_a?(String)
+          FileUtils.cp(local, remote)
+        else
+          File.open(remote, "wb") do |f|
+            IO.copy_stream(local, f)
+          end
+        end
+      end
+
+      def download!(remote, local=nil, options = {})
+        if local.nil?
+          FileUtils.cp(remote, File.basename(remote))
+        else
+          File.open(remote, "rb") do |f|
+            IO.copy_stream(f, local)
+          end
+        end
       end
 
       private

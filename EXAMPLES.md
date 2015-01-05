@@ -344,3 +344,10 @@ Replace `on` with `run_locally`
       end
     end
 
+You can achieve the same thing with `on(:local)`
+
+    on(:local) do
+      within '/tmp' do
+        execute :whoami
+      end
+    end
