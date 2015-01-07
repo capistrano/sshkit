@@ -7,7 +7,7 @@ module SSHKit
     end
 
     def run_locally(&block)
-      Backend::Local.new(&block).run
+      SSHKit.config.local_backend.new(&block).run
     end
 
   end

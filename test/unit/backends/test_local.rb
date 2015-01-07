@@ -1,15 +1,12 @@
 require 'helper'
+require_relative 'test_local_printer'
 
 module SSHKit
   module Backend
-    class TestLocal < UnitTest
+    class TestLocal < TestLocalPrinter
 
       def local
         @local ||= Local.new
-      end
-
-      def test_host
-        assert_equal 'localhost', local.host.to_s
       end
 
       def test_execute

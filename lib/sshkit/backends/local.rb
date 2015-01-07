@@ -1,19 +1,12 @@
 require 'open3'
 require 'fileutils'
+require 'sshkit/backends/local_printer'
+
 module SSHKit
 
   module Backend
 
-    class Local < Printer
-
-      def initialize(&block)
-        @host = Host.new(:local) # just for logging
-        @block = block
-      end
-
-      def run
-        instance_exec(@host, &@block)
-      end
+    class Local < LocalPrinter
 
       def test(*args)
         options = args.extract_options!.merge(

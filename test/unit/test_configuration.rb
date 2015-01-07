@@ -41,6 +41,12 @@ module SSHKit
       assert_equal SSHKit::Backend::Printer, SSHKit.config.backend
     end
 
+    def test_local_backend
+      assert_equal SSHKit::Backend::Local, SSHKit.config.local_backend
+      assert SSHKit.config.local_backend = SSHKit::Backend::LocalPrinter
+      assert_equal SSHKit::Backend::LocalPrinter, SSHKit.config.local_backend
+    end
+
     def test_command_map
       assert_equal SSHKit.config.command_map.is_a?(SSHKit::CommandMap), true
 
