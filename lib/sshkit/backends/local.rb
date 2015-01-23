@@ -60,23 +60,34 @@ module SSHKit
 
           cmd.started = Time.now
 
-          stdout, stderr, exit_status =
-            if RUBY_ENGINE == 'jruby'
-              _, o, e, t = Open3.popen3('/usr/bin/env', 'sh', '-c', cmd.to_command)
-              [o.read, e.read, t.value]
-            else
-              Open3.capture3(cmd.to_command)
+          Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
+            stdout_thread = Thread.new do
+              while line = stdout.gets do
+                cmd.stdout = line
+                cmd.full_stdout += line
+
+                output << cmd
+              end
             end
 
-          cmd.stdout = stdout
-          cmd.full_stdout += stdout
+            stderr_thread = Thread.new do
+              while line = stderr.gets do
+                cmd.stderr = line
+                cmd.full_stderr += line
 
-          cmd.stderr = stderr
-          cmd.full_stderr += stderr
+                output << cmd
+              end
+            end
 
-          cmd.exit_status = exit_status.to_i
+            stdout_thread.join
+            stderr_thread.join
 
-          output << cmd
+            cmd.exit_status = wait_thr.value.to_i
+            cmd.stdout = ''
+            cmd.stderr = ''
+
+            output << cmd
+          end
         end
       end
 
