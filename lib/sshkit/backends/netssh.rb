@@ -62,8 +62,8 @@ module SSHKit
         _execute(*[*args, options]).success?
       end
 
-      def execute(*args)
-        _execute(*args).success?
+      def execute(*args, &block)
+        _execute(*args, &block).success?
       end
 
       def background(*args)
@@ -141,6 +141,15 @@ module SSHKit
                   cmd.stdout = data
                   cmd.full_stdout += data
                   output << cmd
+
+                  if block_given?
+                    yield(cmd)
+                    input = cmd.stdin
+                    cmd.stdin = nil
+                    if input && !input.empty?
+                      ch.send_data "#{input}\n"
+                    end
+                  end
                 end
                 chan.on_extended_data do |ch, type, data|
                   cmd.stderr = data

@@ -15,8 +15,8 @@ module SSHKit
       execute :make, tasks
     end
 
-    def execute(command, args=[])
-      Command.new(command, args)
+    def execute(command, args=[], &block)
+      Command.new(command, args, &block)
     end
 
     private
@@ -34,7 +34,7 @@ module SSHKit
 
     attr_reader :command, :args, :options, :started_at, :started, :exit_status
 
-    attr_accessor :stdout, :stderr
+    attr_accessor :stdin, :stdout, :stderr
     attr_accessor :full_stdout, :full_stderr
 
     # Initialize a new Command object
@@ -51,6 +51,7 @@ module SSHKit
       @args    = args
       @options.symbolize_keys!
       sanitize_command!
+      @stdin = nil
       @stdout, @stderr = String.new, String.new
       @full_stdout, @full_stderr = String.new, String.new
     end
