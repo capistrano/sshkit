@@ -13,5 +13,3 @@ module SSHKit
   end
 
 end
-
-include SSHKit::DSL

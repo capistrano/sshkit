@@ -10,6 +10,7 @@ require_relative 'configuration'
 require_relative 'coordinator'
 
 require_relative 'deprecation_logger'
+require_relative 'dsl'
 
 require_relative 'exception'
 
