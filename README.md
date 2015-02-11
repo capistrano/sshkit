@@ -1,4 +1,4 @@
-![SSHKit Logo](https://raw.github.com/leehambley/sshkit/master/assets/images/logo.png)
+![SSHKit Logo](https://raw.github.com/leehambley/sshkit/master/examples/images/logo.png)
 
 **SSHKit** is a toolkit for running commands in a structured way on one or
 more servers.
@@ -199,7 +199,7 @@ first argument before attempting to find it in the *command map*.
 
 ## Output Handling
 
-![Example Output](https://raw.github.com/leehambley/sshkit/master/assets/images/example_output.png)
+![Example Output](https://raw.github.com/leehambley/sshkit/master/examples/images/example_output.png)
 
 By default, the output format is set to `:pretty`:
 
