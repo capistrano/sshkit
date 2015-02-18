@@ -65,6 +65,17 @@ module SSHKit
         end
       end
 
+      def test_ssh_option_merge
+        a_host.ssh_options = { paranoid: true }
+        host_ssh_options = {}
+        SSHKit::Backend::Netssh.config.ssh_options = { forward_agent: false }
+        Netssh.new(a_host) do |host|
+          capture(:uname)
+          host_ssh_options = host.ssh_options
+        end.run
+        assert_equal({ forward_agent: false, paranoid: true }, host_ssh_options)
+      end
+
       def test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr
         err = assert_raises SSHKit::Command::Failed do
           Netssh.new(a_host) do |host|
