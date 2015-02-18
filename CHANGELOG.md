@@ -7,6 +7,7 @@ appear at the top.
 
   * Add your entries here, remember to credit yourself however you want to be
     credited!
+  * Update Vagrantfile to use multi-provider Hashicorp precise64 box - remove URLs. @townsen
 
 ## 1.6.0
 
