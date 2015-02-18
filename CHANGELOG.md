@@ -8,6 +8,9 @@ appear at the top.
   * Add your entries here, remember to credit yourself however you want to be
     credited!
   * Update Vagrantfile to use multi-provider Hashicorp precise64 box - remove URLs. @townsen
+  * Merge host ssh_options and Netssh defaults @townsen
+    Previously if host-level ssh_options were defined the Netssh defaults
+    were ignored.
 
 ## 1.6.0
 
