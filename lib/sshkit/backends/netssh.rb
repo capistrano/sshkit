@@ -180,7 +180,7 @@ module SSHKit
       end
 
       def with_ssh
-        host.ssh_options ||= Netssh.config.ssh_options
+        host.ssh_options = Netssh.config.ssh_options.merge(host.ssh_options || {})
         conn = self.class.pool.checkout(
           String(host.hostname),
           host.username,
