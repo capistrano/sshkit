@@ -13,6 +13,8 @@ appear at the top.
     were ignored.
   * Fixed race condition where output of failed command would be empty. @townsen
     Caused random failures of `test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr`
+  * Remove override of backtrace() and backtrace_locations() from ExecuteError. @townsen
+    This interferes with rake default behaviour and creates duplicate stacktraces.
 
 ## 1.6.0
 

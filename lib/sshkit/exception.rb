@@ -8,14 +8,6 @@ module SSHKit
           def initialize cause
             @cause = cause
           end
-
-          def backtrace
-            @cause.backtrace
-          end
- 
-          def backtrace_locations
-            @cause.backtrace_locations
-          end
         end
     end
 end
