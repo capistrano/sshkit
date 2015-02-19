@@ -133,6 +133,7 @@ module SSHKit
         command(*args).tap do |cmd|
           output << cmd
           cmd.started = true
+          exit_status = nil
           with_ssh do |ssh|
             ssh.open_channel do |chan|
               chan.request_pty if Netssh.config.pty
@@ -148,9 +149,7 @@ module SSHKit
                   output << cmd
                 end
                 chan.on_request("exit-status") do |ch, data|
-                  cmd.stdout = ''
-                  cmd.stderr = ''
-                  cmd.exit_status = data.read_long
+                  exit_status = data.read_long
                   output << cmd
                 end
                 #chan.on_request("exit-signal") do |ch, data|
@@ -176,6 +175,7 @@ module SSHKit
             end
             ssh.loop
           end
+          cmd.exit_status = exit_status if exit_status
         end
       end
 

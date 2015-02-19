@@ -11,6 +11,8 @@ appear at the top.
   * Merge host ssh_options and Netssh defaults @townsen
     Previously if host-level ssh_options were defined the Netssh defaults
     were ignored.
+  * Fixed race condition where output of failed command would be empty. @townsen
+    Caused random failures of `test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr`
 
 ## 1.6.0
 
