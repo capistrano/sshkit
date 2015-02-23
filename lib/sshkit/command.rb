@@ -90,10 +90,8 @@ module SSHKit
       if options[:raise_on_non_zero_exit] && exit_status > 0
         message = ""
         message += "#{command} exit status: " + exit_status.to_s + "\n"
-        message += "#{command} stdout: " + (stdout.strip.empty? ? "Nothing written" : stdout.strip) + "\n"
-
-        stderr_message = [stderr.strip, full_stderr.strip].delete_if(&:empty?).first
-        message += "#{command} stderr: " + (stderr_message || 'Nothing written') + "\n"
+        message += "#{command} stdout: " + (full_stdout.strip.empty? ? "Nothing written" : full_stdout.strip) + "\n"
+        message += "#{command} stderr: " + (full_stderr.strip.empty? ? 'Nothing written' : full_stderr.strip) + "\n"
         raise Failed, message
       end
     end
