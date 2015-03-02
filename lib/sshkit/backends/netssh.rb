@@ -150,7 +150,6 @@ module SSHKit
                 end
                 chan.on_request("exit-status") do |ch, data|
                   exit_status = data.read_long
-                  output << cmd
                 end
                 #chan.on_request("exit-signal") do |ch, data|
                 #  # TODO: This gets called if the program is killed by a signal
@@ -175,7 +174,11 @@ module SSHKit
             end
             ssh.loop
           end
-          cmd.exit_status = exit_status if exit_status
+          # Set exit_status and log the result upon completion
+          if exit_status
+            cmd.exit_status = exit_status
+            output << cmd
+          end
         end
       end
 
