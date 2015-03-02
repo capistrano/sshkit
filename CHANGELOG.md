@@ -3,18 +3,25 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
-## (Unreleased)
+## `master` (Unreleased)
 
   * Add your entries here, remember to credit yourself however you want to be
     credited!
+
+## 1.7.0
+
   * Update Vagrantfile to use multi-provider Hashicorp precise64 box - remove URLs. @townsen
   * Merge host ssh_options and Netssh defaults @townsen
     Previously if host-level ssh_options were defined the Netssh defaults
     were ignored.
+  * Merge host ssh_options and Netssh defaults
   * Fixed race condition where output of failed command would be empty. @townsen
     Caused random failures of `test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr`
+    Also fixes output handling in failed commands, and generally buggy output.
   * Remove override of backtrace() and backtrace_locations() from ExecuteError. @townsen
     This interferes with rake default behaviour and creates duplicate stacktraces.
+  * Allow running local commands using `on(:local)`
+  * Implement the upload! and download! methods for the local backend
 
 ## 1.6.0
 
