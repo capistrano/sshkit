@@ -5,9 +5,12 @@ appear at the top.
 
 ## `master` (Unreleased)
 
+  * Add your entries below here, remember to credit yourself however you want
+    to be credited!
+
+## 1.7.1
+
   * Fix a regression in 1.7.0 that caused command completion messages to be removed from log output. @mattbrictson
-  * Add your entries here, remember to credit yourself however you want to be
-    credited!
 
 ## 1.7.0
 
