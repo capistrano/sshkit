@@ -128,6 +128,16 @@ module SSHKit
         end.run
         assert_equal File.open(file_name).read, file_contents
       end
+
+      def test_scp_path
+        path = ""
+        Netssh.new(a_host) do
+          within "/tmp" do
+            path = scp_path('example_file')
+          end
+        end.run
+        assert_equal path, "/tmp/example_file"
+      end
     end
 
   end
