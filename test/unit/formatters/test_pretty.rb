@@ -23,32 +23,28 @@ module SSHKit
     end
 
     def test_logging_fatal
-      pretty << SSHKit::LogMessage.new(Logger::FATAL, "Test")
-      assert_equal "\e[0;31;49mFATAL\e[0m Test\n", output
+      assert_log("\e[0;31;49mFATAL\e[0m Test\n", Logger::FATAL, "Test")
     end
 
     def test_logging_error
-      pretty << SSHKit::LogMessage.new(Logger::ERROR, "Test")
-      assert_equal "\e[0;31;49mERROR\e[0m Test\n", output
+      assert_log("\e[0;31;49mERROR\e[0m Test\n", Logger::ERROR, "Test")
     end
 
     def test_logging_warn
-      pretty << SSHKit::LogMessage.new(Logger::WARN, "Test")
-      assert_equal "\e[0;33;49mWARN\e[0m Test\n", output
+      assert_log("\e[0;33;49mWARN\e[0m Test\n", Logger::WARN, "Test")
     end
 
     def test_logging_info
-      pretty << SSHKit::LogMessage.new(Logger::INFO, "Test")
-      assert_equal "\e[0;34;49mINFO\e[0m Test\n", output
+      assert_log("\e[0;34;49mINFO\e[0m Test\n", Logger::INFO, "Test")
     end
 
     def test_logging_debug
-      pretty << SSHKit::LogMessage.new(Logger::DEBUG, "Test")
-      assert_equal "\e[0;30;49mDEBUG\e[0m Test\n", output
+      assert_log("\e[0;30;49mDEBUG\e[0m Test\n", Logger::DEBUG, "Test")
     end
 
     def test_command_lifecycle_logging
-      command = fixed_uid_command('aaaaaa', :a_cmd, 'some args', 'localhost')
+      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('localhost'))
+      command.stubs(:uuid).returns('aaaaaa')
       pretty << command
       command.started = true
       pretty << command
@@ -71,10 +67,10 @@ module SSHKit
 
     private
 
-    def fixed_uid_command(constant_uuid, *args, host)
-      command = SSHKit::Command.new(*args, host: Host.new(host))
-      command.stubs(:uuid).returns(constant_uuid)
-      command
+    def assert_log(expected_output, level, message)
+      pretty << SSHKit::LogMessage.new(level, message)
+      assert_equal expected_output, output
     end
+    
   end
 end
