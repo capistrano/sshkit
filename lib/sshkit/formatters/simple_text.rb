@@ -32,6 +32,7 @@ module SSHKit
               original_output << "\t" + line
               original_output << "\n" unless line[-1] == "\n"
             end
+            command.stdout = ''
           end
 
           unless command.stderr.empty?
@@ -39,6 +40,7 @@ module SSHKit
               original_output << "\t" + line
               original_output << "\n" unless line[-1] == "\n"
             end
+            command.stderr = ''
           end
         end
 
