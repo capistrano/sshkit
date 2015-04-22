@@ -83,6 +83,14 @@ module SSHKit
     end
     alias :failed? :failure?
 
+    def clear_stdout_lines
+      split_and_clear_stream(@stdout)
+    end
+
+    def clear_stderr_lines
+      split_and_clear_stream(@stderr)
+    end
+
     def exit_status=(new_exit_status)
       @finished_at = Time.now
       @exit_status = new_exit_status
@@ -225,6 +233,10 @@ module SSHKit
           end
         end
       end
+    end
+
+    def split_and_clear_stream(stream)
+      stream.lines.to_a.tap { stream.clear } # Convert lines enumerable to an array for ruby 1.9
     end
 
   end

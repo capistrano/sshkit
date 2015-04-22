@@ -19,38 +19,31 @@ module SSHKit
 
       def write_command(command)
         unless command.started?
-          original_output << "%6s %s\n" % [level(command.verbosity),
-                                           uuid(command) + "Running #{c.yellow(c.bold(String(command)))} #{command.host.user ? "as #{c.blue(command.host.user)}@" : "on "}#{c.blue(command.host.to_s)}"]
+          host_prefix = command.host.user ? "as #{c.blue(command.host.user)}@" : 'on '
+          write_command_message("Running #{c.yellow(c.bold(String(command)))} #{host_prefix}#{c.blue(command.host.to_s)}", command)
           if SSHKit.config.output_verbosity == Logger::DEBUG
-            original_output << "%6s %s\n" % [level(Logger::DEBUG),
-                                             uuid(command) + "Command: #{c.blue(command.to_command)}"]
+            write_command_message("Command: #{c.blue(command.to_command)}", command, Logger::DEBUG)
           end
         end
 
         if SSHKit.config.output_verbosity == Logger::DEBUG
-          unless command.stdout.empty?
-            command.stdout.lines.each do |line|
-              original_output << "%6s %s" % [level(Logger::DEBUG),
-                                             uuid(command) + c.green("\t" + line)]
-              original_output << "\n" unless line[-1] == "\n"
-            end
-            command.stdout = ''
+          command.clear_stdout_lines.each do |line|
+            write_command_message(c.green(format_std_stream_line(line)), command, Logger::DEBUG)
           end
 
-          unless command.stderr.empty?
-            command.stderr.lines.each do |line|
-              original_output << "%6s %s" % [level(Logger::DEBUG),
-                                             uuid(command) + c.red("\t" + line)]
-              original_output << "\n" unless line[-1] == "\n"
-            end
-            command.stderr = ''
+          command.clear_stderr_lines.each do |line|
+            write_command_message(c.red(format_std_stream_line(line)), command, Logger::DEBUG)
           end
         end
 
         if command.finished?
-          original_output << "%6s %s\n" % [level(command.verbosity),
-                                           uuid(command) + "Finished in #{sprintf('%5.3f seconds', command.runtime)} with exit status #{command.exit_status} (#{c.bold { command.failure? ? c.red('failed') : c.green('successful') }})."]
+          successful_or_failed = c.bold { command.failure? ? c.red('failed') : c.green('successful') }
+          write_command_message("Finished in #{sprintf('%5.3f seconds', command.runtime)} with exit status #{command.exit_status} (#{successful_or_failed}).", command)
         end
+      end
+
+      def write_command_message(message, command, verbosity_override=nil)
+        original_output << "%6s [%s] %s\n" % [level(verbosity_override || command.verbosity), c.green(command.uuid), message]
       end
 
       def write_log_message(log_message)
@@ -59,10 +52,6 @@ module SSHKit
 
       def c
         @c ||= Color
-      end
-
-      def uuid(obj)
-        "[#{c.green(obj.uuid)}] "
       end
 
       def level(verbosity)

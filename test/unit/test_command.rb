@@ -199,5 +199,11 @@ module SSHKit
       assert_equal "whoami exit status: 1\nwhoami stdout: Nothing written\nwhoami stderr: Nothing written\n", error.message
     end
 
+    def test_clear_lines_methods_return_empty_array_when_blank
+      command = Command.new(:some_command)
+      assert_equal [], command.clear_stdout_lines
+      assert_equal [], command.clear_stderr_lines
+    end
+
   end
 end

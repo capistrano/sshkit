@@ -2,7 +2,7 @@ require 'helper'
 require 'sshkit'
 
 module SSHKit
-  class TestPretty < UnitTest
+  class TestSimpleText < UnitTest
 
     def setup
       SSHKit.config.output_verbosity = Logger::DEBUG
@@ -13,38 +13,39 @@ module SSHKit
     end
 
     def pretty
-      @_pretty ||= SSHKit::Formatter::Pretty.new(output)
+      @_simple ||= SSHKit::Formatter::SimpleText.new(output)
     end
 
     def teardown
-      remove_instance_variable :@_pretty
+      remove_instance_variable :@_simple
       remove_instance_variable :@_output
       SSHKit.reset_configuration!
     end
 
     def test_logging_fatal
-      assert_log("\e[0;31;49mFATAL\e[0m Test\n", Logger::FATAL, "Test")
+      assert_log("Test\n", Logger::FATAL, 'Test')
     end
 
     def test_logging_error
-      assert_log("\e[0;31;49mERROR\e[0m Test\n", Logger::ERROR, "Test")
+      assert_log(output, Logger::ERROR, 'Test')
     end
 
     def test_logging_warn
-      assert_log("\e[0;33;49mWARN\e[0m Test\n", Logger::WARN, "Test")
+      assert_log(output, Logger::WARN, 'Test')
     end
 
     def test_logging_info
-      assert_log("\e[0;34;49mINFO\e[0m Test\n", Logger::INFO, "Test")
+      assert_log(output, Logger::INFO, 'Test')
     end
 
     def test_logging_debug
-      assert_log("\e[0;30;49mDEBUG\e[0m Test\n", Logger::DEBUG, "Test")
+      assert_log(output, Logger::DEBUG, 'Test')
     end
 
     def test_command_lifecycle_logging
       command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('localhost'))
       command.stubs(:uuid).returns('aaaaaa')
+
       pretty << command
       command.started = true
       pretty << command
@@ -56,11 +57,11 @@ module SSHKit
       pretty << command
 
       expected_log_lines = [
-        "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Running \e[1;33;49m/usr/bin/env a_cmd some args\e[0m on \e[0;34;49mlocalhost\e[0m",
-        "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] Command: \e[0;34;49m/usr/bin/env a_cmd some args\e[0m",
-        "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;32;49m\tstdout message\e[0m",
-        "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;31;49m\tstderr message\e[0m",
-        "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Finished in 0.000 seconds with exit status 0 (\e[1;32;49msuccessful\e[0m)."
+        'Running /usr/bin/env a_cmd some args on localhost',
+        'Command: /usr/bin/env a_cmd some args',
+        "\tstdout message",
+        "\tstderr message",
+        'Finished in 0.000 seconds with exit status 0 (successful).'
       ]
       assert_equal expected_log_lines, output.split("\n")
     end
@@ -71,6 +72,6 @@ module SSHKit
       pretty << SSHKit::LogMessage.new(level, message)
       assert_equal expected_output, output
     end
-    
+
   end
 end
