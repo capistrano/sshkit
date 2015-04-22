@@ -27,14 +27,8 @@ module SSHKit
         end
 
         if SSHKit.config.output_verbosity == Logger::DEBUG
-          command.clear_stdout_lines.each do |line|
-            original_output << "\t" + line
-            original_output << "\n" unless line[-1] == "\n"
-          end
-
-          command.clear_stderr_lines.each do |line|
-            original_output << "\t" + line
-            original_output << "\n" unless line[-1] == "\n"
+          (command.clear_stdout_lines + command.clear_stderr_lines).each do |line|
+            original_output << format_std_stream_line(line) << "\n"
           end
         end
 

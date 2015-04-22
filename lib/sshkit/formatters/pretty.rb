@@ -29,15 +29,11 @@ module SSHKit
 
         if SSHKit.config.output_verbosity == Logger::DEBUG
           command.clear_stdout_lines.each do |line|
-            original_output << "%6s %s" % [level(Logger::DEBUG),
-                                           uuid(command) + c.green("\t" + line)]
-            original_output << "\n" unless line[-1] == "\n"
+            original_output << "%6s %s\n" % [level(Logger::DEBUG), uuid(command) + c.green(format_std_stream_line(line))]
           end
 
           command.clear_stderr_lines.each do |line|
-            original_output << "%6s %s" % [level(Logger::DEBUG),
-                                           uuid(command) + c.red("\t" + line)]
-            original_output << "\n" unless line[-1] == "\n"
+            original_output << "%6s %s\n" % [level(Logger::DEBUG), uuid(command) + c.red(format_std_stream_line(line))]
           end
         end
 
