@@ -27,20 +27,14 @@ module SSHKit
         end
 
         if SSHKit.config.output_verbosity == Logger::DEBUG
-          unless command.stdout.empty?
-            command.stdout.lines.each do |line|
-              original_output << "\t" + line
-              original_output << "\n" unless line[-1] == "\n"
-            end
-            command.stdout = ''
+          command.clear_stdout_lines.each do |line|
+            original_output << "\t" + line
+            original_output << "\n" unless line[-1] == "\n"
           end
 
-          unless command.stderr.empty?
-            command.stderr.lines.each do |line|
-              original_output << "\t" + line
-              original_output << "\n" unless line[-1] == "\n"
-            end
-            command.stderr = ''
+          command.clear_stderr_lines.each do |line|
+            original_output << "\t" + line
+            original_output << "\n" unless line[-1] == "\n"
           end
         end
 

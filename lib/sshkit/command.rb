@@ -83,6 +83,14 @@ module SSHKit
     end
     alias :failed? :failure?
 
+    def clear_stdout_lines
+      @stdout.lines.tap { @stdout.clear }
+    end
+
+    def clear_stderr_lines
+      @stderr.lines.tap { @stderr.clear }
+    end
+
     def exit_status=(new_exit_status)
       @finished_at = Time.now
       @exit_status = new_exit_status
