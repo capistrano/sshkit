@@ -45,6 +45,7 @@ module SSHKit
     def test_command_lifecycle_logging
       command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('localhost'))
       command.stubs(:uuid).returns('aaaaaa')
+      command.stubs(:runtime).returns(1)
       pretty << command
       command.started = true
       pretty << command
@@ -60,7 +61,7 @@ module SSHKit
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] Command: \e[0;34;49m/usr/bin/env a_cmd some args\e[0m",
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;32;49m\tstdout message\e[0m",
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;31;49m\tstderr message\e[0m",
-        "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Finished in 0.000 seconds with exit status 0 (\e[1;32;49msuccessful\e[0m)."
+        "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Finished in 1.000 seconds with exit status 0 (\e[1;32;49msuccessful\e[0m)."
       ]
       assert_equal expected_log_lines, output.split("\n")
     end
