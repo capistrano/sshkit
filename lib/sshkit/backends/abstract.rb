@@ -70,6 +70,12 @@ module SSHKit
         raise MethodUnavailableError
       end
 
+      def background(*args)
+        warn "[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!"
+        options = args.extract_options!.merge(run_in_background: true)
+        execute(*[*args, options])
+      end
+
       def within(directory, &block)
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST, verbosity: Logger::DEBUG
