@@ -49,8 +49,9 @@ module SSHKit
       end
 
       def capture(*args)
-        options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
-        command(*[*args, options]).tap { |command| execute_command(command) }.full_stdout.strip
+        # The behaviour to strip the full stdout was removed from the local backend in commit 7d15a9a,
+        # but was left in for the net ssh backend.
+        super(*args).strip
       end
 
       def upload!(local, remote, options = {})

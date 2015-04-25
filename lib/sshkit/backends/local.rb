@@ -11,11 +11,6 @@ module SSHKit
         @block = block
       end
 
-      def capture(*args)
-        options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
-        command(*[*args, options]).tap { |command| execute_command(command) }.full_stdout
-      end
-
       def upload!(local, remote, options = {})
         if local.is_a?(String)
           FileUtils.cp(local, remote)

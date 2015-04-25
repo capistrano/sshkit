@@ -62,18 +62,19 @@ module SSHKit
         execute(*[*args, options])
       end
 
-      def execute(*args)
-        command(*args).tap { |cmd| execute_command(cmd) }.success?
-      end
-
       def capture(*args)
-        raise MethodUnavailableError
+        options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
+        command(*[*args, options]).tap { |command| execute_command(command) }.full_stdout
       end
 
       def background(*args)
         warn "[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!"
         options = args.extract_options!.merge(run_in_background: true)
         execute(*[*args, options])
+      end
+
+      def execute(*args)
+        command(*args).tap { |cmd| execute_command(cmd) }.success?
       end
 
       def within(directory, &block)
