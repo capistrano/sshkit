@@ -47,11 +47,11 @@ module SSHKit
       end
 
       def make(commands=[])
-        raise MethodUnavailableError
+        execute :make, commands
       end
 
       def rake(commands=[])
-        raise MethodUnavailableError
+        execute :rake, commands
       end
 
       def test(command, args=[])

@@ -48,8 +48,6 @@ module SSHKit
         end
       end
 
-      include SSHKit::CommandHelper
-
       def run
         instance_exec(host, &@block)
       end
