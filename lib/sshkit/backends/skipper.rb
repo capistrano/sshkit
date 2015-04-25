@@ -7,10 +7,8 @@ module SSHKit
         @block = block
       end
 
-      def execute(*args)
-        command(*args).tap do |cmd|
+      def execute_command(cmd)
           warn "[SKIPPING] No Matching Host for #{cmd}"
-        end
       end
       alias :upload! :execute
       alias :download! :execute

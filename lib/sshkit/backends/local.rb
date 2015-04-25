@@ -11,13 +11,9 @@ module SSHKit
         @block = block
       end
 
-      def execute(*args)
-        _execute(*args).success?
-      end
-
       def capture(*args)
         options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
-        _execute(*[*args, options]).full_stdout
+        command(*[*args, options]).tap { |command| execute_command(command) }.full_stdout
       end
 
       def upload!(local, remote, options = {})
@@ -42,8 +38,7 @@ module SSHKit
 
       private
 
-      def _execute(*args)
-        command(*args).tap do |cmd|
+      def execute_command(cmd)
           output << cmd
 
           cmd.started = Time.now
@@ -76,7 +71,6 @@ module SSHKit
 
             output << cmd
           end
-        end
       end
 
     end

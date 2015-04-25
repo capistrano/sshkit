@@ -48,13 +48,9 @@ module SSHKit
         end
       end
 
-      def execute(*args)
-        _execute(*args).success?
-      end
-
       def capture(*args)
         options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
-        _execute(*[*args, options]).full_stdout.strip
+        command(*[*args, options]).tap { |command| execute_command(command) }.full_stdout.strip
       end
 
       def upload!(local, remote, options = {})
@@ -109,8 +105,7 @@ module SSHKit
         end
       end
 
-      def _execute(*args)
-        command(*args).tap do |cmd|
+      def execute_command(cmd)
           output << cmd
           cmd.started = true
           exit_status = nil
@@ -159,7 +154,6 @@ module SSHKit
             cmd.exit_status = exit_status
             output << cmd
           end
-        end
       end
 
       def with_ssh

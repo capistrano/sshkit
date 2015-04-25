@@ -63,7 +63,7 @@ module SSHKit
       end
 
       def execute(*args)
-        raise MethodUnavailableError
+        command(*args).tap { |cmd| execute_command(cmd) }.success?
       end
 
       def capture(*args)

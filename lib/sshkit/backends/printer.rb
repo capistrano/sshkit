@@ -3,10 +3,8 @@ module SSHKit
 
     class Printer < Abstract
 
-      def execute(*args)
-        command(*args).tap do |cmd|
+      def execute_command(cmd)
           output << cmd
-        end
       end
       alias :upload! :execute
       alias :download! :execute
