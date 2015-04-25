@@ -55,7 +55,11 @@ module SSHKit
       end
 
       def test(*args)
-        raise MethodUnavailableError
+        options = args.extract_options!.merge(
+          raise_on_non_zero_exit: false,
+          verbosity: Logger::DEBUG
+        )
+        execute(*[*args, options])
       end
 
       def execute(*args)

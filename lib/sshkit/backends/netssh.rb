@@ -48,22 +48,8 @@ module SSHKit
         end
       end
 
-      def test(*args)
-        options = args.extract_options!.merge(
-          raise_on_non_zero_exit: false,
-          verbosity: Logger::DEBUG
-        )
-        _execute(*[*args, options]).success?
-      end
-
       def execute(*args)
         _execute(*args).success?
-      end
-
-      def background(*args)
-        warn "[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!"
-        options = args.extract_options!.merge(run_in_background: true)
-        _execute(*[*args, options]).success?
       end
 
       def capture(*args)
