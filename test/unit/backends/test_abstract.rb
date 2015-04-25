@@ -64,6 +64,16 @@ module SSHKit
         assert_equal 'Some stdout', output
       end
 
+      def test_calling_abstract_with_undefined_execute_command_raises_exception
+        abstract =  Abstract.new(ExampleBackend.example_host) do
+          execute(:some_command)
+        end
+
+        assert_raises(SSHKit::Backend::MethodUnavailableError) do
+          abstract.run
+        end
+      end
+
       def test_abstract_backend_can_be_configured
         Abstract.configure do |config|
           config.some_option = 100

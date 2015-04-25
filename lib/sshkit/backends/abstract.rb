@@ -127,6 +127,12 @@ module SSHKit
         end
       end
 
+      # Backends which extend the Abstract backend should implement the following methods:
+      def upload!(local, remote, options = {}) raise MethodUnavailableError end
+      def download!(remote, local=nil, options = {}) raise MethodUnavailableError end
+      def execute_command(cmd) raise MethodUnavailableError end
+      private :execute_command # Can inline after Ruby 2.1
+
       private
 
       def output
