@@ -31,13 +31,9 @@ module SSHKit
         VagrantWrapper.hosts['one']
       end
 
-      def printer
-        Netssh.new(a_host, &block_to_run)
-      end
-
       def simple_netssh
         SSHKit.capture_output(sio) do
-          printer.run
+          Netssh.new(a_host, &block_to_run).run
         end
         sio.rewind
         result = sio.read
