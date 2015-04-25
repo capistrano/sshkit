@@ -37,7 +37,7 @@ module SSHKit
 
   module Backend
 
-    class Netssh < Printer
+    class Netssh < Abstract
 
       class Configuration
         attr_accessor :connection_timeout, :pty

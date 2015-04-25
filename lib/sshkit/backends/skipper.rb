@@ -1,7 +1,7 @@
 module SSHKit
   module Backend
 
-    class Skipper < Printer
+    class Skipper < Abstract
 
       def initialize(&block)
         @block = block

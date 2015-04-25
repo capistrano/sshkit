@@ -4,7 +4,7 @@ module SSHKit
 
   module Backend
 
-    class Local < Printer
+    class Local < Abstract
 
       def initialize(_ = nil, &block)
         @host = Host.new(:local) # just for logging
