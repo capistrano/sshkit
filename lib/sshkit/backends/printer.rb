@@ -4,7 +4,7 @@ module SSHKit
     class Printer < Abstract
 
       def execute_command(cmd)
-          output << cmd
+        output << cmd
       end
       alias :upload! :execute
       alias :download! :execute

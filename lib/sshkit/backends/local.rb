@@ -34,38 +34,38 @@ module SSHKit
       private
 
       def execute_command(cmd)
-          output << cmd
+        output << cmd
 
-          cmd.started = Time.now
+        cmd.started = Time.now
 
-          Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
-            stdout_thread = Thread.new do
-              while line = stdout.gets do
-                cmd.stdout = line
-                cmd.full_stdout += line
+        Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
+          stdout_thread = Thread.new do
+            while line = stdout.gets do
+              cmd.stdout = line
+              cmd.full_stdout += line
 
-                output << cmd
-              end
+              output << cmd
             end
-
-            stderr_thread = Thread.new do
-              while line = stderr.gets do
-                cmd.stderr = line
-                cmd.full_stderr += line
-
-                output << cmd
-              end
-            end
-
-            stdout_thread.join
-            stderr_thread.join
-
-            cmd.exit_status = wait_thr.value.to_i
-            cmd.stdout = ''
-            cmd.stderr = ''
-
-            output << cmd
           end
+
+          stderr_thread = Thread.new do
+            while line = stderr.gets do
+              cmd.stderr = line
+              cmd.full_stderr += line
+
+              output << cmd
+            end
+          end
+
+          stdout_thread.join
+          stderr_thread.join
+
+          cmd.exit_status = wait_thr.value.to_i
+          cmd.stdout = ''
+          cmd.stderr = ''
+
+          output << cmd
+        end
       end
 
     end

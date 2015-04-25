@@ -8,7 +8,7 @@ module SSHKit
       end
 
       def execute_command(cmd)
-          warn "[SKIPPING] No Matching Host for #{cmd}"
+        warn "[SKIPPING] No Matching Host for #{cmd}"
       end
       alias :upload! :execute
       alias :download! :execute
