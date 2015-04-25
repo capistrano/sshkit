@@ -9,7 +9,7 @@ module SSHKit
       attr_reader :host
 
       def run
-        # Nothing to do
+        instance_exec(@host, &@block)
       end
 
       def initialize(host, &block)

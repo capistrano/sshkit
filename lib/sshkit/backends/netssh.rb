@@ -48,10 +48,6 @@ module SSHKit
         end
       end
 
-      def run
-        instance_exec(host, &@block)
-      end
-
       def test(*args)
         options = args.extract_options!.merge(
           raise_on_non_zero_exit: false,

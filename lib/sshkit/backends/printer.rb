@@ -3,10 +3,6 @@ module SSHKit
 
     class Printer < Abstract
 
-      def run
-        instance_exec(host, &@block)
-      end
-
       def execute(*args)
         command(*args).tap do |cmd|
           output << cmd
