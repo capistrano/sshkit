@@ -54,15 +54,15 @@ module SSHKit
         execute :rake, commands
       end
 
-      def test(command, args=[])
+      def test(*args)
         raise MethodUnavailableError
       end
 
-      def execute(command, args=[])
+      def execute(*args)
         raise MethodUnavailableError
       end
 
-      def capture(command, args=[])
+      def capture(*args)
         raise MethodUnavailableError
       end
 
