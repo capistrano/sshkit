@@ -55,26 +55,24 @@ module SSHKit
       end
 
       def test(*args)
-        options = args.extract_options!.merge(
-          raise_on_non_zero_exit: false,
-          verbosity: Logger::DEBUG
-        )
-        execute(*[*args, options])
+        options = args.extract_options!.merge(raise_on_non_zero_exit: false, verbosity: Logger::DEBUG)
+        create_command_and_execute(args, options).success?
       end
 
       def capture(*args)
         options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
-        command(*[*args, options]).tap { |command| execute_command(command) }.full_stdout
+        create_command_and_execute(args, options).full_stdout
       end
 
       def background(*args)
         warn "[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!"
         options = args.extract_options!.merge(run_in_background: true)
-        execute(*[*args, options])
+        create_command_and_execute(args, options).success?
       end
 
       def execute(*args)
-        command(*args).tap { |cmd| execute_command(cmd) }.success?
+        options = args.extract_options!
+        create_command_and_execute(args, options).success?
       end
 
       def within(directory, &block)
@@ -135,8 +133,11 @@ module SSHKit
         SSHKit.config.output
       end
 
-      def command(*args)
-        options = args.extract_options!
+      def create_command_and_execute(args, options)
+        command(args, options).tap { |cmd| execute_command(cmd) }
+      end
+
+      def command(args, options)
         SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user, group: @group})])
       end
 
