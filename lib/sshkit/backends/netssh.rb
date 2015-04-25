@@ -15,26 +15,6 @@ end
 
 module SSHKit
 
-  class Logger
-
-    class Net::SSH::LogLevelShim
-      attr_reader :output
-      def initialize(output)
-        @output = output
-      end
-      def debug(args)
-        output << LogMessage.new(Logger::TRACE, args)
-      end
-      def error(args)
-        output << LogMessage.new(Logger::ERROR, args)
-      end
-      def lwarn(args)
-        output << LogMessage.new(Logger::WARN, args)
-      end
-    end
-
-  end
-
   module Backend
 
     class Netssh < Abstract
