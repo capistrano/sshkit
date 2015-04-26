@@ -9,12 +9,6 @@ module SSHKit
       alias :upload! :execute
       alias :download! :execute
       alias :test :execute
-
-      def capture(*args)
-        String.new.tap { execute(*args) }
-      end
-      alias :capture! :capture
-
     end
   end
 end
