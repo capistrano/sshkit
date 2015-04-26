@@ -13,7 +13,6 @@ module SSHKit
       alias :upload! :execute
       alias :download! :execute
       alias :test :execute
-      alias :invoke :execute
 
       def info(messages)
         # suppress all messages except `warn`
