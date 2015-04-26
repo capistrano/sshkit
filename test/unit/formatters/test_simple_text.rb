@@ -50,9 +50,9 @@ module SSHKit
       pretty << command
       command.started = true
       pretty << command
-      command.stdout = 'stdout message'
+      command.on_stdout('stdout message')
       pretty << command
-      command.stderr = 'stderr message'
+      command.on_stderr('stderr message')
       pretty << command
       command.exit_status = 0
       pretty << command

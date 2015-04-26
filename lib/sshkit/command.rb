@@ -9,10 +9,7 @@ module SSHKit
 
     Failed = Class.new(SSHKit::StandardError)
 
-    attr_reader :command, :args, :options, :started_at, :started, :exit_status
-
-    attr_accessor :stdout, :stderr
-    attr_accessor :full_stdout, :full_stderr
+    attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr
 
     # Initialize a new Command object
     #
@@ -28,8 +25,7 @@ module SSHKit
       @args    = args
       @options.symbolize_keys!
       sanitize_command!
-      @stdout, @stderr = String.new, String.new
-      @full_stdout, @full_stderr = String.new, String.new
+      @stdout, @stderr, @full_stdout, @full_stderr = String.new, String.new, String.new, String.new
     end
 
     def complete?
@@ -60,8 +56,18 @@ module SSHKit
     end
     alias :failed? :failure?
 
+    def on_stdout(data)
+      @stdout = data
+      @full_stdout += data
+    end
+
     def clear_stdout_lines
       split_and_clear_stream(@stdout)
+    end
+
+    def on_stderr(data)
+      @stderr = data
+      @full_stderr += data
     end
 
     def clear_stderr_lines

@@ -41,18 +41,14 @@ module SSHKit
         Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
           stdout_thread = Thread.new do
             while line = stdout.gets do
-              cmd.stdout = line
-              cmd.full_stdout += line
-
+              cmd.on_stdout(line)
               output << cmd
             end
           end
 
           stderr_thread = Thread.new do
             while line = stderr.gets do
-              cmd.stderr = line
-              cmd.full_stderr += line
-
+              cmd.on_stderr(line)
               output << cmd
             end
           end
@@ -61,8 +57,8 @@ module SSHKit
           stderr_thread.join
 
           cmd.exit_status = wait_thr.value.to_i
-          cmd.stdout = ''
-          cmd.stderr = ''
+          cmd.clear_stdout_lines
+          cmd.clear_stderr_lines
 
           output << cmd
         end
