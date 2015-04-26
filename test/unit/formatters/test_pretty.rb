@@ -23,23 +23,23 @@ module SSHKit
     end
 
     def test_logging_fatal
-      assert_log("\e[0;31;49mFATAL\e[0m Test\n", Logger::FATAL, "Test")
+      assert_equal "\e[0;31;49mFATAL\e[0m Test\n", pretty.fatal('Test')
     end
 
     def test_logging_error
-      assert_log("\e[0;31;49mERROR\e[0m Test\n", Logger::ERROR, "Test")
+      assert_equal "\e[0;31;49mERROR\e[0m Test\n", pretty.error('Test')
     end
 
     def test_logging_warn
-      assert_log("\e[0;33;49mWARN\e[0m Test\n", Logger::WARN, "Test")
+      assert_equal "\e[0;33;49mWARN\e[0m Test\n", pretty.warn('Test')
     end
 
     def test_logging_info
-      assert_log("\e[0;34;49mINFO\e[0m Test\n", Logger::INFO, "Test")
+      assert_equal "\e[0;34;49mINFO\e[0m Test\n", pretty.info('Test')
     end
 
     def test_logging_debug
-      assert_log("\e[0;30;49mDEBUG\e[0m Test\n", Logger::DEBUG, "Test")
+      assert_equal "\e[0;30;49mDEBUG\e[0m Test\n", pretty.debug('Test')
     end
 
     def test_command_lifecycle_logging
@@ -66,12 +66,5 @@ module SSHKit
       assert_equal expected_log_lines, output.split("\n")
     end
 
-    private
-
-    def assert_log(expected_output, level, message)
-      pretty << SSHKit::LogMessage.new(level, message)
-      assert_equal expected_output, output
-    end
-    
   end
 end

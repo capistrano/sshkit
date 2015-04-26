@@ -12,7 +12,7 @@ module SSHKit
       @_output ||= String.new
     end
 
-    def pretty
+    def simple
       @_simple ||= SSHKit::Formatter::SimpleText.new(output)
     end
 
@@ -23,23 +23,23 @@ module SSHKit
     end
 
     def test_logging_fatal
-      assert_log("Test\n", Logger::FATAL, 'Test')
+      assert_equal "Test\n", simple.fatal('Test')
     end
 
     def test_logging_error
-      assert_log(output, Logger::ERROR, 'Test')
+      assert_equal "Test\n", simple.error('Test')
     end
 
     def test_logging_warn
-      assert_log(output, Logger::WARN, 'Test')
+      assert_equal "Test\n", simple.warn('Test')
     end
 
     def test_logging_info
-      assert_log(output, Logger::INFO, 'Test')
+      assert_equal "Test\n", simple.info('Test')
     end
 
     def test_logging_debug
-      assert_log(output, Logger::DEBUG, 'Test')
+      assert_equal "Test\n", simple.debug('Test')
     end
 
     def test_command_lifecycle_logging
@@ -47,15 +47,15 @@ module SSHKit
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
 
-      pretty << command
+      simple << command
       command.started = true
-      pretty << command
+      simple << command
       command.on_stdout('stdout message')
-      pretty << command
+      simple << command
       command.on_stderr('stderr message')
-      pretty << command
+      simple << command
       command.exit_status = 0
-      pretty << command
+      simple << command
 
       expected_log_lines = [
         'Running /usr/bin/env a_cmd some args on localhost',
@@ -65,13 +65,6 @@ module SSHKit
         'Finished in 1.000 seconds with exit status 0 (successful).'
       ]
       assert_equal expected_log_lines, output.split("\n")
-    end
-
-    private
-
-    def assert_log(expected_output, level, message)
-      pretty << SSHKit::LogMessage.new(level, message)
-      assert_equal expected_output, output
     end
 
   end

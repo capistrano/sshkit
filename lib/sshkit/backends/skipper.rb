@@ -21,7 +21,6 @@ module SSHKit
       alias :fatal :info
       alias :error :info
       alias :debug :info
-      alias :trace :info
 
     end
   end
