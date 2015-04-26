@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * No longer strip whitespace or newlines in `capture` method on Netssh backend. @robd
+    * This is to make the `Local` and `Netssh` backends consistent (they diverged at 7d15a9a)    
+    * If you need the old behaviour back, call `.strip` (or `.chomp`) on the captured string i.e. `capture(:my_command).strip`  
   * Simplified backend hierarchy. @robd
     * Moved duplicate implementations of `make`, `rake`, `test`, `capture`, `background` on to `Abstract` backend.
     * Backend implementations now only need to implement `execute_command`, `upload!` and `download!`

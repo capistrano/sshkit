@@ -28,12 +28,6 @@ module SSHKit
         end
       end
 
-      def capture(*args)
-        # The behaviour to strip the full stdout was removed from the local backend in commit 7d15a9a,
-        # but was left in for the net ssh backend.
-        super(*args).strip
-      end
-
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading')
         with_ssh do |ssh|
