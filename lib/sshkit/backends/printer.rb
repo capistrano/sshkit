@@ -3,33 +3,12 @@ module SSHKit
 
     class Printer < Abstract
 
-      include SSHKit::CommandHelper
-
-      def run
-        instance_exec(host, &@block)
-      end
-
-      def execute(*args)
-        command(*args).tap do |cmd|
-          output << cmd
-        end
+      def execute_command(cmd)
+        output << cmd
       end
       alias :upload! :execute
       alias :download! :execute
       alias :test :execute
-
-      def capture(*args)
-        String.new.tap { execute(*args) }
-      end
-      alias :capture! :capture
-
-
-      private
-
-      def output
-        SSHKit.config.output
-      end
-
     end
   end
 end

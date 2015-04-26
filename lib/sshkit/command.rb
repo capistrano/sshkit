@@ -5,29 +5,6 @@ require 'securerandom'
 module SSHKit
 
   # @author Lee Hambley
-  module CommandHelper
-
-    def rake(tasks=[])
-      execute :rake, tasks
-    end
-
-    def make(tasks=[])
-      execute :make, tasks
-    end
-
-    def execute(command, args=[])
-      Command.new(command, args)
-    end
-
-    private
-
-    def map(command)
-      SSHKit.config.command_map[command.to_sym]
-    end
-
-  end
-
-  # @author Lee Hambley
   class Command
 
     Failed = Class.new(SSHKit::StandardError)

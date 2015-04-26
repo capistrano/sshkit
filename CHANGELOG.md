@@ -7,6 +7,11 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Simplified backend hierarchy. @robd
+    * Moved duplicate implementations of `make`, `rake`, `test`, `capture`, `background` on to `Abstract` backend.
+    * Backend implementations now only need to implement `execute_command`, `upload!` and `download!`
+    * Removed `Printer` from backend hierarchy for `Local` and `Netssh` backends (they now just extend `Abstract`)
+    * Removed unused `Net::SSH:LogLevelShim`
 
 ## 1.7.1
 

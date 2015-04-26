@@ -9,7 +9,7 @@ module SSHKit
       attr_reader :host
 
       def run
-        # Nothing to do
+        instance_exec(@host, &@block)
       end
 
       def initialize(host, &block)
@@ -47,23 +47,32 @@ module SSHKit
       end
 
       def make(commands=[])
-        raise MethodUnavailableError
+        execute :make, commands
       end
 
       def rake(commands=[])
-        raise MethodUnavailableError
+        execute :rake, commands
       end
 
-      def test(command, args=[])
-        raise MethodUnavailableError
+      def test(*args)
+        options = args.extract_options!.merge(raise_on_non_zero_exit: false, verbosity: Logger::DEBUG)
+        create_command_and_execute(args, options).success?
       end
 
-      def execute(command, args=[])
-        raise MethodUnavailableError
+      def capture(*args)
+        options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
+        create_command_and_execute(args, options).full_stdout
       end
 
-      def capture(command, args=[])
-        raise MethodUnavailableError
+      def background(*args)
+        warn "[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!"
+        options = args.extract_options!.merge(run_in_background: true)
+        create_command_and_execute(args, options).success?
+      end
+
+      def execute(*args)
+        options = args.extract_options!
+        create_command_and_execute(args, options).success?
       end
 
       def within(directory, &block)
@@ -118,10 +127,23 @@ module SSHKit
         end
       end
 
+      # Backends which extend the Abstract backend should implement the following methods:
+      def upload!(local, remote, options = {}) raise MethodUnavailableError end
+      def download!(remote, local=nil, options = {}) raise MethodUnavailableError end
+      def execute_command(cmd) raise MethodUnavailableError end
+      private :execute_command # Can inline after Ruby 2.1
+
       private
 
-      def command(*args)
-        options = args.extract_options!
+      def output
+        SSHKit.config.output
+      end
+
+      def create_command_and_execute(args, options)
+        command(args, options).tap { |cmd| execute_command(cmd) }
+      end
+
+      def command(args, options)
         SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user, group: @group})])
       end
 
