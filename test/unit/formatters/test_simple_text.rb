@@ -50,9 +50,9 @@ module SSHKit
       simple << command
       command.started = true
       simple << command
-      command.on_stdout('stdout message')
+      command.on_stdout(nil, 'stdout message')
       simple << command
-      command.on_stderr('stderr message')
+      command.on_stderr(nil, 'stderr message')
       simple << command
       command.exit_status = 0
       simple << command

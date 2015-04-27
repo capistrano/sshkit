@@ -41,14 +41,14 @@ module SSHKit
         Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
           stdout_thread = Thread.new do
             while line = stdout.gets do
-              cmd.on_stdout(line)
+              cmd.on_stdout(stdin, line)
               output << cmd
             end
           end
 
           stderr_thread = Thread.new do
             while line = stderr.gets do
-              cmd.on_stderr(line)
+              cmd.on_stderr(stdin, line)
               output << cmd
             end
           end

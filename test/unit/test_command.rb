@@ -165,13 +165,13 @@ module SSHKit
 
     def test_on_stdout
       c = Command.new(:whoami)
-      c.on_stdout("test\n")
+      c.on_stdout(nil, "test\n")
       assert_equal ["test\n"], c.clear_stdout_lines
     end
 
     def test_on_stderr
       c = Command.new(:whoami)
-      c.on_stderr("test\n")
+      c.on_stderr(nil, "test\n")
       assert_equal ["test\n"], c.clear_stderr_lines
     end
 

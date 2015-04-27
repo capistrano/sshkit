@@ -123,6 +123,19 @@ module SSHKit
         end.run
         assert_equal File.open(file_name).read, file_contents
       end
+
+      def test_interaction_handler
+        enter_data_handler = MappingInteractionHandler.new(
+          "Enter Data\n" => 'SOME DATA',
+          "Captured SOME DATA\n" => nil
+        )
+        captured_command_result = nil
+        Netssh.new(a_host) do
+          command = 'echo Enter Data; read the_data; echo Captured $the_data;'
+          captured_command_result = capture(command, :interaction_handler => enter_data_handler)
+        end.run
+        assert_equal("Enter Data\nCaptured SOME DATA\n", captured_command_result)
+      end
     end
 
   end
