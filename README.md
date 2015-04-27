@@ -239,17 +239,17 @@ end
 
 # ...
 
-execute(:passwd, :interaction_handler => PasswdInteractionHandler.new)
+execute(:passwd, interaction_handler: PasswdInteractionHandler.new)
 ```
 
 Often, you want to map directly from an output string returned by the server to the corresponding input string (as in the case above).
 For this case you can use a `MappingInteractionHandler`:
 
 ```ruby
-execute(:passwd, :interaction_handler => MappingInteractionHandler.new(
-  '(current) UNIX password: ' : 'old_pw',
-  'Enter new UNIX password: ' : 'new_pw',
-  'Retype new UNIX password: ' : 'new_pw',
+execute(:passwd, interaction_handler: MappingInteractionHandler.new(
+  '(current) UNIX password: ' => 'old_pw',
+  'Enter new UNIX password: ' => 'new_pw',
+  'Retype new UNIX password: ' => 'new_pw',
   'passwd: password updated successfully' : nil # For stdout/stderr which can be ignored, map a nil input
 ))
 ```
@@ -266,8 +266,8 @@ ENTER_PASSWORD = MappingInteractionHandler.new('Please Enter Password' : 'some_p
 
 # ...
 
-execute(:first_command,  :interaction_handler => ENTER_PASSWORD)
-execute(:second_command,  :interaction_handler => ENTER_PASSWORD)
+execute(:first_command, interaction_handler: ENTER_PASSWORD)
+execute(:second_command, interaction_handler: ENTER_PASSWORD)
 ```
 
 `:interaction_handler`s can also be stateful if you need them to be and you can capture user data with `$stdin`:
@@ -293,10 +293,10 @@ end
 
 # ...
 
-prompt_or_used_cached = PromptUserForPasswordAndCache.new
+prompt_or_use_cached = PromptUserForPasswordAndCache.new
 
-execute(:first_command, :interaction_handler => prompt_or_used_cached)
-execute(:second_command,  :interaction_handler => prompt_or_used_cached)
+execute(:first_command, interaction_handler: prompt_or_use_cached)
+execute(:second_command, interaction_handler: prompt_or_use_cached)
 
 ```
 

@@ -132,7 +132,7 @@ module SSHKit
         captured_command_result = nil
         Netssh.new(a_host) do
           command = 'echo Enter Data; read the_data; echo Captured $the_data;'
-          captured_command_result = capture(command, :interaction_handler => enter_data_handler)
+          captured_command_result = capture(command, interaction_handler: enter_data_handler)
         end.run
         assert_equal("Enter Data\nCaptured SOME DATA\n", captured_command_result)
       end
