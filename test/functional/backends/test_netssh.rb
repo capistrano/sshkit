@@ -55,8 +55,7 @@ module SSHKit
               captured_command_result = capture(:uname)
             end.run
 
-            assert captured_command_result
-            assert_match captured_command_result, /Linux|Darwin/
+            assert_includes %W(Linux\n Darwin\n), captured_command_result
           end
         end
       end
@@ -87,17 +86,17 @@ module SSHKit
         end.run
       end
 
-      def test_upload_file
-        file_contents = ""
+      def test_upload_and_then_capture_file_contents
+        actual_file_contents = ""
         file_name = File.join("/tmp", SecureRandom.uuid)
         File.open file_name, 'w+' do |f|
-          f.write 'example_file'
+          f.write "Some Content\nWith a newline and trailing spaces    \n "
         end
         Netssh.new(a_host) do
           upload!(file_name, file_name)
-          file_contents = capture(:cat, file_name)
+          actual_file_contents = capture(:cat, file_name)
         end.run
-        assert_equal "example_file", file_contents
+        assert_equal "Some Content\nWith a newline and trailing spaces    \n ", actual_file_contents
       end
 
       def test_upload_string_io
