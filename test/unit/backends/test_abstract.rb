@@ -102,7 +102,7 @@ module SSHKit
 
         def execute_command(command)
           @executed_command = command
-          command.full_stdout = @full_stdout
+          command.on_stdout(nil, @full_stdout) unless @full_stdout.nil?
         end
 
         def ExampleBackend.example_host

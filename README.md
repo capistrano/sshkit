@@ -197,6 +197,119 @@ desirable.
 *Note:* All keys should be symbolised, as the *Command* object will symbolize it's
 first argument before attempting to find it in the *command map*.
 
+## Interactive commands
+> (BETA) (Added in version #.##)
+
+By default, commands against remote servers are run in a *non-login, non-interactive* ssh session.
+This is by design, to try and isolate the environment and make sure that things work as expected,
+regardless of any changes that might happen on the server side. This means that,
+although the server may have prompted you, and be waiting for it,
+**you cannot send data to the server by typing into your terminal window**.
+Wherever possible, you should call commands in a way that doesn't require interaction
+(eg by specifying all options as command arguments).
+
+However in some cases, you may want to programmatically drive interaction with a command
+and this can be achieved by specifying an `:interaction_handler` option when you `execute`, `capture` or `test` a command.
+
+**It is not necessary, or desirable to enable `Netssh.config.pty` to use the `interaction_handler` option.
+Only enable `Netssh.config.pty` if the command you are calling won't work without a pty.**
+
+An `interaction_handler` is an object which responds to `on_stdout(stdout, channel, command)` or `on_stderr(stderr, channel, command)`.
+The `interaction_handler`'s methods will be called once per line of `stdout` or `stderr` from the server and
+can send data back to the server using the `channel` parameter.
+This allows scripting of command interaction by responding to `stdout` or `stderr` lines with any input required.
+
+For example, an interaction handler to change the password of your linux user using the `passwd` command could look like this:
+
+```ruby
+class PasswdInteractionHandler
+  def on_stderr(channel, stderr, command)
+    puts stderr
+    case stderr
+      when '(current) UNIX password: '
+        channel.send_data("old_pw\n")
+      when 'Enter new UNIX password: ', 'Retype new UNIX password: '
+        channel.send_data("new_pw\n")
+      when 'passwd: password updated successfully'
+      else
+        raise "Unexpected stderr #{stderr}"
+    end
+  end
+end
+
+# ...
+
+execute(:passwd, interaction_handler: PasswdInteractionHandler.new)
+```
+
+Often, you want to map directly from an output string returned by the server to the corresponding input string (as in the case above).
+For this case you can use a `MappingInteractionHandler`:
+
+```ruby
+execute(:passwd, interaction_handler: MappingInteractionHandler.new(
+  '(current) UNIX password: ' => 'old_pw',
+  'Enter new UNIX password: ' => 'new_pw',
+  'Retype new UNIX password: ' => 'new_pw',
+  'passwd: password updated successfully' : nil # For stdout/stderr which can be ignored, map a nil input
+))
+```
+
+`MappingInteractionHandler`s map output from `stdout` or `stderr` using the same single map.
+If no mapping is found, a warning will show the string you need to add to your map:
+
+`Unable to find interaction handler mapping for stdout: "Server output\n" so no response was sent`
+
+`MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:
+
+```ruby
+ENTER_PASSWORD = MappingInteractionHandler.new('Please Enter Password' : 'some_password')
+
+# ...
+
+execute(:first_command, interaction_handler: ENTER_PASSWORD)
+execute(:second_command, interaction_handler: ENTER_PASSWORD)
+```
+
+`:interaction_handler`s can also be stateful if you need them to be and you can capture user data with `$stdin`:
+
+```ruby
+class PromptUserForPasswordAndCache
+  @password_cache = {}
+
+  def on_stderr(channel, stderr, command)
+    if data =~ /Sorry.*\stry\sagain/
+      @password_cache[command.host] = nil
+    end
+    if data =~ /password.*:/
+      pass = password_cache[command.host]
+      unless pass
+        pass = $stdin.noecho(&:gets)
+        password_cache[command.host] = pass
+      end
+      ch.send_data(pass)
+    end
+  end
+end
+
+# ...
+
+prompt_or_use_cached = PromptUserForPasswordAndCache.new
+
+execute(:first_command, interaction_handler: prompt_or_use_cached)
+execute(:second_command, interaction_handler: prompt_or_use_cached)
+
+```
+
+When using the `Netssh` backend, the `channel` parameter of `on_stdout(channel, stdout, command)` or
+`on_stderr(channel, stderr, command)` is a
+[Net::SSH Channel](http://net-ssh.github.io/ssh/v2/api/classes/Net/SSH/Connection/Channel.html).
+When using the `Local` backend, it is a [ruby IO](http://ruby-doc.org/core/IO.html) object.
+If you need to support both sorts of backends with the same interaction handler,
+you need to call methods the appropriate API depending on the channel type.
+One approach is to detect the presence of the API methods you need -
+eg `channel.respond_to?(:send_data) # Net::SSH channel` and `channel.respond_to?(:write) # IO`.
+See the `MappingInteractionHandler` for an example of this.
+
 ## Output Handling
 
 ![Example Output](https://raw.github.com/leehambley/sshkit/master/examples/images/example_output.png)

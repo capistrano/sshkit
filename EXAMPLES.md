@@ -64,6 +64,17 @@ This will output:
 **Note:** This example is a bit misleading, as the `www-data` user doesn't
 have a shell defined, one cannot switch to that user.
 
+## Run a command which requires interaction between the client and the server
+
+    on hosts do |host|
+      execute(:passwd, interaction_handler: MappingInteractionHandler.new(
+        '(current) UNIX password: ' => 'old_pw',
+        'Enter new UNIX password: ' => 'new_pw',
+        'Retype new UNIX password: ' => 'new_pw',
+        'passwd: password updated successfully' => nil # For stdout/stderr which can be ignored, map a nil input
+      ))
+    end
+
 ## Upload a file from disk
 
     on hosts do |host|

@@ -14,6 +14,8 @@ require_relative 'exception'
 require_relative 'logger'
 require_relative 'log_message'
 
+require_relative 'mapping_interaction_handler'
+
 require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
 require_relative 'formatters/simple_text'

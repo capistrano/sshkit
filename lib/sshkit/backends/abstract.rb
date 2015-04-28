@@ -6,6 +6,9 @@ module SSHKit
 
     class Abstract
 
+      extend Forwardable
+      def_delegators :output, :log, :fatal, :error, :warn, :info, :debug
+
       attr_reader :host
 
       def run
@@ -16,34 +19,6 @@ module SSHKit
         raise "Must pass a Host object" unless host.is_a? Host
         @host  = host
         @block = block
-      end
-
-      def log(messages)
-        info(messages)
-      end
-
-      def fatal(messages)
-        output << LogMessage.new(Logger::FATAL, messages)
-      end
-
-      def error(messages)
-        output << LogMessage.new(Logger::ERROR, messages)
-      end
-
-      def warn(messages)
-        output << LogMessage.new(Logger::WARN, messages)
-      end
-
-      def info(messages)
-        output << LogMessage.new(Logger::INFO, messages)
-      end
-
-      def debug(messages)
-        output << LogMessage.new(Logger::DEBUG, messages)
-      end
-
-      def trace(messages)
-        output << LogMessage.new(Logger::TRACE, messages)
       end
 
       def make(commands=[])

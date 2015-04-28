@@ -89,13 +89,11 @@ module SSHKit
             chan.request_pty if Netssh.config.pty
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
-                cmd.stdout = data
-                cmd.full_stdout += data
+                cmd.on_stdout(ch, data)
                 output << cmd
               end
               chan.on_extended_data do |ch, type, data|
-                cmd.stderr = data
-                cmd.full_stderr += data
+                cmd.on_stderr(ch, data)
                 output << cmd
               end
               chan.on_request("exit-status") do |ch, data|

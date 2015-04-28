@@ -163,16 +163,22 @@ module SSHKit
       assert c.failed?
     end
 
-    def test_appending_stdout
+    def test_on_stdout
       c = Command.new(:whoami)
-      assert c.stdout += "test\n"
-      assert_equal "test\n", c.stdout
+      c.on_stdout(nil, "test\n")
+      assert_equal ["test\n"], c.clear_stdout_lines
     end
 
-    def test_appending_stderr
+    def test_on_stderr
       c = Command.new(:whoami)
-      assert c.stderr += "test\n"
-      assert_equal "test\n", c.stderr
+      c.on_stderr(nil, "test\n")
+      assert_equal ["test\n"], c.clear_stderr_lines
+    end
+
+    def test_clear_lines_methods_return_empty_array_when_blank
+      command = Command.new(:some_command)
+      assert_equal [], command.clear_stdout_lines
+      assert_equal [], command.clear_stderr_lines
     end
 
     def test_setting_exit_status
@@ -197,12 +203,6 @@ module SSHKit
         Command.new(:whoami).exit_status = 1
       end
       assert_equal "whoami exit status: 1\nwhoami stdout: Nothing written\nwhoami stderr: Nothing written\n", error.message
-    end
-
-    def test_clear_lines_methods_return_empty_array_when_blank
-      command = Command.new(:some_command)
-      assert_equal [], command.clear_stdout_lines
-      assert_equal [], command.clear_stderr_lines
     end
 
   end

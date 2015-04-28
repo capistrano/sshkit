@@ -35,6 +35,19 @@ module SSHKit
         assert_equal true,  succeeded_test_result
         assert_equal false, failed_test_result
       end
+
+      def test_interaction_handler
+        enter_data_handler = MappingInteractionHandler.new(
+          "Enter Data\n" => 'SOME DATA',
+          "Captured SOME DATA\n" => nil
+        )
+        captured_command_result = nil
+        Local.new do
+          command = 'echo Enter Data; read the_data; echo Captured $the_data;'
+          captured_command_result = capture(command, interaction_handler: enter_data_handler)
+        end.run
+        assert_equal("Enter Data\nCaptured SOME DATA\n", captured_command_result)
+      end
     end
   end
 end

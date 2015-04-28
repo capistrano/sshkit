@@ -9,10 +9,7 @@ module SSHKit
 
     Failed = Class.new(SSHKit::StandardError)
 
-    attr_reader :command, :args, :options, :started_at, :started, :exit_status
-
-    attr_accessor :stdout, :stderr
-    attr_accessor :full_stdout, :full_stderr
+    attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr
 
     # Initialize a new Command object
     #
@@ -28,8 +25,7 @@ module SSHKit
       @args    = args
       @options.symbolize_keys!
       sanitize_command!
-      @stdout, @stderr = String.new, String.new
-      @full_stdout, @full_stderr = String.new, String.new
+      @stdout, @stderr, @full_stdout, @full_stderr = String.new, String.new, String.new, String.new
     end
 
     def complete?
@@ -60,8 +56,20 @@ module SSHKit
     end
     alias :failed? :failure?
 
+    def on_stdout(channel, data)
+      @stdout = data
+      @full_stdout += data
+      call_interaction_handler(channel, data, :on_stdout)
+    end
+
     def clear_stdout_lines
       split_and_clear_stream(@stdout)
+    end
+
+    def on_stderr(channel, data)
+      @stderr = data
+      @full_stderr += data
+      call_interaction_handler(channel, data, :on_stderr)
     end
 
     def clear_stderr_lines
@@ -216,6 +224,10 @@ module SSHKit
       stream.lines.to_a.tap { stream.clear } # Convert lines enumerable to an array for ruby 1.9
     end
 
+    def call_interaction_handler(channel, data, callback_name)
+      interaction_handler = options[:interaction_handler]
+      interaction_handler.send(callback_name, channel, data, self) if interaction_handler.respond_to?(callback_name)
+    end
   end
 
 end
