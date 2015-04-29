@@ -328,6 +328,16 @@ To output directly to $stdout without any formatting, you can use:
 SSHKit.config.output = $stdout
 ```
 
+#### Custom formatters
+
+Want custom output formatting? Here's what you have to do:
+
+1. Write a new formatter class in the `SSHKit::Formatter` namespace. As an example, check out the default [pretty](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/formatters/pretty.rb) formatter.
+1. Set the output format as described above. E.g. if your new formatter is called `Foobar`:
+
+        SSHKit.config.format = :foobar
+
+
 ## Output Verbosity
 
 By default calls to `capture()` and `test()` are not logged, they are used
