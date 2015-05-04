@@ -24,11 +24,11 @@ module SSHKit
       output.warn("Unable to find interaction handler mapping for #{stream_name}: #{data.inspect} so no response was sent") unless @mapping.key?(data)
 
       unless (response_data = @mapping[data]).nil?
-        output.debug("Sending #{response_data}")
+        output.debug("Sending #{response_data.inspect}")
         if channel.respond_to?(:send_data) # Net SSH Channel
-          channel.send_data("#{response_data}\n")
+          channel.send_data(response_data)
         elsif channel.respond_to?(:write) # Local IO
-          channel.write("#{response_data}\n")
+          channel.write(response_data)
         else
           raise 'Unable to write response data to channel - unrecognised channel type'
         end

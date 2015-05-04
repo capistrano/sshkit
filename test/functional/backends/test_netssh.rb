@@ -129,7 +129,7 @@ module SSHKit
         Netssh.new(a_host) do
           command = 'echo Enter Data; read the_data; echo Captured $the_data;'
           captured_command_result = capture(command, interaction_handler: {
-            "Enter Data\n" => 'SOME DATA',
+            "Enter Data\n" => "SOME DATA\n",
             "Captured SOME DATA\n" => nil
           })
         end.run

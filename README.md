@@ -247,9 +247,9 @@ For this case you can pass a hash which is used to create a `SSHKit::MappingInte
 
 ```ruby
 execute(:passwd, interaction_handler: {
-  '(current) UNIX password: ' => 'old_pw',
-  'Enter new UNIX password: ' => 'new_pw',
-  'Retype new UNIX password: ' => 'new_pw',
+  '(current) UNIX password: ' => "old_pw\n",
+  'Enter new UNIX password: ' => "new_pw\n",
+  'Retype new UNIX password: ' => "new_pw\n",
   'passwd: password updated successfully' => nil # For stdout/stderr which can be ignored, map a nil input
 })
 ```
@@ -262,7 +262,7 @@ If no mapping is found, a warning will show the string you need to add to your h
 `MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:
 
 ```ruby
-ENTER_PASSWORD = SSHKit::MappingInteractionHandler.new('Please Enter Password' => 'some_password')
+ENTER_PASSWORD = SSHKit::MappingInteractionHandler.new('Please Enter Password' => "some_password\n")
 
 # ...
 
