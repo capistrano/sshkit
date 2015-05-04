@@ -125,7 +125,7 @@ module SSHKit
       end
 
       def test_interaction_handler
-        enter_data_handler = MappingInteractionHandler.new(
+        enter_data_handler = SSHKit::MappingInteractionHandler.new(
           "Enter Data\n" => 'SOME DATA',
           "Captured SOME DATA\n" => nil
         )

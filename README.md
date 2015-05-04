@@ -243,14 +243,14 @@ execute(:passwd, interaction_handler: PasswdInteractionHandler.new)
 ```
 
 Often, you want to map directly from an output string returned by the server to the corresponding input string (as in the case above).
-For this case you can use a `MappingInteractionHandler`:
+For this case you can use a `SSHKit::MappingInteractionHandler`:
 
 ```ruby
-execute(:passwd, interaction_handler: MappingInteractionHandler.new(
+execute(:passwd, interaction_handler: SSHKit::MappingInteractionHandler.new(
   '(current) UNIX password: ' => 'old_pw',
   'Enter new UNIX password: ' => 'new_pw',
   'Retype new UNIX password: ' => 'new_pw',
-  'passwd: password updated successfully' : nil # For stdout/stderr which can be ignored, map a nil input
+  'passwd: password updated successfully' => nil # For stdout/stderr which can be ignored, map a nil input
 ))
 ```
 
@@ -262,7 +262,7 @@ If no mapping is found, a warning will show the string you need to add to your m
 `MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:
 
 ```ruby
-ENTER_PASSWORD = MappingInteractionHandler.new('Please Enter Password' : 'some_password')
+ENTER_PASSWORD = SSHKit::MappingInteractionHandler.new('Please Enter Password' => 'some_password')
 
 # ...
 
@@ -308,7 +308,7 @@ If you need to support both sorts of backends with the same interaction handler,
 you need to call methods the appropriate API depending on the channel type.
 One approach is to detect the presence of the API methods you need -
 eg `channel.respond_to?(:send_data) # Net::SSH channel` and `channel.respond_to?(:write) # IO`.
-See the `MappingInteractionHandler` for an example of this.
+See the `SSHKit::MappingInteractionHandler` for an example of this.
 
 ## Output Handling
 
