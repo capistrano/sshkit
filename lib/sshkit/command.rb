@@ -226,6 +226,7 @@ module SSHKit
 
     def call_interaction_handler(channel, data, callback_name)
       interaction_handler = options[:interaction_handler]
+      interaction_handler = MappingInteractionHandler.new(interaction_handler) if interaction_handler.kind_of?(Hash)
       interaction_handler.send(callback_name, channel, data, self) if interaction_handler.respond_to?(callback_name)
     end
   end

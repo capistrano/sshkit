@@ -243,19 +243,19 @@ execute(:passwd, interaction_handler: PasswdInteractionHandler.new)
 ```
 
 Often, you want to map directly from an output string returned by the server to the corresponding input string (as in the case above).
-For this case you can use a `SSHKit::MappingInteractionHandler`:
+For this case you can pass a hash which is used to create a `SSHKit::MappingInteractionHandler`:
 
 ```ruby
-execute(:passwd, interaction_handler: SSHKit::MappingInteractionHandler.new(
+execute(:passwd, interaction_handler: {
   '(current) UNIX password: ' => 'old_pw',
   'Enter new UNIX password: ' => 'new_pw',
   'Retype new UNIX password: ' => 'new_pw',
   'passwd: password updated successfully' => nil # For stdout/stderr which can be ignored, map a nil input
-))
+})
 ```
 
-`MappingInteractionHandler`s map output from `stdout` or `stderr` using the same single map.
-If no mapping is found, a warning will show the string you need to add to your map:
+`MappingInteractionHandler`s map output from `stdout` or `stderr` using the same single hash passed in the constructor.
+If no mapping is found, a warning will show the string you need to add to your hash:
 
 `Unable to find interaction handler mapping for stdout: "Server output\n" so no response was sent`
 
