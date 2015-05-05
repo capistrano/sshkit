@@ -63,7 +63,7 @@ module SSHKit
     end
 
     def clear_stdout_lines
-      split_and_clear_stream(@stdout)
+      split_and_clear_stream(:@stdout)
     end
 
     def on_stderr(channel, data)
@@ -73,7 +73,7 @@ module SSHKit
     end
 
     def clear_stderr_lines
-      split_and_clear_stream(@stderr)
+      split_and_clear_stream(:@stderr)
     end
 
     def exit_status=(new_exit_status)
@@ -220,8 +220,9 @@ module SSHKit
       end
     end
 
-    def split_and_clear_stream(stream)
-      stream.lines.to_a.tap { stream.clear } # Convert lines enumerable to an array for ruby 1.9
+    def split_and_clear_stream(stream_name)
+      # Convert lines enumerable to an array for ruby 1.9
+      instance_variable_get(stream_name).lines.to_a.tap { instance_variable_set(stream_name, '') }
     end
 
     def call_interaction_handler(channel, data, callback_name)
