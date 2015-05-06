@@ -242,27 +242,62 @@ end
 execute(:passwd, interaction_handler: PasswdInteractionHandler.new)
 ```
 
-Often, you want to map directly from an output string returned by the server to the corresponding input string (as in the case above).
-For this case you can use a `MappingInteractionHandler`:
+Often, you want to map directly from an output string returned by the server on either stdout or stderr to the corresponding input string
+(as in the case above). For this case you can pass a hash which is used to create a `SSHKit::MappingInteractionHandler`.
+This provides similar functionality to the linux [expect](http://expect.sourceforge.net/) library:
 
 ```ruby
-execute(:passwd, interaction_handler: MappingInteractionHandler.new(
-  '(current) UNIX password: ' => 'old_pw',
-  'Enter new UNIX password: ' => 'new_pw',
-  'Retype new UNIX password: ' => 'new_pw',
-  'passwd: password updated successfully' : nil # For stdout/stderr which can be ignored, map a nil input
-))
+execute(:passwd, interaction_handler: {
+  '(current) UNIX password: ' => "old_pw\n",
+  /(Enter|Retype) new UNIX password: / => "new_pw\n"
+})
 ```
 
-`MappingInteractionHandler`s map output from `stdout` or `stderr` using the same single map.
-If no mapping is found, a warning will show the string you need to add to your map:
+Note the key to the hash keys are matched output using the case equals `===` method.
+This means that regexes and any objects which define `===` can be used as hash keys.
 
-`Unable to find interaction handler mapping for stdout: "Server output\n" so no response was sent`
+Hash keys are matched in order, which allows for default wildcard matches:
+
+```ruby
+execute(:my_command, interaction_handler: {
+  "some specific line\n" => "specific input\n",
+  /.*/ => "default input\n"
+})
+```
+
+You can also pass a Proc object to map the output line from the server:
+
+```ruby
+execute(:passwd, interaction_handler: lambda { |server_ouput|
+  case server_ouput
+  when '(current) UNIX password: '
+    "old_pw\n",
+  when /(Enter|Retype) new UNIX password: /
+    "new_pw\n"
+  end
+})
+```
+
+If no mapping is found, a debug message will show the string you need to add to your hash.
+This can be helpful if you don't know exactly what the server is sending back (whitespace, newlines etc),
+because you can start with a blank mapping and iteratively add messages as required:
+
+```ruby
+  # Start with this and run your script
+  execute(:unfamiliar_command, {})
+  # DEBUG log => Unable to find interaction handler mapping for stdout:
+  #              "Please type your input:\r\n" so no response was sent"
+
+  # Update mapping:
+  execute(:unfamiliar_command, {"Please type your input:\r\n" => "Some input\n"})
+```
 
 `MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:
 
 ```ruby
-ENTER_PASSWORD = MappingInteractionHandler.new('Please Enter Password' : 'some_password')
+ENTER_PASSWORD = SSHKit::MappingInteractionHandler.new(
+  "Please Enter Password\n" => "some_password\n"
+)
 
 # ...
 
@@ -308,7 +343,7 @@ If you need to support both sorts of backends with the same interaction handler,
 you need to call methods the appropriate API depending on the channel type.
 One approach is to detect the presence of the API methods you need -
 eg `channel.respond_to?(:send_data) # Net::SSH channel` and `channel.respond_to?(:write) # IO`.
-See the `MappingInteractionHandler` for an example of this.
+See the `SSHKit::MappingInteractionHandler` for an example of this.
 
 ## Output Handling
 

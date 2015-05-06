@@ -80,12 +80,12 @@ have a shell defined, one cannot switch to that user.
 
 ```ruby
 on hosts do |host|
-  execute(:passwd, interaction_handler: MappingInteractionHandler.new(
-    '(current) UNIX password: ' => 'old_pw',
-    'Enter new UNIX password: ' => 'new_pw',
-    'Retype new UNIX password: ' => 'new_pw',
+  execute(:passwd, interaction_handler: {
+    '(current) UNIX password: ' => "old_pw\n",
+    'Enter new UNIX password: ' => "new_pw\n",
+    'Retype new UNIX password: ' => "new_pw\n",
     'passwd: password updated successfully' => nil # For stdout/stderr which can be ignored, map a nil input
-  ))
+  })
 end
 ```
 
