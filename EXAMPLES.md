@@ -206,23 +206,41 @@ on hosts do
 end
 ```
 
-## Redirect all output to `/dev/null`
+## Change the output formatter
 
 ```ruby
-SSHKit.config.output = File.open('/dev/null')
+# The default format is pretty, which outputs colored text
+SSHKit.config.format = :pretty
+
+# Text with no coloring
+SSHKit.config.format = :simpletext
+
+# Red / Green dots for each completed step
+SSHKit.config.format = :dot
+
+# No output
+SSHKit.config.format = :blackhole
 ```
 
 ## Implement a dirt-simple formatter class
 
 ```ruby
-class MyFormatter < SSHKit::Formatter::Abstract
-  def write(obj)
-    case obj.is_a? SSHKit::Command
-      # Do something here, see the SSHKit::Command documentation
+module SSHKit
+  module Formatter
+    class MyFormatter < SSHKit::Formatter::Abstract
+      def write(obj)
+        case obj.is_a? SSHKit::Command
+          # Do something here, see the SSHKit::Command documentation
+        end
+      end
     end
   end
 end
 
+# If your formatter is defined in the SSHKit::Formatter module configure with the format option:
+SSHKit.config.format = :myformatter
+
+# Or configure the output directly
 SSHKit.config.output = MyFormatter.new($stdout)
 SSHKit.config.output = MyFormatter.new(SSHKit.config.output)
 SSHKit.config.output = MyFormatter.new(File.open('log/deploy.log', 'wb'))
