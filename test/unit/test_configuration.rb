@@ -5,7 +5,7 @@ module SSHKit
   class TestConfiguration < UnitTest
 
     def setup
-      SSHKit.config = nil
+      super
       SSHKit.config.command_map.clear
       SSHKit.config.output = SSHKit::Formatter::Pretty.new($stdout)
     end

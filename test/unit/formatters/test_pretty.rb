@@ -5,6 +5,7 @@ module SSHKit
   class TestPretty < UnitTest
 
     def setup
+      super
       SSHKit.config.output_verbosity = Logger::DEBUG
     end
 
