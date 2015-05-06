@@ -51,15 +51,17 @@ module SSHKit
       assert_equal "/opt/sites/example/current/bin ruby", SSHKit.config.command_map[:ruby]
     end
 
-    def test_setting_formatter_to_dot
-      assert SSHKit.config.format = :dot
-      assert SSHKit.config.output.is_a? SSHKit::Formatter::Dot
+    def test_setting_formatter_types
+      {
+        dot:        SSHKit::Formatter::Dot,
+        blackhole:  SSHKit::Formatter::BlackHole,
+        simpletext: SSHKit::Formatter::SimpleText,
+      }.each do |format, expected_class|
+        SSHKit.config.format = format
+        assert SSHKit.config.output.is_a? expected_class
+      end
     end
 
-    def test_setting_formatter_to_blackhole
-      assert SSHKit.config.format = :BlackHole
-      assert SSHKit.config.output.is_a? SSHKit::Formatter::BlackHole
-    end
   end
 
 end
