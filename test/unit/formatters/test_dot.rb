@@ -17,12 +17,6 @@ module SSHKit
       @_dot ||= SSHKit::Formatter::Dot.new(output)
     end
 
-    def teardown
-      remove_instance_variable :@_dot
-      remove_instance_variable :@_output
-      SSHKit.reset_configuration!
-    end
-
     def test_logging_fatal
       dot << SSHKit::LogMessage.new(Logger::FATAL, "Test")
       assert_equal "", output.strip

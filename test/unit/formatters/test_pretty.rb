@@ -17,12 +17,6 @@ module SSHKit
       @_pretty ||= SSHKit::Formatter::Pretty.new(output)
     end
 
-    def teardown
-      remove_instance_variable :@_pretty
-      remove_instance_variable :@_output
-      SSHKit.reset_configuration!
-    end
-
     def test_logging_fatal
       assert_equal "\e[0;31;49mFATAL\e[0m Test\n", pretty.fatal('Test')
     end

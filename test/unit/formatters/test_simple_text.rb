@@ -17,12 +17,6 @@ module SSHKit
       @_simple ||= SSHKit::Formatter::SimpleText.new(output)
     end
 
-    def teardown
-      remove_instance_variable :@_simple
-      remove_instance_variable :@_output
-      SSHKit.reset_configuration!
-    end
-
     def test_logging_fatal
       assert_equal "Test\n", simple.fatal('Test')
     end
