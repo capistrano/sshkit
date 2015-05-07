@@ -5,6 +5,7 @@ module SSHKit
   class TestDot < UnitTest
 
     def setup
+      super
       SSHKit.config.output_verbosity = Logger::DEBUG
     end
 

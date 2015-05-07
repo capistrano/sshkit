@@ -4,10 +4,6 @@ require 'sshkit'
 module SSHKit
   class TestCommandMap < UnitTest
 
-    def setup
-      SSHKit.reset_configuration!
-    end
-
     def test_defaults
       map = CommandMap.new
       assert_equal map[:rake], "/usr/bin/env rake"

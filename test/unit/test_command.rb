@@ -4,10 +4,6 @@ require 'sshkit'
 module SSHKit
   class TestCommand < UnitTest
 
-    def setup
-      SSHKit.reset_configuration!
-    end
-
     def test_maps_a_command
       c = Command.new('example')
       assert_equal '/usr/bin/env example', c.to_command

@@ -355,23 +355,32 @@ By default, the output format is set to `:pretty`:
 SSHKit.config.format = :pretty
 ```
 
-However, if you prefer minimal output, `:dot` format will simply output red or green dots based on the success or failure of operations.
+However, if you prefer non colored text you can use the `:simpletext` formatter. If you want minimal output,
+there is also a `:dot` formatter which will simply output red or green dots based on the success or failure of commands.
+There is also a `:blackhole` formatter which does not output anything.
 
-To output directly to $stdout without any formatting, you can use:
+By default, formatters log to `$stdout`, but they can be constructed with any `IO`:
 
 ```ruby
-SSHKit.config.output = $stdout
+# Output to a StringIO:
+out = StringIO.new
+SSHKit.config.output = SSHKit::Formatter::Pretty.new(out)
+# Do something with out.string
+
+# Or output to a file:
+SSHKit.config.output = SSHKit::Formatter::SimpleText.new(File.open('log/deploy.log', 'wb'))
 ```
 
 #### Custom formatters
 
 Want custom output formatting? Here's what you have to do:
 
-1. Write a new formatter class in the `SSHKit::Formatter` namespace. As an example, check out the default [pretty](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/formatters/pretty.rb) formatter.
-1. Set the output format as described above. E.g. if your new formatter is called `Foobar`:
+1. Write a new formatter class in the `SSHKit::Formatter` module. As an example, check out the default [pretty](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/formatters/pretty.rb) formatter.
+1. Set the output format as described above. E.g. if your new formatter is called `FooBar`:
 
-        SSHKit.config.format = :foobar
-
+```ruby
+SSHKit.config.format = :foobar
+```
 
 ## Output Verbosity
 

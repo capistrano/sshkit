@@ -10,54 +10,45 @@ module SSHKit
 
       def setup
         super
-        SSHKit.config.output = SSHKit::Formatter::BlackHole.new($stdout)
-      end
-
-      def block_to_run
-        lambda do |host|
-          execute 'date'
-          execute :ls, '-l', '/some/directory'
-          with rails_env: :production do
-            within '/tmp' do
-              as :root do
-                execute :touch, 'restart.txt'
-              end
-            end
-          end
-        end
+        @out = StringIO.new
+        SSHKit.config.output_verbosity = :debug
+        SSHKit.config.output = SSHKit::Formatter::SimpleText.new(@out)
       end
 
       def a_host
         VagrantWrapper.hosts['one']
       end
 
-      def simple_netssh
-        SSHKit.capture_output(sio) do
-          Netssh.new(a_host, &block_to_run).run
-        end
-        sio.rewind
-        result = sio.read
-        assert_equal <<-EOEXPECTED.unindent, result
-          if test ! -d /opt/sites/example.com; then echo "Directory does not exist '/opt/sites/example.com'" 2>&1; false; fi
-          cd /opt/sites/example.com && /usr/bin/env date
-          cd /opt/sites/example.com && /usr/bin/env ls -l /some/directory
-          if test ! -d /opt/sites/example.com/tmp; then echo "Directory does not exist '/opt/sites/example.com/tmp'" 2>&1; false; fi
-          if ! sudo su -u root whoami > /dev/null; then echo "You cannot switch to user 'root' using sudo, please check the sudoers file" 2>&1; false; fi
-          cd /opt/sites/example.com/tmp && ( RAILS_ENV=production ( sudo su -u root /usr/bin/env touch restart.txt ) )
+      def test_simple_netssh
+        Netssh.new(a_host) do
+          execute 'date'
+          execute :ls, '-l'
+          with rails_env: :production do
+           within '/tmp' do
+             as :root do
+               execute :touch, 'restart.txt'
+             end
+           end
+          end
+        end.run
+
+        command_lines = @out.string.lines.select { |line| line.start_with?('Command:') }
+        assert_equal <<-EOEXPECTED.unindent, command_lines.join
+          Command: /usr/bin/env date
+          Command: /usr/bin/env ls -l
+          Command: if test ! -d /tmp; then echo \"Directory does not exist '/tmp'\" 1>&2; false; fi
+          Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi
+          Command: cd /tmp && ( RAILS_ENV=production sudo -u root RAILS_ENV=production -- sh -c '/usr/bin/env touch restart.txt' )
         EOEXPECTED
       end
 
       def test_capture
-        File.open('/dev/null', 'w') do |dnull|
-          SSHKit.capture_output(dnull) do
-            captured_command_result = nil
-            Netssh.new(a_host) do |host|
-              captured_command_result = capture(:uname)
-            end.run
+        captured_command_result = nil
+        Netssh.new(a_host) do |host|
+          captured_command_result = capture(:uname)
+        end.run
 
-            assert_includes %W(Linux\n Darwin\n), captured_command_result
-          end
-        end
+        assert_includes %W(Linux\n Darwin\n), captured_command_result
       end
 
       def test_ssh_option_merge

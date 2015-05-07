@@ -7,6 +7,8 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Removed broken support for assigning an `IO` to the `output` config option (See [#243](https://github.com/capistrano/sshkit/issues/243)). @robd
+    * Use `SSHKit.config.output = SSHKit::Formatter::SimpleText.new($stdin)` instead
   * Added support for :interaction_handler option on commands. @robd
   * Removed partially supported 'trace' log level. @robd
   * No longer strip whitespace or newlines in `capture` method on Netssh backend. @robd
