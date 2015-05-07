@@ -38,7 +38,7 @@ module SSHKit
     end
 
     def test_command_lifecycle_logging
-      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('localhost'))
+      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('user@localhost'))
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
 
@@ -53,7 +53,7 @@ module SSHKit
       simple << command
 
       expected_log_lines = [
-        'Running /usr/bin/env a_cmd some args on localhost',
+        'Running /usr/bin/env a_cmd some args as user@localhost',
         'Command: /usr/bin/env a_cmd some args',
         "\tstdout message",
         "\tstderr message",

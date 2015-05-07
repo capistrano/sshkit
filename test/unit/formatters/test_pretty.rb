@@ -38,7 +38,7 @@ module SSHKit
     end
 
     def test_command_lifecycle_logging
-      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('localhost'))
+      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('user@localhost'))
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
       pretty << command
@@ -52,7 +52,7 @@ module SSHKit
       pretty << command
 
       expected_log_lines = [
-        "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Running \e[1;33;49m/usr/bin/env a_cmd some args\e[0m on \e[0;34;49mlocalhost\e[0m",
+        "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Running \e[1;33;49m/usr/bin/env a_cmd some args\e[0m as \e[0;34;49muser\e[0m@\e[0;34;49mlocalhost\e[0m",
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] Command: \e[0;34;49m/usr/bin/env a_cmd some args\e[0m",
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;32;49m\tstdout message\e[0m",
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;31;49m\tstderr message\e[0m",
