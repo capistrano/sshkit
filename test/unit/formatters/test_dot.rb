@@ -30,6 +30,7 @@ module SSHKit
     end
 
     def test_command_success
+      output.stubs(:tty?).returns(true)
       command = SSHKit::Command.new(:ls)
       command.exit_status = 0
       dot << command
@@ -37,6 +38,7 @@ module SSHKit
     end
 
     def test_command_failure
+      output.stubs(:tty?).returns(true)
       command = SSHKit::Command.new(:ls, {raise_on_non_zero_exit: false})
       command.exit_status = 1
       dot << command

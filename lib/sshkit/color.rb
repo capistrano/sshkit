@@ -2,8 +2,7 @@ require 'colorize'
 
 module SSHKit
   class Color
-
-    def initialize(io=$stdout, env=ENV)
+    def initialize(io, env=ENV)
       @io, @env = io, env
     end
 

@@ -24,13 +24,15 @@ module SSHKit
       info:  "\e[0;34;49mINFO\e[0m Test\n",
       debug: "\e[0;30;49mDEBUG\e[0m Test\n"
     }.each do |level, expected_output|
-      define_method("test_#{level}_output") do
+      define_method("test_#{level}_output_with_color") do
+        output.stubs(:tty?).returns(true)
         pretty.send(level, 'Test')
         assert_log_output(expected_output)
       end
     end
 
-    def test_command_lifecycle_logging
+    def test_command_lifecycle_logging_with_color
+      output.stubs(:tty?).returns(true)
       execute_command_lifecycle
 
       expected_log_lines = [
@@ -43,6 +45,34 @@ module SSHKit
       assert_equal expected_log_lines, output.string.split("\n")
     end
 
+    {
+        log:   "  INFO Test\n",
+        fatal: " FATAL Test\n",
+        error: " ERROR Test\n",
+        warn:  "  WARN Test\n",
+        info:  "  INFO Test\n",
+        debug: " DEBUG Test\n"
+    }.each do |level, expected_output|
+      define_method("test_#{level}_output_without_color") do
+        pretty.send(level, "Test")
+        assert_equal expected_output, output.string
+      end
+    end
+
+    def test_command_lifecycle_logging_without_color
+      execute_command_lifecycle
+
+      expected_log_lines = [
+          '  INFO [aaaaaa] Running /usr/bin/env a_cmd some args as user@localhost',
+          ' DEBUG [aaaaaa] Command: /usr/bin/env a_cmd some args',
+          " DEBUG [aaaaaa] \tstdout message",
+          " DEBUG [aaaaaa] \tstderr message",
+          '  INFO [aaaaaa] Finished in 1.000 seconds with exit status 0 (successful).'
+      ]
+
+      assert_equal expected_log_lines, output.string.split("\n")
+    end
+
     def test_unsupported_class
       raised_error = assert_raises RuntimeError do
         pretty << Pathname.new('/tmp')
@@ -51,6 +81,8 @@ module SSHKit
     end
 
     def test_does_not_log_when_verbosity_is_too_low
+      output.stubs(:tty?).returns(true)
+
       SSHKit.config.output_verbosity = Logger::WARN
       pretty.info('Some info')
       assert_log_output('')
