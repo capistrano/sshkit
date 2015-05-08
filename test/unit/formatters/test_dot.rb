@@ -1,5 +1,4 @@
 require 'helper'
-require 'sshkit'
 
 module SSHKit
   class TestDot < UnitTest
@@ -10,51 +9,38 @@ module SSHKit
     end
 
     def output
-      @_output ||= String.new
+      @output ||= StringIO.new
     end
 
     def dot
-      @_dot ||= SSHKit::Formatter::Dot.new(output)
+      @dot ||= SSHKit::Formatter::Dot.new(output)
     end
 
-    def test_logging_fatal
-      dot << SSHKit::LogMessage.new(Logger::FATAL, "Test")
-      assert_equal "", output.strip
-    end
-
-    def test_logging_error
-      dot << SSHKit::LogMessage.new(Logger::ERROR, "Test")
-      assert_equal "", output.strip
-    end
-
-    def test_logging_warn
-      dot << SSHKit::LogMessage.new(Logger::WARN, "Test")
-      assert_equal "", output.strip
-    end
-
-    def test_logging_info
-      dot << SSHKit::LogMessage.new(Logger::INFO, "Test")
-      assert_equal "", output.strip
-    end
-
-    def test_logging_debug
-      dot << SSHKit::LogMessage.new(Logger::DEBUG, "Test")
-      assert_equal "", output.strip
+    %w(fatal error warn info debug).each do |level|
+      define_method("test_#{level}_output") do
+        dot.send(level, 'Test')
+        assert_output('')
+      end
     end
 
     def test_command_success
       command = SSHKit::Command.new(:ls)
       command.exit_status = 0
       dot << command
-      assert_equal "\e[0;32;49m.\e[0m", output.strip
+      assert_output("\e[0;32;49m.\e[0m")
     end
 
     def test_command_failure
       command = SSHKit::Command.new(:ls, {raise_on_non_zero_exit: false})
       command.exit_status = 1
       dot << command
-      assert_equal "\e[0;31;49m.\e[0m", output.strip
+      assert_output("\e[0;31;49m.\e[0m")
     end
 
+    private
+
+    def assert_output(expected_output)
+      assert_equal expected_output, output.string
+    end
   end
 end
