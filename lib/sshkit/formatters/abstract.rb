@@ -45,12 +45,6 @@ module SSHKit
       end
       alias :<< :write
 
-      protected
-
-      def format_std_stream_line(line)
-        ("\t" + line).chomp
-      end
-
       private
 
       def write_at_log_level(level, messages)

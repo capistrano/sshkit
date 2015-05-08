@@ -15,6 +15,16 @@ module SSHKit
       end
       alias :<< :write
 
+      protected
+
+      def format_command_message(message, command, verbosity_override)
+        '%6s [%s] %s' % [level(verbosity_override || command.verbosity), colorize(command.uuid, :green), message]
+      end
+
+      def format_log_message(log_message)
+        '%6s %s' % [level(log_message.verbosity), log_message.to_s]
+      end
+
       private
 
       def write_command(command)
@@ -27,13 +37,8 @@ module SSHKit
         end
 
         if SSHKit.config.output_verbosity == Logger::DEBUG
-          command.clear_stdout_lines.each do |line|
-            write_command_message(colorize(format_std_stream_line(line), :green), command, Logger::DEBUG)
-          end
-
-          command.clear_stderr_lines.each do |line|
-            write_command_message(colorize(format_std_stream_line(line), :red), command, Logger::DEBUG)
-          end
+          write_std_stream_lines(command.clear_stdout_lines, :green, command)
+          write_std_stream_lines(command.clear_stderr_lines, :red, command)
         end
 
         if command.finished?
@@ -42,12 +47,18 @@ module SSHKit
         end
       end
 
+      def write_std_stream_lines(lines, color, command)
+        lines.each do |line|
+          write_command_message(colorize(("\t" + line).chomp, color), command, Logger::DEBUG)
+        end
+      end
+
       def write_command_message(message, command, verbosity_override=nil)
-        original_output << "%6s [%s] %s\n" % [level(verbosity_override || command.verbosity), colorize(command.uuid, :green), message]
+        original_output << "#{format_command_message(message, command, verbosity_override)}\n"
       end
 
       def write_log_message(log_message)
-        original_output << "%6s %s\n" % [level(log_message.verbosity), log_message.to_s]
+        original_output << "#{format_log_message(log_message)}\n"
       end
 
       def level(verbosity)
