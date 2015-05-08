@@ -1,27 +1,19 @@
 require 'colorize'
 
-module Color
-  String.colors.each do |color|
-    instance_eval <<-RUBY, __FILE__, __LINE__
-      def #{color}(string = '')
-        string = yield if block_given?
-        colorize? ? string.colorize(:color => :#{color}) : string
-      end
-    RUBY
-  end
+module SSHKit
+  class Color
 
-  String.modes.each do |mode|
-    instance_eval <<-RUBY, __FILE__, __LINE__
-      def #{mode}(string = '')
-        string = yield if block_given?
-        colorize? ? string.colorize(:mode => :#{mode}) : string
-      end
-    RUBY
-  end
+    def initialize(io=$stdout, env=ENV)
+      @io, @env = io, env
+    end
 
-  class << self
+    def colorize(obj, color, mode=nil)
+      string = obj.to_s
+      colorize? ? string.colorize(color: color, mode: mode) : string
+    end
+
     def colorize?
-      ENV['SSHKIT_COLOR'] || $stdout.tty?
+      @env['SSHKIT_COLOR'] || @io.tty?
     end
   end
 end

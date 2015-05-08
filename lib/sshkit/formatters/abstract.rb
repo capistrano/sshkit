@@ -49,6 +49,10 @@ module SSHKit
         ("\t" + line).chomp
       end
 
+      def colorize(obj, color, mode=nil)
+        SSHKit::Color.new.colorize(obj, color, mode)
+      end
+
       private
 
       def write_at_log_level(level, messages)
