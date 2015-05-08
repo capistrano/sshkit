@@ -5,12 +5,12 @@ module SSHKit
     class Pretty < Abstract
 
       def write(obj)
-        return if obj.verbosity < SSHKit.config.output_verbosity
+        return if obj.respond_to?(:verbosity) && obj.verbosity < SSHKit.config.output_verbosity
         case obj
         when SSHKit::Command    then write_command(obj)
         when SSHKit::LogMessage then write_log_message(obj)
         else
-          original_output << c.black(c.on_yellow("Output formatter doesn't know how to handle #{obj.class}\n"))
+          raise "Output formatter only supports formatting SSHKit::Command and SSHKit::LogMessage, called with #{obj.class}: #{obj.inspect}"
         end
       end
       alias :<< :write

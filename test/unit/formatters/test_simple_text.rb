@@ -48,5 +48,27 @@ module SSHKit
       assert_equal expected_log_lines, output.string.split("\n")
     end
 
+    def test_unsupported_class
+      raised_error = assert_raises RuntimeError do
+        simple << Pathname.new('/tmp')
+      end
+      assert_equal('Output formatter only supports formatting SSHKit::Command and SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
+    end
+
+    def test_does_not_log_when_verbosity_is_too_low
+      SSHKit.config.output_verbosity = Logger::WARN
+      simple.info('Some info')
+      assert_log_output('')
+
+      SSHKit.config.output_verbosity = Logger::INFO
+      simple.info('Some other info')
+      assert_log_output("Some other info\n")
+    end
+
+    private
+
+    def assert_log_output(expected_output)
+      assert_equal expected_output, output.string
+    end
   end
 end

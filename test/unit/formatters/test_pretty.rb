@@ -26,7 +26,7 @@ module SSHKit
     }.each do |level, expected_output|
       define_method("test_#{level}_output") do
         pretty.send(level, 'Test')
-        assert_equal expected_output, output.string
+        assert_log_output(expected_output)
       end
     end
 
@@ -41,6 +41,23 @@ module SSHKit
         "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Finished in 1.000 seconds with exit status 0 (\e[1;32;49msuccessful\e[0m)."
       ]
       assert_equal expected_log_lines, output.string.split("\n")
+    end
+
+    def test_unsupported_class
+      raised_error = assert_raises RuntimeError do
+        pretty << Pathname.new('/tmp')
+      end
+      assert_equal('Output formatter only supports formatting SSHKit::Command and SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
+    end
+
+    def test_does_not_log_when_verbosity_is_too_low
+      SSHKit.config.output_verbosity = Logger::WARN
+      pretty.info('Some info')
+      assert_log_output('')
+
+      SSHKit.config.output_verbosity = Logger::INFO
+      pretty.info('Some other info')
+      assert_log_output("\e[0;34;49mINFO\e[0m Some other info\n")
     end
 
     private
@@ -58,6 +75,10 @@ module SSHKit
       pretty << command
       command.exit_status = 0
       pretty << command
+    end
+
+    def assert_log_output(expected_output)
+      assert_equal expected_output, output.string
     end
 
   end
