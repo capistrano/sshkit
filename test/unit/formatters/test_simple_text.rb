@@ -19,8 +19,18 @@ module SSHKit
     %w(fatal error warn info debug).each do |level|
       define_method("test_#{level}_output") do
         simple.send(level, 'Test')
-        assert_equal "Test\n", output
+        assert_log_output "Test\n"
       end
+    end
+
+    def test_logging_message_with_leading_and_trailing_space
+      simple.log("       some spaces\n\n  \t")
+      assert_log_output "some spaces\n"
+    end
+
+    def test_can_log_non_strings
+      simple.log(Pathname.new('/var/log/my.log'))
+      assert_log_output "/var/log/my.log\n"
     end
 
     def test_command_lifecycle_logging
