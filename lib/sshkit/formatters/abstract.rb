@@ -9,9 +9,11 @@ module SSHKit
       extend Forwardable
       attr_reader :original_output
       def_delegators :@original_output, :read, :rewind
+      def_delegators :@color, :colorize
 
-      def initialize(oio)
-        @original_output = oio
+      def initialize(output)
+        @original_output = output
+        @color = SSHKit::Color.new(output)
       end
 
       def log(messages)

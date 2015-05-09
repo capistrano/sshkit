@@ -359,16 +359,33 @@ However, if you prefer non colored text you can use the `:simpletext` formatter.
 there is also a `:dot` formatter which will simply output red or green dots based on the success or failure of commands.
 There is also a `:blackhole` formatter which does not output anything.
 
-By default, formatters log to `$stdout`, but they can be constructed with any `IO`:
+By default, formatters log to `$stdout`, but they can be constructed with any object which implements `<<`
+for example any `IO` subclass, `String`, `Logger` etc:
 
 ```ruby
-# Output to a StringIO:
-out = StringIO.new
-SSHKit.config.output = SSHKit::Formatter::Pretty.new(out)
-# Do something with out.string
+# Output to a String:
+output = String.new
+SSHKit.config.output = SSHKit::Formatter::Pretty.new(output)
+# Do something with output
 
 # Or output to a file:
 SSHKit.config.output = SSHKit::Formatter::SimpleText.new(File.open('log/deploy.log', 'wb'))
+```
+
+#### Output Colors
+
+By default, SSHKit will color the output using ANSI color escape sequences
+if the output you are using is associated with a terminal device (tty).
+This means that you should see colors if you are writing output to the terminal (the default),
+but you shouldn't see ANSI color escape sequences if you are writing to a file.
+
+Colors are supported for the `Pretty` and `Dot` formatters, but for historical reasons
+the `SimpleText` formatter never shows colors.
+
+If you want to force SSHKit to show colors, you can set the `SSHKIT_COLOR` environment variable:
+
+```ruby
+ENV['SSHKIT_COLOR'] = 'TRUE'
 ```
 
 #### Custom formatters

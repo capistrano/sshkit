@@ -1,5 +1,4 @@
 require 'helper'
-require 'sshkit'
 
 module SSHKit
   class TestSimpleText < UnitTest
@@ -10,41 +9,22 @@ module SSHKit
     end
 
     def output
-      @_output ||= String.new
+      @output ||= String.new
     end
 
     def simple
-      @_simple ||= SSHKit::Formatter::SimpleText.new(output)
+      @simple ||= SSHKit::Formatter::SimpleText.new(output)
     end
 
-    def teardown
-      remove_instance_variable :@_simple
-      remove_instance_variable :@_output
-      SSHKit.reset_configuration!
-    end
-
-    def test_logging_fatal
-      assert_equal "Test\n", simple.fatal('Test')
-    end
-
-    def test_logging_error
-      assert_equal "Test\n", simple.error('Test')
-    end
-
-    def test_logging_warn
-      assert_equal "Test\n", simple.warn('Test')
-    end
-
-    def test_logging_info
-      assert_equal "Test\n", simple.info('Test')
-    end
-
-    def test_logging_debug
-      assert_equal "Test\n", simple.debug('Test')
+    %w(fatal error warn info debug).each do |level|
+      define_method("test_#{level}_output") do
+        simple.send(level, 'Test')
+        assert_equal "Test\n", output
+      end
     end
 
     def test_command_lifecycle_logging
-      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('localhost'))
+      command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('user@localhost'))
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
 
@@ -59,7 +39,7 @@ module SSHKit
       simple << command
 
       expected_log_lines = [
-        'Running /usr/bin/env a_cmd some args on localhost',
+        'Running /usr/bin/env a_cmd some args as user@localhost',
         'Command: /usr/bin/env a_cmd some args',
         "\tstdout message",
         "\tstderr message",
@@ -68,5 +48,27 @@ module SSHKit
       assert_equal expected_log_lines, output.split("\n")
     end
 
+    def test_unsupported_class
+      raised_error = assert_raises RuntimeError do
+        simple << Pathname.new('/tmp')
+      end
+      assert_equal('Output formatter only supports formatting SSHKit::Command and SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
+    end
+
+    def test_does_not_log_when_verbosity_is_too_low
+      SSHKit.config.output_verbosity = Logger::WARN
+      simple.info('Some info')
+      assert_log_output('')
+
+      SSHKit.config.output_verbosity = Logger::INFO
+      simple.info('Some other info')
+      assert_log_output("Some other info\n")
+    end
+
+    private
+
+    def assert_log_output(expected_output)
+      assert_equal expected_output, output
+    end
   end
 end

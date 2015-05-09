@@ -6,6 +6,7 @@ module SSHKit
     class TestLocal < MiniTest::Unit::TestCase
 
       def setup
+        super
         SSHKit.config.output = SSHKit::Formatter::BlackHole.new($stdout)
       end
 

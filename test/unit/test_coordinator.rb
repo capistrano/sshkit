@@ -7,9 +7,9 @@ module SSHKit
 
     def setup
       super
-      @out = StringIO.new
+      @output = String.new
       SSHKit.config.output_verbosity = :debug
-      SSHKit.config.output = SSHKit::Formatter::SimpleText.new(@out)
+      SSHKit.config.output = SSHKit::Formatter::SimpleText.new(@output)
       SSHKit.config.backend = SSHKit::Backend::Printer
     end
 
@@ -97,7 +97,7 @@ module SSHKit
     end
 
     def actual_output_commands
-      @out.string.lines.select { |line| line.start_with?('Command:') }
+      @output.lines.select { |line| line.start_with?('Command:') }
     end
 
   end

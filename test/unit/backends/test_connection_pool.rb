@@ -6,6 +6,7 @@ module SSHKit
     class TestConnectionPool < UnitTest
 
       def setup
+        super
         pool.flush_connections
       end
 
