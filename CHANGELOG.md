@@ -7,6 +7,7 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Now only color the output if it is associated with a tty, or the `SSHKIT_COLOR` environment variable is set. (See [README](README.md#output-colors)) @robd
   * Removed broken support for assigning an `IO` to the `output` config option (See [#243](https://github.com/capistrano/sshkit/issues/243)). @robd
     * Use `SSHKit.config.output = SSHKit::Formatter::SimpleText.new($stdin)` instead
   * Added support for :interaction_handler option on commands. @robd
