@@ -9,7 +9,7 @@ module SSHKit
     end
 
     def output
-      @output ||= StringIO.new
+      @output ||= String.new
     end
 
     def dot
@@ -53,7 +53,7 @@ module SSHKit
     private
 
     def assert_log_output(expected_output)
-      assert_equal expected_output, output.string
+      assert_equal expected_output, output
     end
   end
 end

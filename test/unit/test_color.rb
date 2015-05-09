@@ -18,5 +18,13 @@ module SSHKit
       color = SSHKit::Color.new(stub(tty?: false), {})
       assert_equal 'hi', color.colorize('hi', :red)
     end
+
+    # The output parameter may not define the tty method eg if it is a Logger.
+    # In this case we assume showing colors would not be supported
+    # https://github.com/capistrano/sshkit/pull/246#issuecomment-100358122
+    def test_does_not_colorize_when_tty_method_not_defined_and_SSHKIT_COLOR_not_present
+      color = SSHKit::Color.new(stub(), {})
+      assert_equal 'hi', color.colorize('hi', :red)
+    end
   end
 end

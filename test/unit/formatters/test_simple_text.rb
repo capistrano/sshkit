@@ -9,7 +9,7 @@ module SSHKit
     end
 
     def output
-      @output ||= StringIO.new
+      @output ||= String.new
     end
 
     def simple
@@ -19,7 +19,7 @@ module SSHKit
     %w(fatal error warn info debug).each do |level|
       define_method("test_#{level}_output") do
         simple.send(level, 'Test')
-        assert_equal "Test\n", output.string
+        assert_equal "Test\n", output
       end
     end
 
@@ -45,7 +45,7 @@ module SSHKit
         "\tstderr message",
         'Finished in 1.000 seconds with exit status 0 (successful).'
       ]
-      assert_equal expected_log_lines, output.string.split("\n")
+      assert_equal expected_log_lines, output.split("\n")
     end
 
     def test_unsupported_class
@@ -68,7 +68,7 @@ module SSHKit
     private
 
     def assert_log_output(expected_output)
-      assert_equal expected_output, output.string
+      assert_equal expected_output, output
     end
   end
 end

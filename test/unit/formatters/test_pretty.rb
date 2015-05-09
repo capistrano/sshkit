@@ -9,7 +9,7 @@ module SSHKit
     end
 
     def output
-      @output ||= StringIO.new
+      @output ||= String.new
     end
 
     def pretty
@@ -33,7 +33,7 @@ module SSHKit
 
     def test_command_lifecycle_logging_with_color
       output.stubs(:tty?).returns(true)
-      execute_command_lifecycle
+      simulate_command_lifecycle(pretty)
 
       expected_log_lines = [
         "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Running \e[1;33;49m/usr/bin/env a_cmd some args\e[0m as \e[0;34;49muser\e[0m@\e[0;34;49mlocalhost\e[0m",
@@ -42,7 +42,7 @@ module SSHKit
         "\e[0;30;49mDEBUG\e[0m [\e[0;32;49maaaaaa\e[0m] \e[0;31;49m\tstderr message\e[0m",
         "\e[0;34;49mINFO\e[0m [\e[0;32;49maaaaaa\e[0m] Finished in 1.000 seconds with exit status 0 (\e[1;32;49msuccessful\e[0m)."
       ]
-      assert_equal expected_log_lines, output.string.split("\n")
+      assert_equal expected_log_lines, output.split("\n")
     end
 
     {
@@ -55,12 +55,12 @@ module SSHKit
     }.each do |level, expected_output|
       define_method("test_#{level}_output_without_color") do
         pretty.send(level, "Test")
-        assert_equal expected_output, output.string
+        assert_equal expected_output, output
       end
     end
 
     def test_command_lifecycle_logging_without_color
-      execute_command_lifecycle
+      simulate_command_lifecycle(pretty)
 
       expected_log_lines = [
           '  INFO [aaaaaa] Running /usr/bin/env a_cmd some args as user@localhost',
@@ -70,7 +70,7 @@ module SSHKit
           '  INFO [aaaaaa] Finished in 1.000 seconds with exit status 0 (successful).'
       ]
 
-      assert_equal expected_log_lines, output.string.split("\n")
+      assert_equal expected_log_lines, output.split("\n")
     end
 
     def test_unsupported_class
@@ -92,9 +92,16 @@ module SSHKit
       assert_log_output("\e[0;34;49mINFO\e[0m Some other info\n")
     end
 
+    def test_can_write_to_output_which_just_supports_append
+      # Note output doesn't have to be an IO, it only needs to support <<
+      output = stub(:<<)
+      pretty = SSHKit::Formatter::Pretty.new(output)
+      simulate_command_lifecycle(pretty)
+    end
+
     private
 
-    def execute_command_lifecycle
+    def simulate_command_lifecycle(pretty)
       command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('user@localhost'))
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
@@ -110,7 +117,7 @@ module SSHKit
     end
 
     def assert_log_output(expected_output)
-      assert_equal expected_output, output.string
+      assert_equal expected_output, output
     end
 
   end

@@ -11,9 +11,9 @@ module SSHKit
       def_delegators :@original_output, :read, :rewind
       def_delegators :@color, :colorize
 
-      def initialize(oio)
-        @original_output = oio
-        @color = SSHKit::Color.new(oio)
+      def initialize(output)
+        @original_output = output
+        @color = SSHKit::Color.new(output)
       end
 
       def log(messages)

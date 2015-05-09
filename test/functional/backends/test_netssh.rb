@@ -10,9 +10,9 @@ module SSHKit
 
       def setup
         super
-        @out = StringIO.new
+        @output = String.new
         SSHKit.config.output_verbosity = :debug
-        SSHKit.config.output = SSHKit::Formatter::SimpleText.new(@out)
+        SSHKit.config.output = SSHKit::Formatter::SimpleText.new(@output)
       end
 
       def a_host
@@ -32,7 +32,7 @@ module SSHKit
           end
         end.run
 
-        command_lines = @out.string.lines.select { |line| line.start_with?('Command:') }
+        command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal <<-EOEXPECTED.unindent, command_lines.join
           Command: /usr/bin/env date
           Command: /usr/bin/env ls -l

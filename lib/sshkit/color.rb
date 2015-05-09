@@ -2,8 +2,8 @@ require 'colorize'
 
 module SSHKit
   class Color
-    def initialize(io, env=ENV)
-      @io, @env = io, env
+    def initialize(output, env=ENV)
+      @output, @env = output, env
     end
 
     def colorize(obj, color, mode=nil)
@@ -12,7 +12,7 @@ module SSHKit
     end
 
     def colorize?
-      @env['SSHKIT_COLOR'] || @io.tty?
+      @env['SSHKIT_COLOR'] || (@output.respond_to?(:tty?) && @output.tty?)
     end
   end
 end

@@ -12,7 +12,7 @@ module SSHKit
       end
 
       def output
-        @output ||= StringIO.new
+        @output ||= String.new
       end
 
       def printer
@@ -66,7 +66,7 @@ module SSHKit
       private
 
       def assert_output_lines(*expected_lines)
-        assert_equal(expected_lines, output.string.split("\n"))
+        assert_equal(expected_lines, output.split("\n"))
       end
     end
   end
