@@ -9,12 +9,8 @@ module SSHKit
         obj.to_s
       end
 
-      def format_command_message(message, command, verbosity_override=nil)
+      def format_message(verbosity, message, uuid=nil)
         message
-      end
-
-      def format_log_message(log_message)
-        log_message
       end
 
     end
