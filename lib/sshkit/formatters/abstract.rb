@@ -16,46 +16,18 @@ module SSHKit
         @color = SSHKit::Color.new(output)
       end
 
-      def log(messages)
-        info(messages)
+      %w(fatal error warn info debug).each do |level|
+        define_method(level) do |message|
+          write(LogMessage.new(Logger.const_get(level.upcase), message))
+        end
       end
-
-      def fatal(messages)
-        write_at_log_level(Logger::FATAL, messages)
-      end
-
-      def error(messages)
-        write_at_log_level(Logger::ERROR, messages)
-      end
-
-      def warn(messages)
-        write_at_log_level(Logger::WARN, messages)
-      end
-
-      def info(messages)
-        write_at_log_level(Logger::INFO, messages)
-      end
-
-      def debug(messages)
-        write_at_log_level(Logger::DEBUG, messages)
-      end
+      alias :log :info
 
       def write(obj)
         raise "Abstract formatter should not be used directly, maybe you want SSHKit::Formatter::BlackHole"
       end
       alias :<< :write
 
-      protected
-
-      def format_std_stream_line(line)
-        ("\t" + line).chomp
-      end
-
-      private
-
-      def write_at_log_level(level, messages)
-        write(LogMessage.new(level, messages))
-      end
     end
 
   end

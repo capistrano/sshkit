@@ -7,15 +7,40 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
-  * Now only color the output if it is associated with a tty, or the `SSHKIT_COLOR` environment variable is set. (See [README](README.md#output-colors)) @robd
-  * Removed broken support for assigning an `IO` to the `output` config option (See [#243](https://github.com/capistrano/sshkit/issues/243)). @robd
+  * Simplified formatter hierarchy.
+    [PR #248](https://github.com/capistrano/sshkit/pull/248)
+    @robd
+    * `SimpleText` formatter now extends `Pretty`, rather than duplicating.
+  * Hide ANSI color escape sequences when outputting to a file.
+    [README](README.md#output-colors),
+    [Issue #245](https://github.com/capistrano/sshkit/issues/245),
+    [PR #246](https://github.com/capistrano/sshkit/pull/246)
+    @robd
+    * Now only color the output if it is associated with a tty,
+      or the `SSHKIT_COLOR` environment variable is set.
+  * Removed broken support for assigning an `IO` to the `output` config option.
+    [Issue #243](https://github.com/capistrano/sshkit/issues/243),
+    [PR #244](https://github.com/capistrano/sshkit/pull/244)
+    @robd
     * Use `SSHKit.config.output = SSHKit::Formatter::SimpleText.new($stdin)` instead
-  * Added support for :interaction_handler option on commands. @robd
-  * Removed partially supported 'trace' log level. @robd
-  * No longer strip whitespace or newlines in `capture` method on Netssh backend. @robd
-    * This is to make the `Local` and `Netssh` backends consistent (they diverged at 7d15a9a)
-    * If you need the old behaviour back, call `.strip` (or `.chomp`) on the captured string i.e. `capture(:my_command).strip`
-  * Simplified backend hierarchy. @robd
+  * Added support for `:interaction_handler` option on commands.
+    [PR #234](https://github.com/capistrano/sshkit/pull/234),
+    [PR #242](https://github.com/capistrano/sshkit/pull/242)
+    @robd
+  * Removed partially supported `TRACE` log level.
+    [2aa7890](https://github.com/capistrano/sshkit/commit/2aa78905f0c521ad9f697e7a4ed04ba438d5ee78)
+    @robd
+  * No longer strip whitespace or newlines in `capture` method on Netssh backend.
+    [PR #239](https://github.com/capistrano/sshkit/pull/239)
+    @robd
+    * This is to make the `Local` and `Netssh` backends consistent
+      (they diverged at [7d15a9a](https://github.com/capistrano/sshkit/commit/7d15a9aebfcc43807c8151bf6f3a4bc038ce6218))
+    * If you need the old behaviour back, call `.strip` (or `.chomp`) on the captured string
+      i.e. `capture(:my_command).strip`
+  * Simplified backend hierarchy.
+    [PR #235](https://github.com/capistrano/sshkit/pull/235),
+    [PR #237](https://github.com/capistrano/sshkit/pull/237)
+    @robd
     * Moved duplicate implementations of `make`, `rake`, `test`, `capture`, `background` on to `Abstract` backend.
     * Backend implementations now only need to implement `execute_command`, `upload!` and `download!`
     * Removed `Printer` from backend hierarchy for `Local` and `Netssh` backends (they now just extend `Abstract`)

@@ -18,8 +18,8 @@ require_relative 'mapping_interaction_handler'
 
 require_relative 'formatters/abstract'
 require_relative 'formatters/black_hole'
-require_relative 'formatters/simple_text'
 require_relative 'formatters/pretty'
+require_relative 'formatters/simple_text'
 require_relative 'formatters/dot'
 
 require_relative 'runners/abstract'

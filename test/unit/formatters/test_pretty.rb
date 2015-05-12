@@ -55,8 +55,18 @@ module SSHKit
     }.each do |level, expected_output|
       define_method("test_#{level}_output_without_color") do
         pretty.send(level, "Test")
-        assert_equal expected_output, output
+        assert_log_output expected_output
       end
+    end
+
+    def test_logging_message_with_leading_and_trailing_space
+      pretty.log("       some spaces\n\n  \t")
+      assert_log_output "  INFO some spaces\n"
+    end
+
+    def test_can_log_non_strings
+      pretty.log(Pathname.new('/var/log/my.log'))
+      assert_log_output "  INFO /var/log/my.log\n"
     end
 
     def test_command_lifecycle_logging_without_color
