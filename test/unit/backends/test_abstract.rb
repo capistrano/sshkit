@@ -51,17 +51,30 @@ module SSHKit
         assert_equal false, backend.executed_command.options[:raise_on_non_zero_exit], 'raise_on_non_zero_exit option'
       end
 
-      def test_capture_creates_and_executes_command_and_returns_output
+      def test_capture_creates_and_executes_command_and_returns_stripped_output
         output = nil
         backend = ExampleBackend.new do
           output = capture :cat, '/a/file'
         end
-        backend.full_stdout = 'Some stdout'
+        backend.full_stdout = "Some stdout\n     "
 
         backend.run
 
         assert_equal '/usr/bin/env cat /a/file', backend.executed_command.to_command
         assert_equal 'Some stdout', output
+      end
+
+      def test_capture_supports_disabling_strip
+        output = nil
+        backend = ExampleBackend.new do
+          output = capture :cat, '/a/file', :strip => false
+        end
+        backend.full_stdout = "Some stdout\n     "
+
+        backend.run
+
+        assert_equal '/usr/bin/env cat /a/file', backend.executed_command.to_command
+        assert_equal "Some stdout\n     ", output
       end
 
       def test_calling_abstract_with_undefined_execute_command_raises_exception
