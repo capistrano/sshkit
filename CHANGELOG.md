@@ -30,13 +30,13 @@ appear at the top.
   * Removed partially supported `TRACE` log level.
     [2aa7890](https://github.com/capistrano/sshkit/commit/2aa78905f0c521ad9f697e7a4ed04ba438d5ee78)
     @robd
-  * No longer strip whitespace or newlines in `capture` method on Netssh backend.
-    [PR #239](https://github.com/capistrano/sshkit/pull/239)
+  * Add support for the `:strip` option to the `capture` method and strip by default on the `Local` backend.
+    [PR #239](https://github.com/capistrano/sshkit/pull/239),
+    [PR #249](https://github.com/capistrano/sshkit/pull/249)
     @robd
-    * This is to make the `Local` and `Netssh` backends consistent
-      (they diverged at [7d15a9a](https://github.com/capistrano/sshkit/commit/7d15a9aebfcc43807c8151bf6f3a4bc038ce6218))
-    * If you need the old behaviour back, call `.strip` (or `.chomp`) on the captured string
-      i.e. `capture(:my_command).strip`
+    * The `Local` backend now strips by default to be consistent with the `Netssh` one.
+    * This reverses change [7d15a9a](https://github.com/capistrano/sshkit/commit/7d15a9aebfcc43807c8151bf6f3a4bc038ce6218) to the `Local` capture API to remove stripping by default.
+    * If you require the raw, unstripped output, pass the `strip: false` option: `capture(:ls, strip: false)`
   * Simplified backend hierarchy.
     [PR #235](https://github.com/capistrano/sshkit/pull/235),
     [PR #237](https://github.com/capistrano/sshkit/pull/237)
