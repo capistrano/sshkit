@@ -144,9 +144,9 @@ module SSHKit
     def environment_string
       environment_hash.collect do |key,value|
         if key.is_a? Symbol
-          "#{key.to_s.upcase}=#{value}"
+          "#{key.to_s.upcase}=\"#{value.to_s.gsub(/"/, '\"')}\""
         else
-          "#{key.to_s}=#{value}"
+          "#{key.to_s}=\"#{value.to_s.gsub(/"/, '\"')}\""
         end
       end.join(' ')
     end
