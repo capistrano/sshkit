@@ -9,7 +9,7 @@ module SSHKit
 
     def setup
       super
-      @output = stub(debug: anything)
+      @output = stub()
       SSHKit.config.output = @output
     end
 
@@ -27,14 +27,19 @@ module SSHKit
       MappingInteractionHandler.new('Server output' => "some input\n").on_stderr(channel, 'Server output', nil)
     end
 
-    def test_raises_warning_if_server_output_is_not_matched
+    def test_logs_unmatched_interaction_if_constructed_with_a_log_level
+      @output.expects(:debug).with('Looking up response for stdout message "Server output\n"')
       @output.expects(:debug).with('Unable to find interaction handler mapping for stdout: "Server output\n" so no response was sent')
 
-      MappingInteractionHandler.new({}).on_stdout(channel, "Server output\n", nil)
+      MappingInteractionHandler.new({}, :debug).on_stdout(channel, "Server output\n", nil)
     end
 
-    def test_does_not_warn_for_supports_mapping_to_nil
-      MappingInteractionHandler.new({"Some output\n" => nil}).on_stdout(channel, "Some output\n", nil)
+    def test_logs_matched_interaction_if_constructed_with_a_log_level
+      channel.stubs(:send_data)
+      @output.expects(:debug).with('Looking up response for stdout message "Server output\n"')
+      @output.expects(:debug).with('Sending "Some input\n"')
+
+      MappingInteractionHandler.new({"Server output\n" => "Some input\n"}, :debug).on_stdout(channel, "Server output\n", nil)
     end
 
     def test_supports_regex_keys
