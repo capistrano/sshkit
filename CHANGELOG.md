@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Quote environment variable values.
+    [PR #250](https://github.com/capistrano/sshkit/pull/250)
+    @Sinjo - Chris Sinjakli
   * Simplified formatter hierarchy.
     [PR #248](https://github.com/capistrano/sshkit/pull/248)
     @robd
