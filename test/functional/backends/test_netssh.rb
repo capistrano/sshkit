@@ -48,7 +48,7 @@ module SSHKit
           captured_command_result = capture(:uname)
         end.run
 
-        assert_includes %W(Linux\n Darwin\n), captured_command_result
+        assert_includes %W(Linux Darwin), captured_command_result
       end
 
       def test_ssh_option_merge
@@ -85,7 +85,7 @@ module SSHKit
         end
         Netssh.new(a_host) do
           upload!(file_name, file_name)
-          actual_file_contents = capture(:cat, file_name)
+          actual_file_contents = capture(:cat, file_name, strip: false)
         end.run
         assert_equal "Some Content\nWith a newline and trailing spaces    \n ", actual_file_contents
       end
@@ -124,7 +124,7 @@ module SSHKit
             "Captured SOME DATA\n" => nil
           })
         end.run
-        assert_equal("Enter Data\nCaptured SOME DATA\n", captured_command_result)
+        assert_equal("Enter Data\nCaptured SOME DATA", captured_command_result)
       end
     end
 

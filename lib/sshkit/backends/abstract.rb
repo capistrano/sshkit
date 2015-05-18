@@ -35,8 +35,9 @@ module SSHKit
       end
 
       def capture(*args)
-        options = { verbosity: Logger::DEBUG }.merge(args.extract_options!)
-        create_command_and_execute(args, options).full_stdout
+        options = { verbosity: Logger::DEBUG, strip: true }.merge(args.extract_options!)
+        result = create_command_and_execute(args, options).full_stdout
+        options[:strip] ? result.strip : result
       end
 
       def background(*args)

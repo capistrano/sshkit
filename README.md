@@ -13,21 +13,79 @@ The typical use-case looks something like this:
 ```ruby
 require 'sshkit/dsl'
 
-on %w{1.example.com 2.example.com}, in: :sequence, wait: 5 do
+on %w{1.example.com 2.example.com}, in: :sequence, wait: 5 do |host|
   within "/opt/sites/example.com" do
     as :deploy  do
       with rails_env: :production do
         rake   "assets:precompile"
         runner "S3::Sync.notify"
-        execute "node", "socket_server.js"
+        execute :node, "socket_server.js"
       end
     end
   end
 end
 ```
 
-One will notice that it's quite low level, but exposes a convenient API, the
-`as()`/`within()`/`with()` are nestable in any order, repeatable, and stackable.
+You can find many other examples of how to use SSHKit over in [EXAMPLES.md](EXAMPLES.md).
+
+## Basic usage
+
+The `on()` method is used to specify the backends on which you'd like to run the commands.
+You can pass one or more hosts as parameters; this runs commands via SSH. Alternatively you can
+pass `:local` to run commands locally. By default SSKit will run the commands on all hosts in
+parallel.
+
+#### Running commands
+
+All backends support the `execute(*args)`, `test(*args)` & `capture(*args)` methods
+for executing a command. You can call any of these methods in the context of an `on()`
+block.
+
+**Note: In SSHKit, the first parameter of the `execute` / `test` / `capture` methods
+has a special significance. If the first parameter isn't a Symbol,
+SSHKit assumes that you want to execute the raw command and the
+`as` / `within` / `with` methods, `SSHKit.config.umask` and [the comand map](#the-command-map)
+have no effect.**
+
+Typically, you would pass a Symbol for the command name and it's args as follows:
+
+```ruby
+on '1.example.com'
+  if test("[ -f somefile.txt ]")
+    execute(:cp, 'somefile.txt', 'somewhere_else.txt')
+  end
+  ls_output = capture(:ls, '-l')
+end
+```
+
+By default the `capture` methods strips whitespace. If you need to preserve whitespace
+you can pass the `strip: false` option: `capture(:ls, '-l', strip: false)`
+
+#### Transferring files
+
+All backends also support the `upload!` and `download!` methods for transferring files.
+For the remote backed, the file is tranferred with scp.
+
+```ruby
+on '1.example.com' do
+  upload! 'some_local_file.txt', '/home/some_user/somewhere'
+  download! '/home/some_user/some_remote_file.txt', 'somewhere_local'
+end
+```
+
+#### Users, working directories, environment variables and umask
+
+When running commands, you can tell SSHKit to set up the context for those
+commands using the following methods:
+
+```ruby
+as(user: 'un', group: 'grp') { execute('cmd') } # Executes sudo -u un -- sh -c 'sg grp cmd'
+within('/somedir') { execute('cmd') }           # Executes cd /somedir && cmd
+with(env_var: 'value') { execute('cmd') }       # Executes ENV_VAR=value cmd
+SSHKit.config.umask = '077'                     # All commands are executed with umask 077 && cmd
+```
+
+The `as()` / `within()` / `with()` are nestable in any order, repeatable, and stackable.
 
 When used inside a block in this way, `as()` and `within()` will guard
 the block they are given with a check.

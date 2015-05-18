@@ -13,7 +13,7 @@ module SSHKit
       def test_capture
         captured_command_result = ''
         Local.new do
-          captured_command_result = capture(:echo, 'foo')
+          captured_command_result = capture(:echo, 'foo', strip: false)
         end.run
         assert_equal "foo\n", captured_command_result
       end
@@ -46,7 +46,7 @@ module SSHKit
             "Captured SOME DATA\n" => nil
           })
         end.run
-        assert_equal("Enter Data\nCaptured SOME DATA\n", captured_command_result)
+        assert_equal("Enter Data\nCaptured SOME DATA", captured_command_result)
       end
     end
   end
