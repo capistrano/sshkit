@@ -36,7 +36,7 @@ module SSHKit
       if response_data.nil?
         output.debug("Unable to find interaction handler mapping for #{stream_name}: #{data.inspect} so no response was sent")
       else
-        output.debug("Sending #{response_data.inspect}")
+        output.debug("Sending response data")
         if channel.respond_to?(:send_data) # Net SSH Channel
           channel.send_data(response_data)
         elsif channel.respond_to?(:write) # Local IO
