@@ -38,7 +38,7 @@ module SSHKit
           Command: /usr/bin/env ls -l
           Command: if test ! -d /tmp; then echo \"Directory does not exist '/tmp'\" 1>&2; false; fi
           Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi
-          Command: cd /tmp && ( RAILS_ENV=production sudo -u root RAILS_ENV=production -- sh -c '/usr/bin/env touch restart.txt' )
+          Command: cd /tmp && ( RAILS_ENV="production" sudo -u root RAILS_ENV="production" -- sh -c '/usr/bin/env touch restart.txt' )
         EOEXPECTED
       end
 
