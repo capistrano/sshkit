@@ -336,18 +336,22 @@ execute(:passwd, interaction_handler: lambda { |server_ouput|
 })
 ```
 
-If no mapping is found, a debug message will show the string you need to add to your hash.
-This can be helpful if you don't know exactly what the server is sending back (whitespace, newlines etc),
-because you can start with a blank mapping and iteratively add messages as required:
+By default, the `MappingInteractionHandler` does not log, in case the server output or input contains sensitive
+information. However, if you pass a second parameter to the constructor, a `log_level`, the interaction handler
+will log information about what server output is being returned by the server, and what input is being sent
+in response. This can be helpful if you don't know exactly what the server is sending back (whitespace, newlines etc).
 
 ```ruby
   # Start with this and run your script
-  execute(:unfamiliar_command, {})
+  execute(:unfamiliar_command, MappingInteractionHandler.new({}, :debug))
   # DEBUG log => Unable to find interaction handler mapping for stdout:
   #              "Please type your input:\r\n" so no response was sent"
 
   # Update mapping:
-  execute(:unfamiliar_command, {"Please type your input:\r\n" => "Some input\n"})
+  execute(:unfamiliar_command, MappingInteractionHandler.new(
+    {"Please type your input:\r\n" => "Some input\n"}
+    :debug
+  ))
 ```
 
 `MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:

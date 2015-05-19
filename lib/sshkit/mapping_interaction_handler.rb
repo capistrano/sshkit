@@ -2,7 +2,8 @@ module SSHKit
 
   class MappingInteractionHandler
 
-    def initialize(mapping)
+    def initialize(mapping, log_level=nil)
+      @log_level = log_level
       @mapping_proc = case mapping
         when Hash
           lambda do |server_output|
@@ -27,16 +28,14 @@ module SSHKit
     private
 
     def on_data(channel, data, stream_name)
-      output = SSHKit.config.output
-
-      output.debug("Looking up response for #{stream_name} message #{data.inspect}")
+      log("Looking up response for #{stream_name} message #{data.inspect}")
 
       response_data = @mapping_proc.call(data)
 
       if response_data.nil?
-        output.debug("Unable to find interaction handler mapping for #{stream_name}: #{data.inspect} so no response was sent")
+        log("Unable to find interaction handler mapping for #{stream_name}: #{data.inspect} so no response was sent")
       else
-        output.debug("Sending #{response_data.inspect}")
+        log("Sending #{response_data.inspect}")
         if channel.respond_to?(:send_data) # Net SSH Channel
           channel.send_data(response_data)
         elsif channel.respond_to?(:write) # Local IO
@@ -45,6 +44,10 @@ module SSHKit
           raise "Unable to write response data to channel #{channel.inspect} - does not support 'send_data' or 'write'"
         end
       end
+    end
+
+    def log(message)
+      SSHKit.config.output.send(@log_level, message) unless @log_level.nil?
     end
 
   end
