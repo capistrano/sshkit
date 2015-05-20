@@ -10,7 +10,6 @@ module SSHKit
           original_output << colorize('.', obj.failure? ? :red : :green)
         end
       end
-      alias :<< :write
 
     end
 

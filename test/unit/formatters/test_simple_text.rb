@@ -38,15 +38,14 @@ module SSHKit
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
 
-      simple << command
+      simple.log_command_start(command)
       command.started = true
-      simple << command
       command.on_stdout(nil, 'stdout message')
-      simple << command
+      simple.log_command_data(command, :stdout, 'stdout message')
       command.on_stderr(nil, 'stderr message')
-      simple << command
+      simple.log_command_data(command, :stderr, 'stderr message')
       command.exit_status = 0
-      simple << command
+      simple.log_command_exit(command)
 
       expected_log_lines = [
         'Running /usr/bin/env a_cmd some args as user@localhost',

@@ -7,7 +7,6 @@ module SSHKit
       def write(obj)
         # Nothing, nothing to do
       end
-      alias :<< :write
 
     end
 

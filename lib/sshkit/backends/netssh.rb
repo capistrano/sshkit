@@ -81,7 +81,7 @@ module SSHKit
       end
 
       def execute_command(cmd)
-        output << cmd
+        output.log_command_start(cmd)
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|
@@ -90,11 +90,11 @@ module SSHKit
             chan.exec cmd.to_command do |ch, success|
               chan.on_data do |ch, data|
                 cmd.on_stdout(ch, data)
-                output << cmd
+                output.log_command_data(cmd, :stdout, data)
               end
               chan.on_extended_data do |ch, type, data|
                 cmd.on_stderr(ch, data)
-                output << cmd
+                output.log_command_data(cmd, :stderr, data)
               end
               chan.on_request("exit-status") do |ch, data|
                 exit_status = data.read_long
@@ -104,7 +104,7 @@ module SSHKit
               #  # might also be a worthwhile thing to report
               #  exit_signal = data.read_string.to_i
               #  warn ">>> " + exit_signal.inspect
-              #  output << cmd
+              #  output.log_command_killed(cmd, exit_signal)
               #end
               chan.on_open_failed do |ch|
                 # TODO: What do do here?
@@ -125,7 +125,7 @@ module SSHKit
         # Set exit_status and log the result upon completion
         if exit_status
           cmd.exit_status = exit_status
-          output << cmd
+          output.log_command_exit(cmd)
         end
       end
 

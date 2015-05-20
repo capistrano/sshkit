@@ -34,7 +34,7 @@ module SSHKit
       private
 
       def execute_command(cmd)
-        output << cmd
+        output.log_command_start(cmd)
 
         cmd.started = Time.now
 
@@ -42,14 +42,14 @@ module SSHKit
           stdout_thread = Thread.new do
             while line = stdout.gets do
               cmd.on_stdout(stdin, line)
-              output << cmd
+              output.log_command_data(cmd, :stdout, line)
             end
           end
 
           stderr_thread = Thread.new do
             while line = stderr.gets do
               cmd.on_stderr(stdin, line)
-              output << cmd
+              output.log_command_data(cmd, :stderr, line)
             end
           end
 
@@ -60,7 +60,7 @@ module SSHKit
           cmd.clear_stdout_lines
           cmd.clear_stderr_lines
 
-          output << cmd
+          output.log_command_exit(cmd)
         end
       end
 

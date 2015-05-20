@@ -115,15 +115,14 @@ module SSHKit
       command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('user@localhost'))
       command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
-      pretty << command
+      pretty.log_command_start(command)
       command.started = true
-      pretty << command
       command.on_stdout(nil, 'stdout message')
-      pretty << command
+      pretty.log_command_data(command, :stdout, 'stdout message')
       command.on_stderr(nil, 'stderr message')
-      pretty << command
+      pretty.log_command_data(command, :stderr, 'stderr message')
       command.exit_status = 0
-      pretty << command
+      pretty.log_command_exit(command)
     end
 
     def assert_log_output(expected_output)

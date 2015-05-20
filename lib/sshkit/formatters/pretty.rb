@@ -17,7 +17,6 @@ module SSHKit
                 "called with #{obj.class}: #{obj.inspect}"
         end
       end
-      alias :<< :write
 
       protected
 
