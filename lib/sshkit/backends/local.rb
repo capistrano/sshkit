@@ -57,8 +57,6 @@ module SSHKit
           stderr_thread.join
 
           cmd.exit_status = wait_thr.value.to_i
-          cmd.clear_stdout_lines
-          cmd.clear_stderr_lines
 
           output.log_command_exit(cmd)
         end

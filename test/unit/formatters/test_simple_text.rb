@@ -61,7 +61,7 @@ module SSHKit
       raised_error = assert_raises RuntimeError do
         simple << Pathname.new('/tmp')
       end
-      assert_equal('Output formatter only supports formatting SSHKit::Command and SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
+      assert_equal('write only supports formatting SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
     end
 
     def test_does_not_log_when_verbosity_is_too_low

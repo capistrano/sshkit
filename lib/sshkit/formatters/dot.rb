@@ -4,11 +4,11 @@ module SSHKit
 
     class Dot < Abstract
 
+      def log_command_exit(command)
+        original_output << colorize('.', command.failure? ? :red : :green)
+      end
+
       def write(obj)
-        return unless obj.is_a? SSHKit::Command
-        if obj.finished?
-          original_output << colorize('.', obj.failure? ? :red : :green)
-        end
       end
 
     end
