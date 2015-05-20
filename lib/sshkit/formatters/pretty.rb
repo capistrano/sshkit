@@ -8,7 +8,6 @@ module SSHKit
       LEVEL_COLORS = [:black, :blue, :yellow, :red, :red].freeze
 
       def write(obj)
-        return if obj.respond_to?(:verbosity) && obj.verbosity < SSHKit.config.output_verbosity
         case obj
         when SSHKit::Command    then write_command(obj)
         when SSHKit::LogMessage then write_message(obj.verbosity, obj.to_s)
@@ -35,7 +34,7 @@ module SSHKit
           host_prefix = command.host.user ? "as #{colorize(command.host.user, :blue)}@" : 'on '
           message = "Running #{colorize(command, :yellow, :bold)} #{host_prefix}#{colorize(command.host, :blue)}"
           write_message(command.verbosity, message, uuid)
-          write_debug("Command: #{colorize(command.to_command, :blue)}", uuid)
+          write_message(Logger::DEBUG, "Command: #{colorize(command.to_command, :blue)}", uuid)
         end
 
         write_std_stream_debug(command.clear_stdout_lines, :green, uuid)
@@ -51,16 +50,12 @@ module SSHKit
 
       def write_std_stream_debug(lines, color, uuid)
         lines.each do |line|
-          write_debug(colorize("\t#{line}".chomp, color), uuid)
+          write_message(Logger::DEBUG, colorize("\t#{line}".chomp, color), uuid)
         end
       end
 
-      def write_debug(message, uuid)
-        write_message(Logger::DEBUG, message, uuid) if SSHKit.config.output_verbosity == Logger::DEBUG
-      end
-
       def write_message(verbosity, message, uuid=nil)
-        original_output << "#{format_message(verbosity, message, uuid)}\n"
+        original_output << "#{format_message(verbosity, message, uuid)}\n" if verbosity >= SSHKit.config.output_verbosity
       end
 
     end
