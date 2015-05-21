@@ -9,6 +9,8 @@ require_relative 'command_map'
 require_relative 'configuration'
 require_relative 'coordinator'
 
+require_relative 'deprecation_logger'
+
 require_relative 'exception'
 
 require_relative 'logger'

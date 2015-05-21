@@ -41,7 +41,9 @@ module SSHKit
       end
 
       def background(*args)
-        warn "[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!"
+        SSHKit.config.deprecation_logger.log(
+          'The background method is deprecated. Blame badly behaved pseudo-daemons!'
+        )
         options = args.extract_options!.merge(run_in_background: true)
         create_command_and_execute(args, options).success?
       end

@@ -4,3 +4,7 @@ SSHKit respects semantic versioning. This file is a place to record breaking API
 which could be considered at the next major release.
 
 * Consider no longer stripping by default on `capture` [#249](https://github.com/capistrano/sshkit/pull/249)
+
+## Deprecated methods which could be deleted in a future major release
+
+* [Abstract.background](lib/sshkit/backends/abstract.rb#L43)

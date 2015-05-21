@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Add support for deprecation logging options.
+    [README](README.md#deprecation-warnings),
+    [PR #258](https://github.com/capistrano/sshkit/pull/258)
   * Quote environment variable values.
     [PR #250](https://github.com/capistrano/sshkit/pull/250)
     @Sinjo - Chris Sinjakli

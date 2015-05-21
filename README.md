@@ -472,6 +472,19 @@ and defaults to `Logger::INFO`.
 
 At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
 
+## Deprecation warnings
+
+Deprecation warnings are logged directly to `stderr` by default. This behaviour
+can be changed by setting the `SSHKit.config.deprecation_output` option:
+
+```ruby
+# Disable deprecation warnings
+SSHKit.config.deprecation_output = nil
+
+# Log deprecation warnings to a file
+SSHKit.config.deprecation_output = File.open('log/deprecation_warnings.log', 'wb')
+```
+
 ## Connection Pooling
 
 SSHKit uses a simple connection pool (enabled by default) to reduce the
