@@ -9,6 +9,15 @@ module SSHKit
       @output ||= formatter(:pretty)
     end
 
+    def deprecation_logger
+      self.deprecation_output = $stderr if @deprecation_logger.nil?
+      @deprecation_logger
+    end
+
+    def deprecation_output=(out)
+      @deprecation_logger = DeprecationLogger.new(out)
+    end
+
     def default_env
       @default_env ||= {}
     end

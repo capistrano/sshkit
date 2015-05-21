@@ -10,6 +10,22 @@ module SSHKit
       SSHKit.config.output = SSHKit::Formatter::Pretty.new($stdout)
     end
 
+    def test_deprecation_output
+      output = ''
+      SSHKit.config.deprecation_output = output
+      SSHKit.config.deprecation_logger.log('Test')
+      assert_equal "[Deprecated] Test\n", output.lines.first
+    end
+
+    def test_default_deprecation_output
+      SSHKit.config.deprecation_logger.log('Test')
+    end
+
+    def test_nil_deprecation_output
+      SSHKit.config.deprecation_output = nil
+      SSHKit.config.deprecation_logger.log('Test')
+    end
+
     def test_output
       assert SSHKit.config.output.is_a? SSHKit::Formatter::Pretty
       assert SSHKit.config.output = $stderr
