@@ -56,24 +56,36 @@ module SSHKit
     end
     alias :failed? :failure?
 
+    def stdout
+      log_reader_deprecation('stdout')
+      @stdout
+    end
+
+    def stdout=(new_value)
+      log_writer_deprecation('stdout')
+      @stdout = new_value
+    end
+
+    def stderr
+      log_reader_deprecation('stderr')
+      @stderr
+    end
+
+    def stderr=(new_value)
+      log_writer_deprecation('stderr')
+      @stderr = new_value
+    end
+
     def on_stdout(channel, data)
       @stdout = data
       @full_stdout += data
       call_interaction_handler(channel, data, :on_stdout)
     end
 
-    def clear_stdout_lines
-      split_and_clear_stream(:@stdout)
-    end
-
     def on_stderr(channel, data)
       @stderr = data
       @full_stderr += data
       call_interaction_handler(channel, data, :on_stderr)
-    end
-
-    def clear_stderr_lines
-      split_and_clear_stream(:@stderr)
     end
 
     def exit_status=(new_exit_status)
@@ -218,15 +230,23 @@ module SSHKit
       end
     end
 
-    def split_and_clear_stream(stream_name)
-      # Convert lines enumerable to an array for ruby 1.9
-      instance_variable_get(stream_name).lines.to_a.tap { instance_variable_set(stream_name, '') }
-    end
-
     def call_interaction_handler(channel, data, callback_name)
       interaction_handler = options[:interaction_handler]
       interaction_handler = MappingInteractionHandler.new(interaction_handler) if interaction_handler.kind_of?(Hash)
       interaction_handler.send(callback_name, channel, data, self) if interaction_handler.respond_to?(callback_name)
+    end
+
+    def log_reader_deprecation(stream)
+      SSHKit.config.deprecation_logger.log(
+        "The #{stream} method on Command is deprecated. " \
+        "The @#{stream} attribute will be removed in a future release. Use full_#{stream}() instead."
+      )
+    end
+
+    def log_writer_deprecation(stream)
+      SSHKit.config.deprecation_logger.log(
+        "The #{stream}= method on Command is deprecated. The @#{stream} attribute will be removed in a future release."
+      )
     end
   end
 

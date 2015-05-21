@@ -168,19 +168,46 @@ module SSHKit
     def test_on_stdout
       c = Command.new(:whoami)
       c.on_stdout(nil, "test\n")
-      assert_equal ["test\n"], c.clear_stdout_lines
+      c.on_stdout(nil, 'test2')
+      c.on_stdout(nil, 'test3')
+      assert_equal "test\ntest2test3", c.full_stdout
     end
 
     def test_on_stderr
       c = Command.new(:whoami)
-      c.on_stderr(nil, "test\n")
-      assert_equal ["test\n"], c.clear_stderr_lines
+      c.on_stderr(nil, 'test')
+      assert_equal 'test', c.full_stderr
     end
 
-    def test_clear_lines_methods_return_empty_array_when_blank
-      command = Command.new(:some_command)
-      assert_equal [], command.clear_stdout_lines
-      assert_equal [], command.clear_stderr_lines
+    def test_deprecated_stdtream_accessors
+      deprecation_out = ''
+      SSHKit.config.deprecation_output = deprecation_out
+
+      c = Command.new(:whoami)
+      c.stdout='a test'
+      assert_equal('a test', c.stdout)
+      c.stderr='another test'
+      assert_equal('another test', c.stderr)
+      deprecation_lines = deprecation_out.lines.to_a
+
+      assert_equal 8, deprecation_lines.size
+      assert_equal(
+        '[Deprecated] The stdout= method on Command is deprecated. ' +
+        "The @stdout attribute will be removed in a future release.\n",
+        deprecation_lines[0])
+      assert_equal(
+        '[Deprecated] The stdout method on Command is deprecated. ' +
+        "The @stdout attribute will be removed in a future release. Use full_stdout() instead.\n",
+        deprecation_lines[2])
+
+      assert_equal(
+        '[Deprecated] The stderr= method on Command is deprecated. ' +
+        "The @stderr attribute will be removed in a future release.\n",
+        deprecation_lines[4])
+      assert_equal(
+        '[Deprecated] The stderr method on Command is deprecated. ' +
+        "The @stderr attribute will be removed in a future release. Use full_stderr() instead.\n",
+        deprecation_lines[6])
     end
 
     def test_setting_exit_status
