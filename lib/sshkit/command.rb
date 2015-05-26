@@ -79,13 +79,13 @@ module SSHKit
     def on_stdout(channel, data)
       @stdout = data
       @full_stdout += data
-      call_interaction_handler(channel, data, :on_stdout)
+      call_interaction_handler(:stdout, data, channel)
     end
 
     def on_stderr(channel, data)
       @stderr = data
       @full_stderr += data
-      call_interaction_handler(channel, data, :on_stderr)
+      call_interaction_handler(:stderr, data, channel)
     end
 
     def exit_status=(new_exit_status)
@@ -230,10 +230,10 @@ module SSHKit
       end
     end
 
-    def call_interaction_handler(channel, data, callback_name)
+    def call_interaction_handler(stream_name, data, channel)
       interaction_handler = options[:interaction_handler]
       interaction_handler = MappingInteractionHandler.new(interaction_handler) if interaction_handler.kind_of?(Hash)
-      interaction_handler.send(callback_name, channel, data, self) if interaction_handler.respond_to?(callback_name)
+      interaction_handler.on_data(self, stream_name, data, channel) if interaction_handler.respond_to?(:on_data)
     end
 
     def log_reader_deprecation(stream)

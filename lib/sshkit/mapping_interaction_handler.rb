@@ -17,17 +17,7 @@ module SSHKit
       end
     end
 
-    def on_stdout(channel, data, command)
-      on_data(channel, data, 'stdout')
-    end
-
-    def on_stderr(channel, data, command)
-      on_data(channel, data, 'stderr')
-    end
-
-    private
-
-    def on_data(channel, data, stream_name)
+    def on_data(command, stream_name, data, channel)
       log("Looking up response for #{stream_name} message #{data.inspect}")
 
       response_data = @mapping_proc.call(data)
@@ -45,6 +35,8 @@ module SSHKit
         end
       end
     end
+
+    private
 
     def log(message)
       SSHKit.config.output.send(@log_level, message) unless @log_level.nil?
