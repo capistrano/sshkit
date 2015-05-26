@@ -7,9 +7,14 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Introduce `log_command_start`, `log_command_data`, `log_command_exit` methods on `Formatter`
+    [PR #257](https://github.com/capistrano/sshkit/pull/257)
+    @robd
+    * Deprecate `@stdout` and `@stderr` accessors on `Command`
   * Add support for deprecation logging options.
     [README](README.md#deprecation-warnings),
     [PR #258](https://github.com/capistrano/sshkit/pull/258)
+    @robd
   * Quote environment variable values.
     [PR #250](https://github.com/capistrano/sshkit/pull/250)
     @Sinjo - Chris Sinjakli

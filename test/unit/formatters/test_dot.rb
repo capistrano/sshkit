@@ -23,9 +23,13 @@ module SSHKit
       end
     end
 
-    def test_unfinished_command
-      command = SSHKit::Command.new(:ls)
-      dot << command
+    def test_log_command_start
+      dot.log_command_start(SSHKit::Command.new(:ls))
+      assert_log_output('')
+    end
+
+    def test_log_command_data
+      dot.log_command_data(SSHKit::Command.new(:ls), :stdout, 'Some output')
       assert_log_output('')
     end
 
@@ -33,7 +37,7 @@ module SSHKit
       output.stubs(:tty?).returns(true)
       command = SSHKit::Command.new(:ls)
       command.exit_status = 0
-      dot << command
+      dot.log_command_exit(command)
       assert_log_output("\e[0;32;49m.\e[0m")
     end
 
@@ -41,13 +45,8 @@ module SSHKit
       output.stubs(:tty?).returns(true)
       command = SSHKit::Command.new(:ls, {raise_on_non_zero_exit: false})
       command.exit_status = 1
-      dot << command
+      dot.log_command_exit(command)
       assert_log_output("\e[0;31;49m.\e[0m")
-    end
-
-    def test_unsupported_class
-      dot << Pathname.new('/tmp')
-      assert_log_output('')
     end
 
     private

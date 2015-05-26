@@ -23,10 +23,25 @@ module SSHKit
       end
       alias :log :info
 
+      def log_command_start(command)
+        write(command)
+      end
+
+      def log_command_data(command, stream_type, stream_data)
+        write(command)
+      end
+
+      def log_command_exit(command)
+        write(command)
+      end
+
+      def <<(obj)
+        write(obj)
+      end
+
       def write(obj)
         raise "Abstract formatter should not be used directly, maybe you want SSHKit::Formatter::BlackHole"
       end
-      alias :<< :write
 
     end
 

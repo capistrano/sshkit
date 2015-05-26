@@ -6,6 +6,7 @@ module SSHKit
     def setup
       super
       SSHKit.config.output_verbosity = Logger::DEBUG
+      Command.any_instance.stubs(:uuid).returns('aaaaaa')
     end
 
     def output
@@ -87,20 +88,30 @@ module SSHKit
       raised_error = assert_raises RuntimeError do
         pretty << Pathname.new('/tmp')
       end
-      assert_equal('Output formatter only supports formatting SSHKit::Command and SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
+      assert_equal('write only supports formatting SSHKit::LogMessage, called with Pathname: #<Pathname:/tmp>', raised_error.message)
     end
 
-    def test_does_not_log_when_verbosity_is_too_low
-      output.stubs(:tty?).returns(true)
-
+    def test_does_not_log_message_when_verbosity_is_too_low
       SSHKit.config.output_verbosity = Logger::WARN
       pretty.info('Some info')
       assert_log_output('')
 
       SSHKit.config.output_verbosity = Logger::INFO
       pretty.info('Some other info')
-      assert_log_output("\e[0;34;49mINFO\e[0m Some other info\n")
+      assert_log_output("  INFO Some other info\n")
     end
+
+    def test_does_not_log_command_when_verbosity_is_too_low
+      SSHKit.config.output_verbosity = Logger::WARN
+      command = Command.new(:ls, host: Host.new('user@localhost'), verbosity: Logger::INFO)
+      pretty.log_command_start(command)
+      assert_log_output('')
+
+      SSHKit.config.output_verbosity = Logger::INFO
+      pretty.log_command_start(command)
+      assert_log_output("  INFO [aaaaaa] Running /usr/bin/env ls as user@localhost\n")
+    end
+
 
     def test_can_write_to_output_which_just_supports_append
       # Note output doesn't have to be an IO, it only needs to support <<
@@ -113,17 +124,15 @@ module SSHKit
 
     def simulate_command_lifecycle(pretty)
       command = SSHKit::Command.new(:a_cmd, 'some args', host: Host.new('user@localhost'))
-      command.stubs(:uuid).returns('aaaaaa')
       command.stubs(:runtime).returns(1)
-      pretty << command
+      pretty.log_command_start(command)
       command.started = true
-      pretty << command
       command.on_stdout(nil, 'stdout message')
-      pretty << command
+      pretty.log_command_data(command, :stdout, 'stdout message')
       command.on_stderr(nil, 'stderr message')
-      pretty << command
+      pretty.log_command_data(command, :stderr, 'stderr message')
       command.exit_status = 0
-      pretty << command
+      pretty.log_command_exit(command)
     end
 
     def assert_log_output(expected_output)
