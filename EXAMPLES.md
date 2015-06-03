@@ -89,6 +89,15 @@ on hosts do |host|
 end
 ```
 
+## Download a file from disk
+```ruby
+on roles(:all) do
+  puts 'Downloading DB Backup File'
+  date_path = Date.today.strftime("%Y/%m/%d")
+  download! "/var/mysql-backup/#{date_path}/my-awesome-db.sql.gz", "my-awesome-db.sql.gz"
+end
+```
+
 ## Upload a file from disk
 
 ```ruby
