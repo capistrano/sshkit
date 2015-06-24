@@ -56,6 +56,7 @@ appear at the top.
     * Backend implementations now only need to implement `execute_command`, `upload!` and `download!`
     * Removed `Printer` from backend hierarchy for `Local` and `Netssh` backends (they now just extend `Abstract`)
     * Removed unused `Net::SSH:LogLevelShim`
+  * Removed dependency on the `colorize` gem. SSHKit now implements its own ANSI color logic, with no external dependencies. Note that SSHKit now only supports the `:bold` or plain modes. Other modes will be gracefully ignored. [#263](https://github.com/capistrano/sshkit/issues/263)
 
 ## 1.7.1
 
