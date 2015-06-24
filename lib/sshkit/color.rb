@@ -1,5 +1,3 @@
-require 'colorize'
-
 module SSHKit
   # Very basic support for ANSI color, so that we don't have to rely on
   # any external dependencies. This class handles colorizing strings, and

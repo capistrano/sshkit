@@ -19,7 +19,6 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency('net-ssh',  '>= 2.8.0')
   gem.add_runtime_dependency('net-scp',  '>= 1.1.2')
-  gem.add_runtime_dependency('colorize', '>= 0.7.0')
 
   gem.add_development_dependency('minitest', ['>= 2.11.3', '< 2.12.0'])
   gem.add_development_dependency('rake')
