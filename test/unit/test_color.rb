@@ -66,5 +66,15 @@ module SSHKit
       assert_equal "\e[1;96;49mhi\e[0m", color.colorize('hi', :light_cyan, :bold)
       assert_equal "\e[1;97;49mhi\e[0m", color.colorize('hi', :light_white, :bold)
     end
+
+    def test_ignores_unrecognized_color
+      color = SSHKit::Color.new(stub(tty?: true), {})
+      assert_equal 'hi', color.colorize('hi', :tangerine)
+    end
+
+    def test_ignores_unrecognized_mode
+      color = SSHKit::Color.new(stub(tty?: true), {})
+      assert_equal "\e[0;31;49mhi\e[0m", color.colorize('hi', :red, :underline)
+    end
   end
 end
