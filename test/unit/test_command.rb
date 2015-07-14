@@ -49,6 +49,12 @@ module SSHKit
       assert_equal %{( FOO="asdf\\\"hjkl" /usr/bin/env rails server )}, c.to_command
     end
 
+    def test_percent_signs_are_escaped_in_env
+      SSHKit.config = nil
+      c = Command.new(:rails, 'server', env: {foo: 'asdf%hjkl'})
+      assert_equal %{( FOO="asdf%hjkl" /usr/bin/env rails server )}, c.to_command
+    end
+
     def test_including_the_env_doesnt_addressively_escape
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {path: '/example:$PATH'})
