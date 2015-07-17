@@ -272,8 +272,8 @@ and this can be achieved by specifying an `:interaction_handler` option when you
 **It is not necessary, or desirable to enable `Netssh.config.pty` to use the `interaction_handler` option.
 Only enable `Netssh.config.pty` if the command you are calling won't work without a pty.**
 
-An `interaction_handler` is an object which responds to `on_stdout(stdout, channel, command)` or `on_stderr(stderr, channel, command)`.
-The `interaction_handler`'s methods will be called once per line of `stdout` or `stderr` from the server and
+An `interaction_handler` is an object which responds to `on_data(command, stream_name, data, channel)`.
+The `interaction_handler`'s method will be called once per line of `stdout` or `stderr` from the server and
 can send data back to the server using the `channel` parameter.
 This allows scripting of command interaction by responding to `stdout` or `stderr` lines with any input required.
 
@@ -281,9 +281,9 @@ For example, an interaction handler to change the password of your linux user us
 
 ```ruby
 class PasswdInteractionHandler
-  def on_stderr(channel, stderr, command)
-    puts stderr
-    case stderr
+  def on_data(command, stream_name, data, channel)
+    puts data
+    case data
       when '(current) UNIX password: '
         channel.send_data("old_pw\n")
       when 'Enter new UNIX password: ', 'Retype new UNIX password: '
@@ -373,7 +373,7 @@ execute(:second_command, interaction_handler: ENTER_PASSWORD)
 class PromptUserForPasswordAndCache
   @password_cache = {}
 
-  def on_stderr(channel, stderr, command)
+  def on_data(command, stream_name, data, channel)
     if data =~ /Sorry.*\stry\sagain/
       @password_cache[command.host] = nil
     end
@@ -397,8 +397,7 @@ execute(:second_command, interaction_handler: prompt_or_use_cached)
 
 ```
 
-When using the `Netssh` backend, the `channel` parameter of `on_stdout(channel, stdout, command)` or
-`on_stderr(channel, stderr, command)` is a
+When using the `Netssh` backend, the `channel` parameter of `on_data(command, stream_name, data, channel)` is a
 [Net::SSH Channel](http://net-ssh.github.io/ssh/v2/api/classes/Net/SSH/Connection/Channel.html).
 When using the `Local` backend, it is a [ruby IO](http://ruby-doc.org/core/IO.html) object.
 If you need to support both sorts of backends with the same interaction handler,
