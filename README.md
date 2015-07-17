@@ -273,9 +273,9 @@ and this can be achieved by specifying an `:interaction_handler` option when you
 Only enable `Netssh.config.pty` if the command you are calling won't work without a pty.**
 
 An `interaction_handler` is an object which responds to `on_data(command, stream_name, data, channel)`.
-The `interaction_handler`'s method will be called once per line of `stdout` or `stderr` from the server and
-can send data back to the server using the `channel` parameter.
-This allows scripting of command interaction by responding to `stdout` or `stderr` lines with any input required.
+The `interaction_handler`'s `on_data` method will be called each time `stdout` or `stderr` data is available from
+the server. Data can be sent back to the server using the `channel` parameter. This allows scripting of command
+interaction by responding to `stdout` or `stderr` lines with any input required.
 
 For example, an interaction handler to change the password of your linux user using the `passwd` command could look like this:
 
@@ -300,9 +300,12 @@ end
 execute(:passwd, interaction_handler: PasswdInteractionHandler.new)
 ```
 
-Often, you want to map directly from an output string returned by the server on either stdout or stderr to the corresponding input string
-(as in the case above). For this case you can pass a hash which is used to create a `SSHKit::MappingInteractionHandler`.
-This provides similar functionality to the linux [expect](http://expect.sourceforge.net/) library:
+#### Using the `SSHKit::MappingInteractionHandler`
+
+Often, you want to map directly from a short output string returned by the server (either stdout or stderr)
+to a corresponding input string (as in the case above). For this case you can specify
+the `interaction_handler` option as a hash. This is used to create a `SSHKit::MappingInteractionHandler` which
+provides similar functionality to the linux [expect](http://expect.sourceforge.net/) library:
 
 ```ruby
 execute(:passwd, interaction_handler: {
@@ -311,7 +314,7 @@ execute(:passwd, interaction_handler: {
 })
 ```
 
-Note the key to the hash keys are matched output using the case equals `===` method.
+Note: the key to the hash keys are matched against the server output `data` using the case equals `===` method.
 This means that regexes and any objects which define `===` can be used as hash keys.
 
 Hash keys are matched in order, which allows for default wildcard matches:
@@ -326,8 +329,8 @@ execute(:my_command, interaction_handler: {
 You can also pass a Proc object to map the output line from the server:
 
 ```ruby
-execute(:passwd, interaction_handler: lambda { |server_ouput|
-  case server_ouput
+execute(:passwd, interaction_handler: lambda { |server_data|
+  case server_data
   when '(current) UNIX password: '
     "old_pw\n",
   when /(Enter|Retype) new UNIX password: /
@@ -336,9 +339,22 @@ execute(:passwd, interaction_handler: lambda { |server_ouput|
 })
 ```
 
+`MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:
+
+```ruby
+ENTER_PASSWORD = SSHKit::MappingInteractionHandler.new(
+  "Please Enter Password\n" => "some_password\n"
+)
+
+execute(:first_command, interaction_handler: ENTER_PASSWORD)
+execute(:second_command, interaction_handler: ENTER_PASSWORD)
+```
+
+#### Exploratory logging
+
 By default, the `MappingInteractionHandler` does not log, in case the server output or input contains sensitive
-information. However, if you pass a second parameter to the constructor, a `log_level`, the interaction handler
-will log information about what server output is being returned by the server, and what input is being sent
+information. However, if you pass a second `log_level` parameter to the constructor, the `MappingInteractionHandler`
+will log information about what output is being returned by the server, and what input is being sent
 in response. This can be helpful if you don't know exactly what the server is sending back (whitespace, newlines etc).
 
 ```ruby
@@ -354,54 +370,26 @@ in response. This can be helpful if you don't know exactly what the server is se
   ))
 ```
 
-`MappingInteractionHandler`s are stateless, so you can assign one to a constant and reuse it:
+#### The `data` parameter
 
-```ruby
-ENTER_PASSWORD = SSHKit::MappingInteractionHandler.new(
-  "Please Enter Password\n" => "some_password\n"
-)
+The `data` parameter of `on_data(command, stream_name, data, channel)` is a string containing the latest data
+delivered from the backend.
 
-# ...
+When using the `Netssh` backend for commands where a small amount of data is returned (eg prompting for sudo passwords),
+`on_data` will normally be called once per line and `data` will be terminated by a newline. For commands with
+larger amounts of output, `data` is delivered as it arrives from the underlying network stack, which depends on
+network conditions, buffer sizes, etc. In this case, you may need to implement a more complex `interaction_handler`
+to concatenate `data` from multiple calls to `on_data` before matching the required output.
 
-execute(:first_command, interaction_handler: ENTER_PASSWORD)
-execute(:second_command, interaction_handler: ENTER_PASSWORD)
-```
+When using the `Local` backend, `on_data` is always called once per line.
 
-`:interaction_handler`s can also be stateful if you need them to be and you can capture user data with `$stdin`:
-
-```ruby
-class PromptUserForPasswordAndCache
-  @password_cache = {}
-
-  def on_data(command, stream_name, data, channel)
-    if data =~ /Sorry.*\stry\sagain/
-      @password_cache[command.host] = nil
-    end
-    if data =~ /password.*:/
-      pass = password_cache[command.host]
-      unless pass
-        pass = $stdin.noecho(&:gets)
-        password_cache[command.host] = pass
-      end
-      ch.send_data(pass)
-    end
-  end
-end
-
-# ...
-
-prompt_or_use_cached = PromptUserForPasswordAndCache.new
-
-execute(:first_command, interaction_handler: prompt_or_use_cached)
-execute(:second_command, interaction_handler: prompt_or_use_cached)
-
-```
+#### The `channel` parameter
 
 When using the `Netssh` backend, the `channel` parameter of `on_data(command, stream_name, data, channel)` is a
 [Net::SSH Channel](http://net-ssh.github.io/ssh/v2/api/classes/Net/SSH/Connection/Channel.html).
 When using the `Local` backend, it is a [ruby IO](http://ruby-doc.org/core/IO.html) object.
 If you need to support both sorts of backends with the same interaction handler,
-you need to call methods the appropriate API depending on the channel type.
+you need to call methods on the appropriate API depending on the channel type.
 One approach is to detect the presence of the API methods you need -
 eg `channel.respond_to?(:send_data) # Net::SSH channel` and `channel.respond_to?(:write) # IO`.
 See the `SSHKit::MappingInteractionHandler` for an example of this.
