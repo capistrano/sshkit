@@ -37,11 +37,11 @@ parallel.
 
 #### Running commands
 
-All backends support the `execute(*args)`, `test(*args)` & `capture(*args)` methods
+All backends support the `execute(*args)`, `test(*args)`, `capture(*args)` & `test_and_capture(*args)` methods
 for executing a command. You can call any of these methods in the context of an `on()`
 block.
 
-**Note: In SSHKit, the first parameter of the `execute` / `test` / `capture` methods
+**Note: In SSHKit, the first parameter of the `execute` / `test` / `capture` / `test_and_capture` methods
 has a special significance. If the first parameter isn't a Symbol,
 SSHKit assumes that you want to execute the raw command and the
 `as` / `within` / `with` methods, `SSHKit.config.umask` and [the comand map](#the-command-map)
@@ -55,10 +55,14 @@ on '1.example.com'
     execute(:cp, 'somefile.txt', 'somewhere_else.txt')
   end
   ls_output = capture(:ls, '-l')
+  rm_output = test_and_capture(:rm, "/a/file")
+  unless rm_output.success?
+    raise StandardError, rm_output.stderr + rm_output.stdout
+  end
 end
 ```
 
-By default the `capture` methods strips whitespace. If you need to preserve whitespace
+By default the `capture` & `test_and_capture` methods strip whitespace. If you need to preserve whitespace
 you can pass the `strip: false` option: `capture(:ls, '-l', strip: false)`
 
 #### Transferring files
@@ -267,7 +271,7 @@ Wherever possible, you should call commands in a way that doesn't require intera
 (eg by specifying all options as command arguments).
 
 However in some cases, you may want to programmatically drive interaction with a command
-and this can be achieved by specifying an `:interaction_handler` option when you `execute`, `capture` or `test` a command.
+and this can be achieved by specifying an `:interaction_handler` option when you `execute`, `capture`,  `test`, or `test_and_capture` a command.
 
 **It is not necessary, or desirable to enable `Netssh.config.pty` to use the `interaction_handler` option.
 Only enable `Netssh.config.pty` if the command you are calling won't work without a pty.**
@@ -450,7 +454,7 @@ SSHKit.config.format = :foobar
 
 ## Output Verbosity
 
-By default calls to `capture()` and `test()` are not logged, they are used
+By default calls to `test()`, `capture()` and `test_and_capture()` are not logged, they are used
 *so* frequently by backend tasks to check environmental settings that it
 produces a large amount of noise. They are tagged with a verbosity option on
 the `Command` instances of `Logger::DEBUG`. The default configuration for
