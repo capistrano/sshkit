@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Export environment variables and execute command in a subshell.
+    [PR #273](https://github.com/capistrano/sshkit/pull/273)
+    @kuon
   * Introduce `log_command_start`, `log_command_data`, `log_command_exit` methods on `Formatter`
     [PR #257](https://github.com/capistrano/sshkit/pull/257)
     @robd

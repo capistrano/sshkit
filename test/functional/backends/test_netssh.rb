@@ -38,7 +38,7 @@ module SSHKit
           Command: /usr/bin/env ls -l
           Command: if test ! -d /tmp; then echo \"Directory does not exist '/tmp'\" 1>&2; false; fi
           Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi
-          Command: cd /tmp && ( RAILS_ENV="production" sudo -u root RAILS_ENV="production" -- sh -c '/usr/bin/env touch restart.txt' )
+          Command: cd /tmp && ( export RAILS_ENV="production" ; sudo -u root RAILS_ENV="production" -- sh -c '/usr/bin/env touch restart.txt' )
         EOEXPECTED
       end
 
@@ -60,6 +60,16 @@ module SSHKit
           host_ssh_options = host.ssh_options
         end.run
         assert_equal({ forward_agent: false, paranoid: true }, host_ssh_options)
+      end
+
+      def test_env_vars_substituion_in_subshell
+        captured_command_result = nil
+        Netssh.new(a_host) do |host|
+          with some_env_var: :some_value do
+           captured_command_result = capture(:echo, '$SOME_ENV_VAR')
+          end
+        end.run
+        assert_equal "some_value", captured_command_result
       end
 
       def test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr
