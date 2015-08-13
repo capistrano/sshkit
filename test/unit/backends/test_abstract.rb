@@ -64,6 +64,23 @@ module SSHKit
         assert_equal 'Some stdout', output
       end
 
+      def test_test_and_capture
+        output = nil
+        backend = ExampleBackend.new do
+          output = test_and_capture :cat, '/a/file'
+        end
+        backend.full_stdout = "Some stdout\n     "
+        backend.full_stderr = "Some stderr\n     "
+
+        backend.run
+
+        assert_equal '/usr/bin/env cat /a/file', backend.executed_command.to_command
+        assert_equal false, output.success?
+        assert_equal 'Some stdout', output.stdout
+        assert_equal 'Some stderr', output.stderr
+        assert_equal false, backend.executed_command.options[:raise_on_non_zero_exit], 'raise_on_non_zero_exit option'
+      end
+
       def test_capture_supports_disabling_strip
         output = nil
         backend = ExampleBackend.new do
@@ -121,6 +138,7 @@ module SSHKit
 
       # Use a concrete ExampleBackend rather than a mock for improved assertion granularity
       class ExampleBackend < Abstract
+        attr_writer :full_stderr
         attr_writer :full_stdout
         attr_reader :executed_command
 
@@ -132,6 +150,7 @@ module SSHKit
         def execute_command(command)
           @executed_command = command
           command.on_stdout(nil, @full_stdout) unless @full_stdout.nil?
+          command.on_stderr(nil, @full_stderr) unless @full_stderr.nil?
         end
 
         def ExampleBackend.example_host

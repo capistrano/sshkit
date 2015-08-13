@@ -1,6 +1,17 @@
 module SSHKit
 
   module Backend
+    class CapturedResult
+      attr_reader :stdout, :stderr
+
+      def initialize(success, stdout, stderr)
+        @success, @stdout, @stderr = success, stdout, stderr
+      end
+
+      def success?
+        @success
+      end
+    end
 
     MethodUnavailableError = Class.new(SSHKit::StandardError)
 
@@ -38,6 +49,17 @@ module SSHKit
         options = { verbosity: Logger::DEBUG, strip: true }.merge(args.extract_options!)
         result = create_command_and_execute(args, options).full_stdout
         options[:strip] ? result.strip : result
+      end
+
+      def test_and_capture(*args)
+        options = { verbosity: Logger::DEBUG, strip: true, raise_on_non_zero_exit: false }.merge(args.extract_options!)
+        cmd = create_command_and_execute(args, options)
+        stdout, stderr = cmd.full_stdout, cmd.full_stderr
+        if options[:strip]
+          stdout = stdout.strip
+          stderr = stderr.strip
+        end
+        CapturedResult.new(cmd.success?, stdout, stderr)
       end
 
       def background(*args)

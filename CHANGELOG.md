@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Introduced `test_and_capture` method on backends
+    [PR #274](https://github.com/capistrano/sshkit/pull/274)
+    @betesh
   * Export environment variables and execute command in a subshell.
     [PR #273](https://github.com/capistrano/sshkit/pull/273)
     @kuon
