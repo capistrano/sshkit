@@ -5,11 +5,11 @@ module SSHKit
     class SimpleText < Pretty
 
       # Historically, SimpleText formatter was used to disable coloring, so we maintain that behaviour
-      def colorize(obj, color, mode=nil)
+      def colorize(obj, _color, _mode=nil)
         obj.to_s
       end
 
-      def format_message(verbosity, message, uuid=nil)
+      def format_message(_verbosity, message, _uuid=nil)
         message
       end
 

@@ -40,7 +40,7 @@ class FunctionalTest < MiniTest::Unit::TestCase
   def create_user_with_key(username, password = :secret)
     username, password = username.to_s, password.to_s
 
-    keys = VagrantWrapper.hosts.collect do |name, host|
+    keys = VagrantWrapper.hosts.collect do |_name, host|
       Net::SSH.start(host.hostname, host.user, port: host.port, password: host.password) do |ssh|
 
         # Remove the user, make it again, force-generate a key for him
@@ -70,7 +70,7 @@ class FunctionalTest < MiniTest::Unit::TestCase
       end
     end
 
-    Hash[VagrantWrapper.hosts.collect { |n, h| n.to_sym }.zip(keys)]
+    Hash[VagrantWrapper.hosts.collect { |n, _h| n.to_sym }.zip(keys)]
   end
 
 end

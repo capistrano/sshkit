@@ -100,7 +100,7 @@ module SSHKit
   class SimpleHostParser
 
     def self.suitable?(host_string)
-      !host_string.match /[:|@]/
+      !host_string.match(/[:|@]/)
     end
 
     def initialize(host_string)
@@ -128,7 +128,7 @@ module SSHKit
   class HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
-      !host_string.match /[@|\[|\]]/
+      !host_string.match(/[@|\[|\]]/)
     end
 
     def port
@@ -145,7 +145,7 @@ module SSHKit
   # :nodoc:
   class HostWithUsernameAndPortParser < SimpleHostParser
     def self.suitable?(host_string)
-      host_string.match /@.*:\d+/
+      host_string.match(/@.*:\d+/)
     end
     def username
       @host_string.split(/:|@/)[0]
@@ -163,7 +163,7 @@ module SSHKit
   class IPv6HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
-      host_string.match /[a-fA-F0-9:]+:\d+/
+      host_string.match(/[a-fA-F0-9:]+:\d+/)
     end
 
     def port

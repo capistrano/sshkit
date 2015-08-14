@@ -61,7 +61,7 @@ module SSHKit
       def transfer_summarizer(action)
         last_name = nil
         last_percentage = nil
-        proc do |ch, name, transferred, total|
+        proc do |_ch, name, transferred, total|
           percentage = (transferred.to_f * 100 / total.to_f)
           unless percentage.nan?
             message = "#{action} #{name} #{percentage.round(2)}%"
@@ -87,16 +87,16 @@ module SSHKit
         with_ssh do |ssh|
           ssh.open_channel do |chan|
             chan.request_pty if Netssh.config.pty
-            chan.exec cmd.to_command do |ch, success|
+            chan.exec cmd.to_command do |_ch, _success|
               chan.on_data do |ch, data|
                 cmd.on_stdout(ch, data)
                 output.log_command_data(cmd, :stdout, data)
               end
-              chan.on_extended_data do |ch, type, data|
+              chan.on_extended_data do |ch, _type, data|
                 cmd.on_stderr(ch, data)
                 output.log_command_data(cmd, :stderr, data)
               end
-              chan.on_request("exit-status") do |ch, data|
+              chan.on_request("exit-status") do |_ch, data|
                 exit_status = data.read_long
               end
               #chan.on_request("exit-signal") do |ch, data|
@@ -106,14 +106,14 @@ module SSHKit
               #  warn ">>> " + exit_signal.inspect
               #  output.log_command_killed(cmd, exit_signal)
               #end
-              chan.on_open_failed do |ch|
+              chan.on_open_failed do |_ch|
                 # TODO: What do do here?
                 # I think we should raise something
               end
-              chan.on_process do |ch|
+              chan.on_process do |_ch|
                 # TODO: I don't know if this is useful
               end
-              chan.on_eof do |ch|
+              chan.on_eof do |_ch|
                 # TODO: chan sends EOF before the exit status has been
                 # writtend
               end

@@ -39,7 +39,7 @@ module SSHKit
       def find_live_entry(key)
         @mutex.synchronize do
           return nil unless @pool.key?(key)
-          while entry = @pool[key].shift
+          while (entry = @pool[key].shift)
             return entry if entry.live?
           end
         end

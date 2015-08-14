@@ -65,7 +65,6 @@ module SSHKit
     end
 
     def test_assert_hosts_compare_equal
-      assert Host.new('example.com') == Host.new('example.com')
       assert Host.new('example.com').eql? Host.new('example.com')
       assert Host.new('example.com').equal? Host.new('example.com')
     end

@@ -14,7 +14,7 @@ module SSHKit
     end
 
     def echo_time
-      lambda do |host|
+      lambda do |_host|
         execute "echo #{Time.now.to_f}"
       end
     end
@@ -45,7 +45,7 @@ module SSHKit
     end
 
     def test_the_connection_manaager_runs_things_in_parallel_by_default
-      Coordinator.new(%w{1.example.com 2.example.com}).each &echo_time
+      Coordinator.new(%w{1.example.com 2.example.com}).each(&echo_time)
       assert_equal 2, actual_execution_times.length
       assert_within_10_ms(actual_execution_times)
     end
@@ -60,7 +60,7 @@ module SSHKit
       start = Time.now
       Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, wait: 10, &echo_time
       stop = Time.now
-      assert_operator (stop - start), :>=, 10.0
+      assert_operator(stop - start, :>=, 10.0)
     end
 
     def test_the_connection_manager_can_run_things_in_groups
@@ -85,11 +85,11 @@ module SSHKit
     private
 
     def assert_at_least_1_sec_apart(first_time, last_time)
-      assert_operator (last_time - first_time), :>, 1.0
+      assert_operator(last_time - first_time, :>, 1.0)
     end
 
     def assert_within_10_ms(array)
-      assert_in_delta *array, 0.01 # 10 msec
+      assert_in_delta(*array, 0.01) # 10 msec
     end
 
     def actual_execution_times

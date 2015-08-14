@@ -53,7 +53,7 @@ module SSHKit
         create_command_and_execute(args, options).success?
       end
 
-      def within(directory, &block)
+      def within(directory, &_block)
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST, verbosity: Logger::DEBUG
           if test ! -d #{File.join(@pwd)}
@@ -66,7 +66,7 @@ module SSHKit
         @pwd.pop
       end
 
-      def with(environment, &block)
+      def with(environment, &_block)
         @_env = (@env ||= {})
         @env = @_env.merge environment
         yield
@@ -75,7 +75,7 @@ module SSHKit
         remove_instance_variable(:@_env)
       end
 
-      def as(who, &block)
+      def as(who, &_block)
         if who.is_a? Hash
           @user  = who[:user]  || who["user"]
           @group = who[:group] || who["group"]
@@ -106,9 +106,9 @@ module SSHKit
       end
 
       # Backends which extend the Abstract backend should implement the following methods:
-      def upload!(local, remote, options = {}) raise MethodUnavailableError end
-      def download!(remote, local=nil, options = {}) raise MethodUnavailableError end
-      def execute_command(cmd) raise MethodUnavailableError end
+      def upload!(_local, _remote, _options = {}) raise MethodUnavailableError end
+      def download!(_remote, _local=nil, _options = {}) raise MethodUnavailableError end
+      def execute_command(_cmd) raise MethodUnavailableError end
       private :execute_command # Can inline after Ruby 2.1
 
       private

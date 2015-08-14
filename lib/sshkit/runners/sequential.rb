@@ -19,7 +19,7 @@ module SSHKit
       private
       def run_backend(host, &block)
         backend(host, &block).run
-      rescue Exception => e
+      rescue StandardError => e
         e2 = ExecuteError.new e
         raise e2, "Exception while executing #{host.user ? "as #{host.user}@" : "on host "}#{host}: #{e.message}"
       end
