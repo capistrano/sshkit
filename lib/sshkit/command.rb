@@ -130,7 +130,7 @@ module SSHKit
     end
 
     def verbosity
-      if vb = options[:verbosity]
+      if (vb = options[:verbosity])
         case vb.class.name
         when 'Symbol' then return Logger.const_get(vb.to_s.upcase)
         when 'Fixnum' then return vb
@@ -141,12 +141,12 @@ module SSHKit
     end
 
     def should_map?
-      !command.match /\s/
+      !command.match(/\s/)
     end
 
-    def within(&block)
+    def within(&_block)
       return yield unless options[:in]
-      "cd #{options[:in]} && %s" % yield
+      sprintf("cd #{options[:in]} && %s", yield)
     end
 
     def environment_hash
@@ -161,27 +161,27 @@ module SSHKit
       end.join(' ')
     end
 
-    def with(&block)
+    def with(&_block)
       return yield unless environment_hash.any?
-      "( export #{environment_string} ; %s )" % yield
+      sprintf("( export #{environment_string} ; %s )", yield)
     end
 
-    def user(&block)
+    def user(&_block)
       return yield unless options[:user]
       "sudo -u #{options[:user]} #{environment_string + " " unless environment_string.empty?}-- sh -c '%s'" % %Q{#{yield}}
     end
 
-    def in_background(&block)
+    def in_background(&_block)
       return yield unless options[:run_in_background]
-      "( nohup %s > /dev/null & )" % yield
+      sprintf("( nohup %s > /dev/null & )", yield)
     end
 
-    def umask(&block)
+    def umask(&_block)
       return yield unless SSHKit.config.umask
-      "umask #{SSHKit.config.umask} && %s" % yield
+      sprintf("umask #{SSHKit.config.umask} && %s", yield)
     end
 
-    def group(&block)
+    def group(&_block)
       return yield unless options[:group]
       "sg #{options[:group]} -c \\\"%s\\\"" % %Q{#{yield}}
       # We could also use the so-called heredoc format perhaps:

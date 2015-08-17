@@ -17,7 +17,7 @@ module SSHKit
       end
     end
 
-    def on_data(command, stream_name, data, channel)
+    def on_data(_command, stream_name, data, channel)
       log("Looking up response for #{stream_name} message #{data.inspect}")
 
       response_data = @mapping_proc.call(data)

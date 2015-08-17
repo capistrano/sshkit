@@ -11,7 +11,7 @@ module SSHKit
         @block = block
       end
 
-      def upload!(local, remote, options = {})
+      def upload!(local, remote, _options = {})
         if local.is_a?(String)
           FileUtils.cp(local, remote)
         else
@@ -21,7 +21,7 @@ module SSHKit
         end
       end
 
-      def download!(remote, local=nil, options = {})
+      def download!(remote, local=nil, _options = {})
         if local.nil?
           FileUtils.cp(remote, File.basename(remote))
         else
@@ -40,14 +40,14 @@ module SSHKit
 
         Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
           stdout_thread = Thread.new do
-            while line = stdout.gets do
+            while (line = stdout.gets) do
               cmd.on_stdout(stdin, line)
               output.log_command_data(cmd, :stdout, line)
             end
           end
 
           stderr_thread = Thread.new do
-            while line = stderr.gets do
+            while (line = stderr.gets) do
               cmd.on_stderr(stdin, line)
               output.log_command_data(cmd, :stderr, line)
             end

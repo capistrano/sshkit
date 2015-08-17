@@ -8,7 +8,7 @@ module SSHKit
         original_output << colorize('.', command.failure? ? :red : :green)
       end
 
-      def write(obj)
+      def write(_obj)
       end
 
     end

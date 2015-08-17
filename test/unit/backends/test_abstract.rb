@@ -117,8 +117,6 @@ module SSHKit
         end
       end
 
-      private
-
       # Use a concrete ExampleBackend rather than a mock for improved assertion granularity
       class ExampleBackend < Abstract
         attr_writer :full_stdout

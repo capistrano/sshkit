@@ -44,7 +44,7 @@ module SSHKit
 
       def test_capture
         captured_command_result = nil
-        Netssh.new(a_host) do |host|
+        Netssh.new(a_host) do |_host|
           captured_command_result = capture(:uname)
         end.run
 
@@ -64,7 +64,7 @@ module SSHKit
 
       def test_env_vars_substituion_in_subshell
         captured_command_result = nil
-        Netssh.new(a_host) do |host|
+        Netssh.new(a_host) do |_host|
           with some_env_var: :some_value do
            captured_command_result = capture(:echo, '$SOME_ENV_VAR')
           end
@@ -74,7 +74,7 @@ module SSHKit
 
       def test_execute_raises_on_non_zero_exit_status_and_captures_stdout_and_stderr
         err = assert_raises SSHKit::Command::Failed do
-          Netssh.new(a_host) do |host|
+          Netssh.new(a_host) do |_host|
             execute :echo, "'Test capturing stderr' 1>&2; false"
           end.run
         end
@@ -82,7 +82,7 @@ module SSHKit
       end
 
       def test_test_does_not_raise_on_non_zero_exit_status
-        Netssh.new(a_host) do |host|
+        Netssh.new(a_host) do |_host|
           test :false
         end.run
       end
@@ -102,7 +102,7 @@ module SSHKit
 
       def test_upload_string_io
         file_contents = ""
-        Netssh.new(a_host) do |host|
+        Netssh.new(a_host) do |_host|
           file_name = File.join("/tmp", SecureRandom.uuid)
           upload!(StringIO.new('example_io'), file_name)
           file_contents = download!(file_name)

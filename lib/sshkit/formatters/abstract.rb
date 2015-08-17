@@ -27,7 +27,7 @@ module SSHKit
         write(command)
       end
 
-      def log_command_data(command, stream_type, stream_data)
+      def log_command_data(command, _stream_type, _stream_data)
         write(command)
       end
 
@@ -39,7 +39,7 @@ module SSHKit
         write(obj)
       end
 
-      def write(obj)
+      def write(_obj)
         raise "Abstract formatter should not be used directly, maybe you want SSHKit::Formatter::BlackHole"
       end
 

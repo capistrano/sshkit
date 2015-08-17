@@ -7,6 +7,19 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Clean up rubocop lint warnings
+    [PR #275](https://github.com/capistrano/sshkit/pull/275)
+    @cshaffer
+    * Prepend unused parameter names with an underscore
+    * Prefer “safe assignment in condition”
+    * Disambiguate regexp literals with parens
+    * Prefer `sprintf` over `String#%`
+    * No longer shadow `caller_line` variable in `DeprecationLogger`
+    * Rescue `StandardError` instead of `Exception`
+    * Remove useless `private` access modifier in `TestAbstract`
+    * Disambiguate block operator with parens
+    * Disambiguate between grouped expression and method params
+    * Remove assertion in `TestHost#test_assert_hosts_compare_equal` that compares something with itself
   * Export environment variables and execute command in a subshell.
     [PR #273](https://github.com/capistrano/sshkit/pull/273)
     @kuon

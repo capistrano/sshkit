@@ -15,11 +15,11 @@ module SSHKit
       end
 
       def connect
-        ->(*args) { Object.new }
+        ->(*_args) { Object.new }
       end
 
       def connect_and_close
-        ->(*args) { OpenStruct.new(:closed? => true) }
+        ->(*_args) { OpenStruct.new(:closed? => true) }
       end
 
       def echo_args
