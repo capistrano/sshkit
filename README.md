@@ -11,6 +11,7 @@ more servers.
 The typical use-case looks something like this:
 
 ```ruby
+require 'sshkit'
 require 'sshkit/dsl'
 
 on %w{1.example.com 2.example.com}, in: :sequence, wait: 5 do |host|
