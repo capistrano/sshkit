@@ -5,6 +5,9 @@ appear at the top.
 
 ## [Unreleased][]
 
+  * Escape '%' in environment string before it is passed to sprintf.
+    [PR #280](https://github.com/capistrano/sshkit/pull/280)
+    @Sinjo - Chris Sinjakli
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
 
