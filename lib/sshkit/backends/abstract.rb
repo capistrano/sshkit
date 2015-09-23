@@ -75,6 +75,10 @@ module SSHKit
         remove_instance_variable(:@_env)
       end
 
+      def prerun(command, &_block)
+        (@before ||= []).push command.to_s
+      end
+
       def as(who, &_block)
         if who.is_a? Hash
           @user  = who[:user]  || who["user"]
@@ -122,7 +126,7 @@ module SSHKit
       end
 
       def command(args, options)
-        SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user, group: @group})])
+        SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user, group: @group, before: @before})])
       end
 
     end

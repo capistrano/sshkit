@@ -43,6 +43,12 @@ module SSHKit
       assert_equal %{( export FACTER_env="production" FOO="bar" ; /usr/bin/env rails server )}, c.to_command
     end
 
+    def test_source_bashrc_before_including_the_env
+      SSHKit.config = nil
+      c = Command.new(:rails, 'server', env: {rails_env: :production}, before: ['source ~/.bashrc', 'echo $PATH'])
+      assert_equal %{( export RAILS_ENV="production" ; source ~/.bashrc ; echo $PATH ; /usr/bin/env rails server )}, c.to_command
+    end
+
     def test_double_quotes_are_escaped_in_env
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {foo: 'asdf"hjkl'})
@@ -121,6 +127,12 @@ module SSHKit
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var')
       assert_equal %{cd /var && umask 007 && ( export A="b" ; sudo -u bob A="b" -- sh -c '/usr/bin/env touch somefile' )}, c.to_command
+    end
+
+    def test_source_bashrc_before_umask_with_env_and_working_directory_and_user
+      SSHKit.config.umask = '007'
+      c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var', before: 'source ~/.bashrc')
+      assert_equal %{cd /var && umask 007 && ( export A="b" ; sudo -u bob A="b" -- sh -c 'source ~/.bashrc ; /usr/bin/env touch somefile' )}, c.to_command
     end
 
     def test_verbosity_defaults_to_logger_info
