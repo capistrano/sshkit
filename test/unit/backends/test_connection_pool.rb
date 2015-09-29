@@ -111,6 +111,18 @@ module SSHKit
         refute_equal conn1, conn2
       end
 
+      def test_close_connections
+        conn1 = mock
+        conn1.expects(:closed?).returns(false)
+        conn1.expects(:close)
+        entry1 = pool.checkout("conn1"){|*args| conn1 }
+        pool.checkin entry1
+        entry2 = pool.checkout("conn2", &connect)
+        # entry2 isn't closed if close_connections is called
+
+        pool.close_connections
+      end
+
     end
   end
 end
