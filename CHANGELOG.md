@@ -5,6 +5,9 @@ appear at the top.
 
 ## `master` (Unreleased)
 
+  * add SSHKit::Backend::ConnectionPool#close_connections
+    [PR #285](https://github.com/capistrano/sshkit/pull/285)
+    @akm
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
   * Clean up rubocop lint warnings
