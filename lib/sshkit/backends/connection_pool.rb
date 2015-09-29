@@ -33,7 +33,6 @@ module SSHKit
       def close_connections
         @mutex.synchronize do
           @pool.values.flatten.map(&:connection).uniq.each do |conn|
-            $stdout.puts conn.inspect
             if conn.respond_to?(:closed?) && conn.respond_to?(:close)
               conn.close unless conn.closed?
             end
