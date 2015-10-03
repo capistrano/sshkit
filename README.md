@@ -158,7 +158,7 @@ end
 # they will all exist (all tar commands exited with a success status, or
 # that we will have raised an exception if one of them failed.
 on all_servers do |host|
-  in site_dir do
+  within site_dir do
     backup_filename = "backup-#{host.hostname}.tar.gz"
     target_filename = "backups/#{Time.now.utc.iso8601}/#{host.hostname}.tar.gz"
     puts capture(:s3cmd, 'put', backup_filename, target_filename)
