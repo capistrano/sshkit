@@ -3,6 +3,4 @@ rvm:
   - 2.2.2
   - 2.1.6
   - 2.0.0
-  - 1.9.3
-  - 1.9.2
 script: "rake test:units"
