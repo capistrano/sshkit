@@ -1,5 +1,19 @@
 require "thread"
 
+# Since we call to_s on new_connection_args and use that as a hash
+# We need to make sure the memory address of the object is not used as part of the key
+# Otherwise identical objects with different memory address won't get a hash hit.
+# In the case of proxy commands, this can lead to proxy processes leaking
+# And in severe cases can cause deploys to fail due to default file descriptor limits
+# An alternate solution would be to use a different means of generating hash keys
+module Net; module SSH; module Proxy
+  class Command
+    def inspect
+      @command_line_template
+    end
+  end
+end;end;end
+
 module SSHKit
 
   module Backend
