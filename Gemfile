@@ -6,3 +6,10 @@ platforms :rbx do
   gem 'rubysl', '~> 2.0'
   gem 'json'
 end
+
+# Chandler requires Ruby >= 2.1.0, but depending on the Travis environment,
+# we may not meet that requirement. Only include the chandler gem if the Ruby
+# requirement is met. (Chandler is used only for `rake release`; see Rakefile.)
+if Gem::Requirement.new('>= 2.1.0').satisfied_by?(Gem::Version.new(RUBY_VERSION))
+  gem 'chandler', '>= 0.1.1'
+end
