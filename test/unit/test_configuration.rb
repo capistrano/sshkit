@@ -78,28 +78,6 @@ module SSHKit
       end
     end
 
-    def test_prohibits_unknown_formatter_type_with_exception
-      assert_raises(NameError) do
-        SSHKit.config.format = :doesnotexist
-      end
-    end
-
-    def test_options_can_be_provided_to_formatter
-      SSHKit.config.use_format(TestFormatter, :color => false)
-      formatter = SSHKit.config.output
-      assert_instance_of(TestFormatter, formatter)
-      assert_equal($stdout, formatter.output)
-      assert_equal({ :color => false }, formatter.options)
-    end
-
-    class TestFormatter
-      attr_accessor :output, :options
-
-      def initialize(output, options={})
-        @output = output
-        @options = options
-      end
-    end
   end
 
 end

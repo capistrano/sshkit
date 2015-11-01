@@ -6,7 +6,7 @@ module SSHKit
     attr_writer :output, :backend, :default_env
 
     def output
-      @output ||= use_format(:pretty)
+      @output ||= formatter(:pretty)
     end
 
     def deprecation_logger
@@ -34,29 +34,8 @@ module SSHKit
       @output_verbosity = logger(verbosity)
     end
 
-    # TODO: deprecate in favor of `use_format`
     def format=(format)
-      use_format(format)
-    end
-
-    # Tell SSHKit to use the specified `formatter` for stdout. The formatter
-    # can be the name of a built-in SSHKit formatter, like `:pretty`, a
-    # formatter class, like `SSHKit::Formatter::Pretty`, or a custom formatter
-    # class you've written yourself.
-    #
-    # Additional arguments will be passed to the formatter's constructor.
-    #
-    # Example:
-    #
-    #   config.use_format(:pretty)
-    #
-    # Is equivalent to:
-    #
-    #   config.output = SSHKit::Formatter::Pretty.new($stdout)
-    #
-    def use_format(formatter, *args)
-      klass = formatter.is_a?(Class) ? formatter : formatter_class(formatter)
-      self.output = klass.new($stdout, *args)
+      self.output = formatter(format)
     end
 
     def command_map
@@ -73,13 +52,10 @@ module SSHKit
       verbosity.is_a?(Integer) ? verbosity : Logger.const_get(verbosity.upcase)
     end
 
-    def formatter_class(symbol)
-      name = symbol.to_s.downcase
-      found = SSHKit::Formatter.constants.find do |const|
-        const.to_s.downcase == name
+    def formatter(format)
+      SSHKit::Formatter.constants.each do |const|
+        return SSHKit::Formatter.const_get(const).new($stdout) if const.downcase.eql?(format.downcase)
       end
-      fail NameError, 'Unrecognized SSHKit::Formatter "#{symbol}"' if found.nil?
-      SSHKit::Formatter.const_get(found)
     end
 
   end
