@@ -1,5 +1,4 @@
 require 'ostruct'
-require 'etc'
 
 module SSHKit
 
@@ -26,7 +25,7 @@ module SSHKit
       if host_string_or_options_hash == :local
         @local = true
         @hostname = "localhost"
-        @user = Etc.getpwuid.name
+        @user = ENV['USER'] || ENV['LOGNAME'] || ENV['USERNAME']
       elsif !host_string_or_options_hash.is_a?(Hash)
         suitable_parsers = [
           SimpleHostParser,
