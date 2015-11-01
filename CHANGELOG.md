@@ -76,6 +76,8 @@ appear at the top.
     * Removed `Printer` from backend hierarchy for `Local` and `Netssh` backends (they now just extend `Abstract`)
     * Removed unused `Net::SSH:LogLevelShim`
   * Removed dependency on the `colorize` gem. SSHKit now implements its own ANSI color logic, with no external dependencies. Note that SSHKit now only supports the `:bold` or plain modes. Other modes will be gracefully ignored. [#263](https://github.com/capistrano/sshkit/issues/263)
+  * New API for setting the formatter: `use_format`. This differs from `format=` in that it accepts options or arguments that will be passed to the formatter's constructor. The `format=` syntax will be deprecated in a future release. [#295](https://github.com/capistrano/sshkit/issues/295)
+  * SSHKit now immediately raises a `NameError` if you try to set a formatter that does not exist. [#295](https://github.com/capistrano/sshkit/issues/295)
 
 ## 1.7.1
 
