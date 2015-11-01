@@ -78,6 +78,11 @@ module SSHKit
       end
     end
 
+    def test_prohibits_unknown_formatter_type_with_exception
+      assert_raises(NameError) do
+        SSHKit.config.format = :doesnotexist
+      end
+    end
   end
 
 end

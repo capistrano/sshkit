@@ -53,9 +53,16 @@ module SSHKit
     end
 
     def formatter(format)
-      SSHKit::Formatter.constants.each do |const|
-        return SSHKit::Formatter.const_get(const).new($stdout) if const.downcase.eql?(format.downcase)
+      formatter_class(format).new($stdout)
+    end
+
+    def formatter_class(symbol)
+      name = symbol.to_s.downcase
+      found = SSHKit::Formatter.constants.find do |const|
+        const.to_s.downcase == name
       end
+      fail NameError, 'Unrecognized SSHKit::Formatter "#{symbol}"' if found.nil?
+      SSHKit::Formatter.const_get(found)
     end
 
   end
