@@ -6,7 +6,7 @@ module SSHKit
     attr_writer :output, :backend, :default_env
 
     def output
-      @output ||= formatter(:pretty)
+      @output ||= use_format(:pretty)
     end
 
     def deprecation_logger
@@ -34,8 +34,29 @@ module SSHKit
       @output_verbosity = logger(verbosity)
     end
 
+    # TODO: deprecate in favor of `use_format`
     def format=(format)
-      self.output = formatter(format)
+      use_format(format)
+    end
+
+    # Tell SSHKit to use the specified `formatter` for stdout. The formatter
+    # can be the name of a built-in SSHKit formatter, like `:pretty`, a
+    # formatter class, like `SSHKit::Formatter::Pretty`, or a custom formatter
+    # class you've written yourself.
+    #
+    # Additional arguments will be passed to the formatter's constructor.
+    #
+    # Example:
+    #
+    #   config.use_format(:pretty)
+    #
+    # Is equivalent to:
+    #
+    #   config.output = SSHKit::Formatter::Pretty.new($stdout)
+    #
+    def use_format(formatter, *args)
+      klass = formatter.is_a?(Class) ? formatter : formatter_class(formatter)
+      self.output = klass.new($stdout, *args)
     end
 
     def command_map
@@ -50,10 +71,6 @@ module SSHKit
 
     def logger(verbosity)
       verbosity.is_a?(Integer) ? verbosity : Logger.const_get(verbosity.upcase)
-    end
-
-    def formatter(format)
-      formatter_class(format).new($stdout)
     end
 
     def formatter_class(symbol)

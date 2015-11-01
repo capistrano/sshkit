@@ -402,25 +402,12 @@ See the `SSHKit::MappingInteractionHandler` for an example of this.
 By default, the output format is set to `:pretty`:
 
 ```ruby
-SSHKit.config.format = :pretty
+SSHKit.config.use_format :pretty
 ```
 
 However, if you prefer non colored text you can use the `:simpletext` formatter. If you want minimal output,
 there is also a `:dot` formatter which will simply output red or green dots based on the success or failure of commands.
 There is also a `:blackhole` formatter which does not output anything.
-
-By default, formatters log to `$stdout`, but they can be constructed with any object which implements `<<`
-for example any `IO` subclass, `String`, `Logger` etc:
-
-```ruby
-# Output to a String:
-output = String.new
-SSHKit.config.output = SSHKit::Formatter::Pretty.new(output)
-# Do something with output
-
-# Or output to a file:
-SSHKit.config.output = SSHKit::Formatter::SimpleText.new(File.open('log/deploy.log', 'wb'))
-```
 
 #### Output Colors
 
@@ -446,7 +433,19 @@ Want custom output formatting? Here's what you have to do:
 1. Set the output format as described above. E.g. if your new formatter is called `FooBar`:
 
 ```ruby
-SSHKit.config.format = :foobar
+SSHKit.config.use_format = :foobar
+```
+
+If your formatter class takes a second `options` argument in its constructor, you can pass options to it like this:
+
+```ruby
+SSHKit.config.use_format = :foobar, :my_option => "value"
+```
+
+Which will call your constructor:
+
+```ruby
+SSHKit::Formatter::FooBar.new($stdout, :my_option => "value")
 ```
 
 ## Output Verbosity
