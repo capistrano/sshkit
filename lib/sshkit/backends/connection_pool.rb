@@ -29,6 +29,7 @@ module SSHKit
       end
 
       def checkout(*new_connection_args, &block)
+        prune_expired
         # Optimization: completely bypass the pool if idle_timeout is zero.
         key = new_connection_args.to_s
         return create_new_entry(new_connection_args, key, &block) if idle_timeout == 0
@@ -37,6 +38,7 @@ module SSHKit
       end
 
       def checkin(entry)
+        prune_expired
         entry.expires_at = Time.now + idle_timeout if idle_timeout
         @mutex.synchronize do
           @pool[entry.key] ||= []
@@ -61,6 +63,21 @@ module SSHKit
 
       private
 
+      def prune_expired
+        @mutex.synchronize do
+          @pool.each_value do |entries|
+            entries.collect! do |entry|
+              if entry.expired?
+                entry.close unless entry.closed?
+                nil
+              else
+                entry
+              end
+            end.compact!
+          end
+        end
+      end
+
       def find_live_entry(key)
         @mutex.synchronize do
           return nil unless @pool.key?(key)
@@ -84,6 +101,10 @@ module SSHKit
 
         def expired?
           expires_at && Time.now > expires_at
+        end
+
+        def close
+          connection.respond_to?(:close) && connection.close
         end
 
         def closed?
