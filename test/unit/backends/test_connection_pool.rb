@@ -95,6 +95,18 @@ module SSHKit
         refute_equal conn1, conn2
       end
 
+      def test_expired_connection_is_closed
+        pool.idle_timeout = 0.1
+        conn1 = mock
+        conn1.expects(:closed?).returns(false)
+        conn1.expects(:close)
+
+        entry1 = pool.checkout("conn1"){|*args| conn1 }
+        pool.checkin entry1
+        sleep(pool.idle_timeout)
+        pool.checkout("conn2"){|*args| Object.new}
+      end
+
       def test_closed_connection_is_not_reused
         conn1 = pool.checkout("conn", &connect_and_close)
         pool.checkin conn1
