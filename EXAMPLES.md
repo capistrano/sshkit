@@ -270,7 +270,7 @@ end
 
 ```ruby
 on hosts do |host|
-  execute!(:echo, '"Example Message!" 1>&2; false')
+  execute(:echo, '"Example Message!" 1>&2; false')
 end
 ```
 
