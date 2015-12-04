@@ -8,6 +8,11 @@ appear at the top.
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
 
+## 1.8.1
+
+  * Change license to MIT, thanks to all the patient contributors who gave
+    their permissions.
+
 ## 1.8.0
 
   * add SSHKit::Backend::ConnectionPool#close_connections
