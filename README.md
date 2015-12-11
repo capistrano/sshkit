@@ -3,8 +3,9 @@
 **SSHKit** is a toolkit for running commands in a structured way on one or
 more servers.
 
-[![Build Status](https://travis-ci.org/capistrano/sshkit.png?branch=master)](https://travis-ci.org/capistrano/sshkit)
-[![Dependency Status](https://gemnasium.com/leehambley/sshkit.png)](https://gemnasium.com/leehambley/sshkit)
+[![Gem Version](https://badge.fury.io/rb/sshkit.svg)](https://rubygems.org/gems/sshkit)
+[![Build Status](https://travis-ci.org/capistrano/sshkit.svg?branch=master)](https://travis-ci.org/capistrano/sshkit)
+[![Dependency Status](https://gemnasium.com/capistrano/sshkit.svg)](https://gemnasium.com/capistrano/sshkit)
 
 ## How might it work?
 
