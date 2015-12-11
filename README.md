@@ -4,7 +4,7 @@
 more servers.
 
 [![Build Status](https://travis-ci.org/capistrano/sshkit.png?branch=master)](https://travis-ci.org/capistrano/sshkit)
-[![Dependency Status](https://gemnasium.com/leehambley/sshkit.png)](https://gemnasium.com/leehambley/sshkit)
+[![Dependency Status](https://gemnasium.com/capistrano/sshkit.png)](https://gemnasium.com/capistrano/sshkit)
 
 ## How might it work?
 
