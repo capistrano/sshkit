@@ -121,8 +121,16 @@ module SSHKit
         command(args, options).tap { |cmd| execute_command(cmd) }
       end
 
+      def pwd_path
+        if @pwd.nil? || @pwd.empty?
+          nil
+        else
+          File.join(@pwd)
+        end
+      end
+
       def command(args, options)
-        SSHKit::Command.new(*[*args, options.merge({in: @pwd.nil? ? nil : File.join(@pwd), env: @env, host: @host, user: @user, group: @group})])
+        SSHKit::Command.new(*[*args, options.merge({in: pwd_path, env: @env, host: @host, user: @user, group: @group})])
       end
 
     end
