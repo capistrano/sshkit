@@ -188,6 +188,14 @@ module SSHKit
       #"newgrp #{options[:group]} <<EOC \\\"%s\\\" EOC" % %Q{#{yield}}
     end
 
+    def before
+      return yield unless options[:before]
+      before_string = Array === options[:before] ?
+        options[:before].join(" ; ") :
+        options[:before].to_s
+      "#{before_string} ; #{yield}"
+    end
+
     def to_command
       return command.to_s unless should_map?
       within do
@@ -196,7 +204,9 @@ module SSHKit
             user do
               in_background do
                 group do
-                  to_s
+                  before do
+                    to_s
+                  end
                 end
               end
             end
