@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * make sure working directory for commands is properly cleared after `within` blocks
+    [PR #307](https://github.com/capistrano/sshkit/pull/307)
+    @steved
 
 ## 1.8.1
 
