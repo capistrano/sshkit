@@ -22,7 +22,7 @@ module SSHKit
       def test_execute
         printer.execute 'uname -a'
         assert_output_lines(
-          '  INFO [aaaaaa] Running /usr/bin/env uname -a on example.com',
+          '  INFO [aaaaaa] Running uname -a on example.com',
           ' DEBUG [aaaaaa] Command: uname -a'
         )
       end
@@ -31,7 +31,7 @@ module SSHKit
         printer.test '[ -d /some/file ]'
 
         assert_output_lines(
-          ' DEBUG [aaaaaa] Running /usr/bin/env [ -d /some/file ] on example.com',
+          ' DEBUG [aaaaaa] Running [ -d /some/file ] on example.com',
           ' DEBUG [aaaaaa] Command: [ -d /some/file ]'
         )
       end
@@ -42,7 +42,7 @@ module SSHKit
         assert_equal '', result
 
         assert_output_lines(
-          ' DEBUG [aaaaaa] Running /usr/bin/env ls -l on example.com',
+          ' DEBUG [aaaaaa] Running ls -l on example.com',
           ' DEBUG [aaaaaa] Command: ls -l'
         )
       end

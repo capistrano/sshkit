@@ -206,7 +206,11 @@ module SSHKit
     end
 
     def to_s
-      [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+      if should_map?
+        [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+      else
+        command.to_s
+      end
     end
 
     private

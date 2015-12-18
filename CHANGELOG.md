@@ -10,6 +10,9 @@ appear at the top.
   * make sure working directory for commands is properly cleared after `within` blocks
     [PR #307](https://github.com/capistrano/sshkit/pull/307)
     @steved
+  * display more accurate string for commands with spaces being output in `Formatter::Pretty`
+    [PR #304](https://github.com/capistrano/sshkit/pull/304)
+    @steved
 
 ## 1.8.1
 
