@@ -66,7 +66,23 @@ module SSHKit
 
     def test_assert_hosts_compare_equal
       assert Host.new('example.com').eql? Host.new('example.com')
-      assert Host.new('example.com').equal? Host.new('example.com')
+
+      assert Host.new('example.com:22') == Host.new('example.com')
+      assert Host.new('example.com:22').eql? Host.new('example.com')
+
+      assert Host.new('example.com:22') != Host.new('example.com:23')
+      assert !Host.new('example.com:22').eql?(Host.new('example.com:23'))
+
+      assert Host.new('foo@example.com') == Host.new('foo@example.com')
+      assert Host.new('foo@example.com').eql? Host.new('foo@example.com')
+
+      assert Host.new('foo@example.com') != Host.new('bar@example.com')
+      assert !Host.new('foo@example.com').eql?(Host.new('bar@example.com'))
+
+      a = Host.new('example.com')
+      b = Host.new('example.com')
+      assert a.equal? a
+      assert !a.equal?(b)
     end
 
     def test_arbitrary_host_properties

@@ -5,6 +5,7 @@ module SSHKit
   UnparsableHostStringError = Class.new(SSHKit::StandardError)
 
   class Host
+    DEFAULT_SSH_PORT = 22
 
     attr_accessor :password, :hostname, :port, :user, :ssh_options
 
@@ -68,10 +69,12 @@ module SSHKit
     end
 
     def eql?(other_host)
-      other_host.hash == hash
+      other_host &&
+        user == other_host.user &&
+        hostname == other_host.hostname &&
+        port_with_default == other_host.send(:port_with_default)
     end
     alias :== :eql?
-    alias :equal? :eql?
 
     def to_s
       hostname
@@ -90,6 +93,12 @@ module SSHKit
 
     def properties
       @properties ||= OpenStruct.new
+    end
+
+    private
+
+    def port_with_default
+      port || DEFAULT_SSH_PORT
     end
 
   end
