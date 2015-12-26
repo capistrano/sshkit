@@ -13,6 +13,8 @@ appear at the top.
   * display more accurate string for commands with spaces being output in `Formatter::Pretty`
     [PR #304](https://github.com/capistrano/sshkit/pull/304)
     @steved
+  * `SSHKit::Formatter::Abstract` now accepts an optional Hash of options
+    [PR #308](https://github.com/capistrano/sshkit/pull/308) @mattbrictson
 
 ## 1.8.1
 

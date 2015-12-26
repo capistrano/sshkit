@@ -7,12 +7,13 @@ module SSHKit
     class Abstract
 
       extend Forwardable
-      attr_reader :original_output
+      attr_reader :original_output, :options
       def_delegators :@original_output, :read, :rewind
       def_delegators :@color, :colorize
 
-      def initialize(output)
+      def initialize(output, options={})
         @original_output = output
+        @options = options
         @color = SSHKit::Color.new(output)
       end
 
