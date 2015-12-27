@@ -1,9 +1,9 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'tempfile'
-require 'minitest/unit'
+require 'minitest/autorun'
+require 'minitest/reporters'
 require 'mocha/setup'
-require 'turn'
 require 'unindent'
 require 'stringio'
 require 'json'
@@ -14,7 +14,7 @@ require 'sshkit'
 
 Dir[File.expand_path('test/support/*.rb')].each { |file| require file }
 
-class UnitTest < MiniTest::Unit::TestCase
+class UnitTest < Minitest::Test
 
   def setup
     SSHKit.reset_configuration!
@@ -27,7 +27,7 @@ class UnitTest < MiniTest::Unit::TestCase
   end
 end
 
-class FunctionalTest < MiniTest::Unit::TestCase
+class FunctionalTest < Minitest::Test
 
   def setup
     unless VagrantWrapper.running?
@@ -78,7 +78,4 @@ end
 #
 # Force colours in Autotest
 #
-Turn.config.ansi = true
-Turn.config.format = :pretty
-
-MiniTest::Unit.autorun
+Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new

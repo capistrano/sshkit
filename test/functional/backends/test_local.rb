@@ -3,7 +3,7 @@ module SSHKit
 
   module Backend
 
-    class TestLocal < MiniTest::Unit::TestCase
+    class TestLocal < Minitest::Test
 
       def setup
         super
