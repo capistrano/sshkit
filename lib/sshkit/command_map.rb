@@ -38,14 +38,10 @@ module SSHKit
     end
 
     def [](command)
-      if prefix[command].any?
-        prefixes = prefix[command].map(&TO_VALUE)
-        prefixes = prefixes.join(" ")
+      prefixes = prefix[command].map(&TO_VALUE)
+      cmd = TO_VALUE.(@map[command])
 
-        "#{prefixes} #{command}"
-      else
-        TO_VALUE.(@map[command])
-      end
+      [*prefixes, cmd].compact.join(' ')
     end
 
     def prefix

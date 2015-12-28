@@ -18,6 +18,9 @@ appear at the top.
     @beatrichartz
   * `SSHKit::Backend::Printer#test` now always returns true
     [PR #312](https://github.com/capistrano/sshkit/pull/312) @mikz
+  * when using `SSHKit::CommandMap#prefix`, resolve the command through `SSHKit::CommandMap#[]`
+    [PR #311]((https://github.com/capistrano/sshkit/pull/311)
+    @mikz
 
 ### New features
 

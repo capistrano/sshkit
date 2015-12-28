@@ -30,7 +30,7 @@ module SSHKit
       map.prefix[:rake].push("/home/vagrant/.rbenv/bin/rbenv exec")
       map.prefix[:rake].push("bundle exec")
 
-      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
+      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec /usr/bin/env rake"
     end
 
     def test_prefix_procs
@@ -38,7 +38,7 @@ module SSHKit
       map.prefix[:rake].push("/home/vagrant/.rbenv/bin/rbenv exec")
       map.prefix[:rake].push(proc{ "bundle exec" })
 
-      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
+      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec /usr/bin/env rake"
     end
 
     def test_prefix_unshift
@@ -46,7 +46,7 @@ module SSHKit
       map.prefix[:rake].push("bundle exec")
       map.prefix[:rake].unshift("/home/vagrant/.rbenv/bin/rbenv exec")
 
-      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
+      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec /usr/bin/env rake"
     end
 
     def test_indifferent_setter
@@ -62,7 +62,7 @@ module SSHKit
       map.prefix[:rake].push("/home/vagrant/.rbenv/bin/rbenv exec")
       map.prefix["rake"].push("bundle exec")
 
-      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
+      assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec /usr/bin/env rake"
     end
 
     def test_prefix_initialization_is_thread_safe
@@ -73,6 +73,14 @@ module SSHKit
         end
       end
       threads.each(&:join)
+    end
+
+    def test_prefix_setter
+      map = CommandMap.new({})
+      map[:rake] = 'rake2.2'
+      map.prefix[:rake].push('bundle exec')
+
+      assert_equal map[:rake], 'bundle exec rake2.2'
     end
   end
 end
