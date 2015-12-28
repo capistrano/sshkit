@@ -32,6 +32,9 @@ appear at the top.
     and have a cleaner internal API. You can still completely disable the pool
     by setting `SSHKit::Backend::Netssh.pool.idle_timeout = 0`.
     @mattbrictson @byroot [PR #328](https://github.com/capistrano/sshkit/pull/328)
+  * Allow command map entries (`SSHKit::CommandMap#[]`) to be Procs
+    [PR #310]((https://github.com/capistrano/sshkit/pull/310)
+    @mikz
 
 ### Bug fixes
 

@@ -31,18 +31,20 @@ module SSHKit
       end
     end
 
+    TO_VALUE = ->(obj) { obj.respond_to?(:call) ? obj.call : obj }
+
     def initialize(value = nil)
       @map = CommandHash.new(value || defaults)
     end
 
     def [](command)
       if prefix[command].any?
-        prefixes = prefix[command].map{ |prefix| prefix.respond_to?(:call) ? prefix.call : prefix }
+        prefixes = prefix[command].map(&TO_VALUE)
         prefixes = prefixes.join(" ")
 
         "#{prefixes} #{command}"
       else
-        @map[command]
+        TO_VALUE.(@map[command])
       end
     end
 
