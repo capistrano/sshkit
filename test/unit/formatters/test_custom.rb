@@ -43,6 +43,11 @@ module SSHKit
       assert_log_output 'C 1 /usr/bin/env ls'
     end
 
+    def test_accepts_options_hash
+      custom = CustomFormatter.new(output, :foo => 'value')
+      assert_equal('value', custom.options[:foo])
+    end
+
     private
 
     def assert_log_output(expected_output)

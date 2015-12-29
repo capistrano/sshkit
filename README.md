@@ -443,24 +443,22 @@ ENV['SSHKIT_COLOR'] = 'TRUE'
 
 Want custom output formatting? Here's what you have to do:
 
-1. Write a new formatter class in the `SSHKit::Formatter` module. As an example, check out the default [pretty](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/formatters/pretty.rb) formatter.
+1. Write a new formatter class in the `SSHKit::Formatter` module. Your class should subclass `SSHKit::Formatter::Abstract` to inherit conveniences and common behavior. For a basic an example, check out the [Pretty](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/formatters/pretty.rb) formatter.
 1. Set the output format as described above. E.g. if your new formatter is called `FooBar`:
 
 ```ruby
 SSHKit.config.use_format :foobar
 ```
 
-If your formatter class takes a second `options` argument in its constructor, you can pass options to it like this:
+All formatters that extend from `SSHKit::Formatter::Abstract` accept an options Hash as a constructor argument. You can pass options to your formatter like this:
 
 ```ruby
 SSHKit.config.use_format :foobar, :my_option => "value"
 ```
 
-Which will call your constructor:
+You can then access these options using the `options` accessor within your formatter code.
 
-```ruby
-SSHKit::Formatter::FooBar.new($stdout, :my_option => "value")
-```
+For a much more full-featured formatter example that makes use of options, check out the [Airbrussh repository](https://github.com/mattbrictson/airbrussh/).
 
 ## Output Verbosity
 
