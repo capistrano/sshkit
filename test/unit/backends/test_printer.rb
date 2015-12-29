@@ -28,7 +28,7 @@ module SSHKit
       end
 
       def test_test_method
-        printer.test '[ -d /some/file ]'
+        assert printer.test('[ -d /some/file ]'), 'test should return true'
 
         assert_output_lines(
           ' DEBUG [aaaaaa] Running [ -d /some/file ] on example.com',

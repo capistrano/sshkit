@@ -15,6 +15,8 @@ appear at the top.
     @steved
   * `SSHKit::Formatter::Abstract` now accepts an optional Hash of options
     [PR #308](https://github.com/capistrano/sshkit/pull/308) @mattbrictson
+  * `SSHKit::Backend::Printer#test` now always returns true
+    [PR #312](https://github.com/capistrano/sshkit/pull/312) @mikz
 
 ## 1.8.1
 

@@ -10,6 +10,11 @@ module SSHKit
 
       alias :upload! :execute
       alias :download! :execute
+
+      def test(*)
+        super
+        true
+      end
     end
   end
 end
