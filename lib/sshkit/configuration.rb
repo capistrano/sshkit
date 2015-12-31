@@ -78,7 +78,7 @@ module SSHKit
       found = SSHKit::Formatter.constants.find do |const|
         const.to_s.downcase == name
       end
-      fail NameError, 'Unrecognized SSHKit::Formatter "#{symbol}"' if found.nil?
+      fail NameError, %Q{Unrecognized SSHKit::Formatter "#{symbol}"} if found.nil?
       SSHKit::Formatter.const_get(found)
     end
 
