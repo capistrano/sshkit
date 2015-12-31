@@ -28,6 +28,16 @@ ruby versions.
 **The Travis build does not run the functional tests,
 so make sure all the tests pass locally before creating your PR.**
 
+## Coding guidelines
+
+This project uses [RuboCop](https://github.com/bbatsov/rubocop) to enforce standard Ruby coding
+guidelines. Currently we run RuboCop's lint rules only, which check for readability issues
+like indentation, ambiguity, and useless/unreachable code.
+
+* Test that your contributions pass with `rake lint`
+* The linter is also run as part of the full test suite with `rake`
+* Note the Travis build will fail and your PR cannot be merged if the linter finds errors
+
 ## Changelog
 
 Most changes should have an accompanying entry in the [CHANGELOG](CHANGELOG.md), unless they

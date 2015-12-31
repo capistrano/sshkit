@@ -23,11 +23,12 @@ module SSHKit
       end
 
       def log_command_data(command, stream_type, stream_data)
-        color = case stream_type
+        color = \
+          case stream_type
           when :stdout then :green
           when :stderr then :red
           else raise "Unrecognised stream_type #{stream_type}, expected :stdout or :stderr"
-        end
+          end
         write_message(Logger::DEBUG, colorize("\t#{stream_data}".chomp, color), command.uuid)
       end
 

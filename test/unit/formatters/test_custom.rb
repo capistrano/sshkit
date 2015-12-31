@@ -58,10 +58,11 @@ module SSHKit
 
   class CustomFormatter < SSHKit::Formatter::Abstract
     def write(obj)
-      original_output << case obj
+      original_output << \
+        case obj
         when SSHKit::Command    then "C #{obj.verbosity} #{obj}"
         when SSHKit::LogMessage then "LM #{obj.verbosity} #{obj}"
-      end
+        end
     end
     alias :<< :write
 

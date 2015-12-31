@@ -3,4 +3,4 @@ rvm:
   - 2.2.2
   - 2.1.6
   - 2.0.0
-script: "rake test:units"
+script: "rake test:units lint"

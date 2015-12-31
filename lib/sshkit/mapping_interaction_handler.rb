@@ -4,7 +4,8 @@ module SSHKit
 
     def initialize(mapping, log_level=nil)
       @log_level = log_level
-      @mapping_proc = case mapping
+      @mapping_proc = \
+        case mapping
         when Hash
           lambda do |server_output|
             first_matching_key_value = mapping.find { |k, _v| k === server_output }
@@ -14,7 +15,7 @@ module SSHKit
           mapping
         else
           raise "Unsupported mapping type: #{mapping.class} - only Hash and Proc mappings are supported"
-      end
+        end
     end
 
     def on_data(_command, stream_name, data, channel)
