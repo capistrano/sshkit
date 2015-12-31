@@ -101,10 +101,10 @@ module SSHKit
         conn1.expects(:closed?).returns(false)
         conn1.expects(:close)
 
-        entry1 = pool.checkout("conn1"){|*args| conn1 }
+        entry1 = pool.checkout("conn1") { conn1 }
         pool.checkin entry1
         sleep(pool.idle_timeout)
-        pool.checkout("conn2"){|*args| Object.new}
+        pool.checkout("conn2") { Object.new }
       end
 
       def test_closed_connection_is_not_reused
@@ -127,10 +127,10 @@ module SSHKit
         conn1 = mock
         conn1.expects(:closed?).returns(false)
         conn1.expects(:close)
-        entry1 = pool.checkout("conn1"){|*args| conn1 }
+        entry1 = pool.checkout("conn1"){ conn1 }
         pool.checkin entry1
-        entry2 = pool.checkout("conn2", &connect)
-        # entry2 isn't closed if close_connections is called
+        # the following isn't closed if close_connections is called
+        pool.checkout("conn2", &connect)
 
         pool.close_connections
       end
