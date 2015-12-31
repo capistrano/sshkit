@@ -2,8 +2,9 @@
 
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rubocop/rake_task'
 
-task :default => :test
+task :default => [:test, :lint]
 
 desc "Run all tests"
 task :test => ['test:units', 'test:functional']
@@ -24,6 +25,11 @@ end
 
 Rake::Task["test:functional"].enhance do
   warn "Remember there are still some VMs running, kill them with `vagrant halt` if you are finished using them."
+end
+
+desc 'Run RuboCop lint checks'
+RuboCop::RakeTask.new(:lint) do |task|
+  task.options = ['--lint']
 end
 
 task "release:rubygem_push" do
