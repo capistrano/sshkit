@@ -66,7 +66,7 @@ you can pass the `strip: false` option: `capture(:ls, '-l', strip: false)`
 #### Transferring files
 
 All backends also support the `upload!` and `download!` methods for transferring files.
-For the remote backed, the file is tranferred with scp.
+For the remote backend, the file is tranferred with scp.
 
 ```ruby
 on '1.example.com' do
