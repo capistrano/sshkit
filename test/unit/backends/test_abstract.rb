@@ -131,6 +131,28 @@ module SSHKit
         end
       end
 
+      def test_current_refers_to_currently_executing_backend
+        backend = nil
+        current = nil
+
+        backend = ExampleBackend.new do
+          backend = self
+          current = SSHKit::Backend.current
+        end
+        backend.run
+
+        assert_equal(backend, current)
+      end
+
+      def test_current_is_nil_outside_of_the_block
+        backend = ExampleBackend.new do
+          # nothing
+        end
+        backend.run
+
+        assert_nil(SSHKit::Backend.current)
+      end
+
       # Use a concrete ExampleBackend rather than a mock for improved assertion granularity
       class ExampleBackend < Abstract
         attr_writer :full_stdout

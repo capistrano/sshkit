@@ -4,6 +4,19 @@ module SSHKit
 
     MethodUnavailableError = Class.new(SSHKit::StandardError)
 
+    # The Backend instance that is running in the current thread. If no Backend
+    # is running, returns `nil` instead.
+    #
+    # Example:
+    #
+    #   on(:local) do
+    #     self == SSHKit::Backend.current # => true
+    #   end
+    #
+    def self.current
+      Thread.current["sshkit_backend"]
+    end
+
     class Abstract
 
       extend Forwardable
@@ -12,7 +25,10 @@ module SSHKit
       attr_reader :host
 
       def run
+        Thread.current["sshkit_backend"] = self
         instance_exec(@host, &@block)
+      ensure
+        Thread.current["sshkit_backend"] = nil
       end
 
       def initialize(host, &block)

@@ -17,6 +17,10 @@ appear at the top.
     [PR #308](https://github.com/capistrano/sshkit/pull/308) @mattbrictson
   * `SSHKit::Backend::Printer#test` now always returns true
     [PR #312](https://github.com/capistrano/sshkit/pull/312) @mikz
+  * Add `SSHKit::Backend.current` so that Capistrano plugin authors can refactor
+    helper methods and still have easy access to the currently-executing Backend
+    without having to use global variables.
+    [PR #319](https://github.com/capistrano/sshkit/pull/319) @mattbrictson
 
 ## 1.8.1
 
