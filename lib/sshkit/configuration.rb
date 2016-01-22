@@ -3,7 +3,7 @@ module SSHKit
   class Configuration
 
     attr_accessor :umask, :output_verbosity
-    attr_writer :output, :backend, :default_env
+    attr_writer :output, :backend, :default_env, :default_runner
 
     def output
       @output ||= use_format(:pretty)
@@ -20,6 +20,10 @@ module SSHKit
 
     def default_env
       @default_env ||= {}
+    end
+
+    def default_runner
+      @default_runner ||= :parallel
     end
 
     def backend

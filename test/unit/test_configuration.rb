@@ -51,6 +51,12 @@ module SSHKit
       assert SSHKit.config.default_env
     end
 
+    def test_default_runner
+      assert_equal :parallel, SSHKit.config.default_runner
+      SSHKit.config.default_runner = :sequence
+      assert_equal :sequence, SSHKit.config.default_runner
+    end
+
     def test_backend
       assert_equal SSHKit::Backend::Netssh, SSHKit.config.backend
       assert SSHKit.config.backend = SSHKit::Backend::Printer

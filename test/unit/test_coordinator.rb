@@ -4,7 +4,6 @@ require 'helper'
 module SSHKit
 
   class TestCoordinator < UnitTest
-
     def setup
       super
       @output = String.new
@@ -54,6 +53,33 @@ module SSHKit
       Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, &echo_time
       assert_equal 2, actual_execution_times.length
       assert_at_least_1_sec_apart(actual_execution_times.first, actual_execution_times.last)
+    end
+
+    class MyRunner < SSHKit::Runner::Parallel
+      def execute
+        threads = hosts.map do |host|
+          Thread.new(host) do |h|
+            b = backend(h, &block)
+            b.run
+            b.warn "custom runner out"
+          end
+        end
+        threads.each(&:join)
+      end
+    end
+
+    def test_the_connection_manager_can_run_things_in_custom_runner
+      begin
+        $original_runner = SSHKit.config.default_runner
+        SSHKit.config.default_runner = MyRunner
+
+        Coordinator.new(%w{1.example.com 2.example.com}).each(&echo_time)
+        assert_equal 2, actual_execution_times.length
+        assert_within_10_ms(actual_execution_times)
+        assert_match(/custom runner out/, @output)
+      ensure
+        SSHKit.config.default_runner = $original_runner
+      end
     end
 
     def test_the_connection_manager_can_run_things_in_sequence_with_wait

@@ -21,6 +21,8 @@ appear at the top.
     helper methods and still have easy access to the currently-executing Backend
     without having to use global variables.
     [PR #319](https://github.com/capistrano/sshkit/pull/319) @mattbrictson
+  * Add `SSHKit.config.default_runner` options that allows to override default command runner.
+    This option also accepts a name of the custom runner class.
 
 ## 1.8.1
 

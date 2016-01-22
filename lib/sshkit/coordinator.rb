@@ -17,7 +17,7 @@ module SSHKit
         when :sequence then Runner::Sequential
         when :groups   then Runner::Group
         else
-          raise RuntimeError, "Don't know how to handle run style #{options[:in].inspect}"
+          options[:in]
         end.new(hosts, options, &block).execute
       else
         Runner::Null.new(hosts, options, &block).execute
@@ -26,13 +26,13 @@ module SSHKit
 
     private
 
-      def default_options
-        { in: :parallel }
-      end
+    def default_options
+      { in: SSHKit.config.default_runner }
+    end
 
-      def resolve_hosts
-        @raw_hosts.collect { |rh| rh.is_a?(Host) ? rh : Host.new(rh) }.uniq
-      end
+    def resolve_hosts
+      @raw_hosts.collect { |rh| rh.is_a?(Host) ? rh : Host.new(rh) }.uniq
+    end
 
   end
 
