@@ -6,9 +6,8 @@ module SSHKit
 
     class Parallel < Abstract
       def execute
-        threads = []
-        hosts.each do |host|
-          threads << Thread.new(host) do |h|
+        threads = hosts.map do |host|
+          Thread.new(host) do |h|
             begin
               backend(h, &block).run
             rescue StandardError => e
@@ -17,7 +16,7 @@ module SSHKit
             end
           end
         end
-        threads.map(&:join)
+        threads.each(&:join)
       end
     end
 
