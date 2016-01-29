@@ -28,8 +28,6 @@ module SSHKit
 
       def [](command)
         @storage[command] ||= []
-
-        @storage[command]
       end
     end
 

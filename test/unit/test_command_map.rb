@@ -56,5 +56,14 @@ module SSHKit
       assert_equal map[:rake], "/home/vagrant/.rbenv/bin/rbenv exec bundle exec rake"
     end
 
+    def test_prefix_initialization_is_thread_safe
+      map = CommandMap.new
+      threads = Array.new(3) do
+        Thread.new do
+          (1..1_000).each { |i| assert_equal([], map.prefix[i.to_s]) }
+        end
+      end
+      threads.each(&:join)
+    end
   end
 end
