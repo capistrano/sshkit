@@ -1,5 +1,4 @@
 module SSHKit
-
   module Backend
 
     MethodUnavailableError = Class.new(SSHKit::StandardError)
@@ -18,6 +17,7 @@ module SSHKit
     end
 
     class Abstract
+      using SSHKit::Refinements
 
       extend Forwardable
       def_delegators :output, :log, :fatal, :error, :warn, :info, :debug

@@ -6,6 +6,7 @@ module SSHKit
 
   # @author Lee Hambley
   class Command
+    using SSHKit::Refinements
 
     Failed = Class.new(SSHKit::StandardError)
 

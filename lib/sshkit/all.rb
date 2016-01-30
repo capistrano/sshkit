@@ -1,5 +1,4 @@
-require_relative '../core_ext/array'
-require_relative '../core_ext/hash'
+require_relative 'refinements'
 
 require_relative 'host'
 
