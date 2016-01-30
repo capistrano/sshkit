@@ -23,6 +23,9 @@ appear at the top.
     [PR #319](https://github.com/capistrano/sshkit/pull/319) @mattbrictson
   * Add `SSHKit.config.default_runner` options that allows to override default command runner.
     This option also accepts a name of the custom runner class.
+  * Fix a race condition experienced in JRuby that could cause multi-server
+    deploys to fail. [PR #322](https://github.com/capistrano/sshkit/pull/322)
+    @mattbrictson
 
 ## 1.8.1
 
