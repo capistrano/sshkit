@@ -73,8 +73,15 @@ module SSHKit
         assert_equal t2[:conn], t3[:conn]
       end
 
-      def test_zero_idle_timeout_disables_reuse
+      def test_zero_idle_timeout_disables_pruning
         pool.idle_timeout = 0
+
+        conn1 = pool.checkout("conn", &connect)
+        assert_nil conn1.expires_at
+      end
+
+      def test_enabled_false_disables_pooling
+        pool.enabled = false
 
         conn1 = pool.checkout("conn", &connect)
         pool.checkin conn1
