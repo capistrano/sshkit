@@ -19,28 +19,35 @@ module SSHKit
 
     class ConnectionPool
 
-      attr_accessor :idle_timeout
+      attr_accessor :idle_timeout, :enabled
 
       def initialize
         self.idle_timeout = 30
+        self.enabled = true
         @mutex = Mutex.new
         @pool = {}
+      end
+
+      def prune_expired?
+        idle_timeout && idle_timeout != 0
       end
 
       def checkout(*new_connection_args, &block)
         entry = nil
         key = new_connection_args.to_s
-        if idle_timeout
-          prune_expired
+        if enabled
+          prune_expired if prune_expired?
           entry = find_live_entry(key)
         end
         entry || create_new_entry(new_connection_args, key, &block)
       end
 
       def checkin(entry)
-        if idle_timeout
-          prune_expired
-          entry.expires_at = Time.now + idle_timeout
+        if enabled
+          if prune_expired?
+            entry.expires_at = Time.now + idle_timeout
+            prune_expired
+          end
           @mutex.synchronize do
             @pool[entry.key] ||= []
             @pool[entry.key] << entry
