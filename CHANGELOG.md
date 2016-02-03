@@ -4,7 +4,8 @@ This file is written in reverse chronological order, newer releases will
 appear at the top.
 
 ## `master` (Unreleased)
-
+  * `SSHKit::Backend::Netssh.pool.idle_timeout = 0` doesn't disable connection pooling anymore,
+    only connection expiration. To disable connection polling use `SSHKit::Backend::Netssh.pool.enabled = false`
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
   * make sure working directory for commands is properly cleared after `within` blocks
