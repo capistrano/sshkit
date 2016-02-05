@@ -500,16 +500,11 @@ seconds. This timeout can be changed as follows:
 SSHKit::Backend::Netssh.pool.idle_timeout = 60 # seconds
 ```
 
-If you suspect the connection pruning is causing problems, you can disable the
-expiration behaviour entirely by setting the idle_timeout to zero:
+If you suspect the connection pooling is causing problems, you can disable the
+pooling behaviour entirely by setting the idle_timeout to zero:
 
 ```ruby
 SSHKit::Backend::Netssh.pool.idle_timeout = 0 # disabled
-```
-
-Or even disable the pooling entirely, but it will severely reduce performance:
-```
-SSHKit::Backend::Netssh.pool.enabled = false # disabled
 ```
 
 ## Tunneling and other related SSH themes
