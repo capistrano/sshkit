@@ -1,4 +1,6 @@
 require 'English'
+require 'strscan'
+require 'mutex_m'
 require 'net/ssh'
 require 'net/scp'
 
@@ -21,13 +23,12 @@ module SSHKit
   module Backend
 
     class Netssh < Abstract
-
       class Configuration
         attr_accessor :connection_timeout, :pty
         attr_writer :ssh_options
 
         def ssh_options
-          @ssh_options || {}
+          @ssh_options ||= {}
         end
       end
 
