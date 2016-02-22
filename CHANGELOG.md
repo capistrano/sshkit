@@ -4,6 +4,9 @@ This file is written in reverse chronological order, newer releases will
 appear at the top.
 
 ## `master` (Unreleased)
+  * Do not auto-include DSL in context of `require`. Load DSL with Gem and allow to include it.
+    [PR #219](https://github.com/capistrano/sshkit/pull/219)
+    @beatrichartz
   * `SSHKit::Backend::Netssh.pool.idle_timeout = 0` doesn't disable connection pooling anymore,
     only connection expiration. To disable connection polling use `SSHKit::Backend::Netssh.pool.enabled = false`
   * Add your entries below here, remember to credit yourself however you want

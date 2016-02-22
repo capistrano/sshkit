@@ -366,12 +366,14 @@ known test cases, it works. The key thing is that `if` is not mapped to
 Into the `Rakefile` simply put something like:
 
 ```ruby
-require 'sshkit/dsl'
+require 'sshkit'
 
 SSHKit.config.command_map[:rake] = "./bin/rake"
 
 desc "Deploy the site, pulls from Git, migrate the db and precompile assets, then restart Passenger."
 task :deploy do
+  include SSHKit::DSL
+
   on "example.com" do |host|
     within "/opt/sites/example.com" do
       execute :git, :pull
