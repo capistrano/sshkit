@@ -129,19 +129,15 @@ module SSHKit
         end
       end
 
-      def with_ssh
+      def with_ssh(&block)
         host.ssh_options = self.class.config.ssh_options.merge(host.ssh_options || {})
-        conn = self.class.pool.checkout(
+        self.class.pool.with(
+          Net::SSH.method(:start),
           String(host.hostname),
           host.username,
           host.netssh_options,
-          &Net::SSH.method(:start)
+          &block
         )
-        begin
-          yield conn.connection
-        ensure
-          self.class.pool.checkin conn
-        end
       end
 
     end

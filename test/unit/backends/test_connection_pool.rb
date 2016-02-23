@@ -32,72 +32,62 @@ module SSHKit
 
       def test_connection_factory_receives_args
         args = %w(a b c)
-        conn = pool.checkout(*args, &echo_args)
+        conn = pool.with(echo_args, *args) { |c| c }
 
-        assert_equal args, conn.connection
+        assert_equal args, conn
       end
 
       def test_connections_are_not_reused_if_not_checked_in
-        conn1 = pool.checkout("conn", &connect)
-        conn2 = pool.checkout("conn", &connect)
+        conn1 = nil
+        conn2 = nil
+
+        pool.with(connect, "conn") do |yielded_conn_1|
+          conn1 = yielded_conn_1
+          conn2 = pool.with(connect, "conn") { |c| c }
+        end
 
         refute_equal conn1, conn2
       end
 
       def test_connections_are_reused_if_checked_in
-        conn1 = pool.checkout("conn", &connect)
-        pool.checkin conn1
-        conn2 = pool.checkout("conn", &connect)
+        conn1 = pool.with(connect, "conn") {}
+        conn2 = pool.with(connect, "conn") {}
 
         assert_equal conn1, conn2
       end
 
       def test_connections_are_reused_across_threads_multiple_times
-        t1 = Thread.new {
-          Thread.current[:conn] = pool.checkout("conn", &connect)
-          pool.checkin Thread.current[:conn]
-        }.join
+        t1 = Thread.new do
+          pool.with(connect, "conn") { |c| c }
+        end
 
-        t2 = Thread.new {
-          Thread.current[:conn] = pool.checkout("conn", &connect)
-          pool.checkin Thread.current[:conn]
-        }.join
+        t2 = Thread.new do
+          pool.with(connect, "conn") { |c| c }
+        end
 
-        t3 = Thread.new {
-          Thread.current[:conn] = pool.checkout("conn", &connect)
-          pool.checkin Thread.current[:conn]
-        }.join
+        t3 = Thread.new do
+          pool.with(connect, "conn") { |c| c }
+        end
 
-        refute_equal t1[:conn], nil
-        assert_equal t1[:conn], t2[:conn]
-        assert_equal t2[:conn], t3[:conn]
+        refute_nil t1.value
+        assert_equal t1.value, t2.value
+        assert_equal t2.value, t3.value
       end
 
-      def test_zero_idle_timeout_disables_pruning
+      def test_zero_idle_timeout_disables_pooling
         pool.idle_timeout = 0
 
-        conn1 = pool.checkout("conn", &connect)
-        assert_nil conn1.expires_at
-      end
-
-      def test_enabled_false_disables_pooling
-        pool.enabled = false
-
-        conn1 = pool.checkout("conn", &connect)
-        pool.checkin conn1
-
-        conn2 = pool.checkout("conn", &connect)
-
+        conn1 = pool.with(connect, "conn") { |c| c }
+        conn2 = pool.with(connect, "conn") { |c| c }
         refute_equal conn1, conn2
       end
 
       def test_expired_connection_is_not_reused
         pool.idle_timeout = 0.1
 
-        conn1 = pool.checkout("conn", &connect)
-        pool.checkin conn1
+        conn1 = pool.with(connect, "conn") { |c| c }
         sleep(pool.idle_timeout)
-        conn2 = pool.checkout("conn", &connect)
+        conn2 = pool.with(connect, "conn") { |c| c }
 
         refute_equal conn1, conn2
       end
@@ -105,43 +95,45 @@ module SSHKit
       def test_expired_connection_is_closed
         pool.idle_timeout = 0.1
         conn1 = mock
-        conn1.expects(:closed?).returns(false)
+        conn1.expects(:closed?).twice.returns(false)
         conn1.expects(:close)
 
-        entry1 = pool.checkout("conn1") { conn1 }
-        pool.checkin entry1
-        sleep(pool.idle_timeout)
-        pool.checkout("conn2") { Object.new }
+        pool.with(->(*) { conn1 }, "conn1") {}
+        # Pause to allow the background thread to wake and close the conn
+        sleep(5 + pool.idle_timeout)
       end
 
       def test_closed_connection_is_not_reused
-        conn1 = pool.checkout("conn", &connect_and_close)
-        pool.checkin conn1
-        conn2 = pool.checkout("conn", &connect)
+        conn1 = pool.with(connect_and_close, "conn") { |c| c }
+        conn2 = pool.with(connect, "conn") { |c| c }
 
         refute_equal conn1, conn2
       end
 
       def test_connections_with_different_args_are_not_reused
-        conn1 = pool.checkout("conn1", &connect)
-        pool.checkin conn1
-        conn2 = pool.checkout("conn2", &connect)
+        conn1 = pool.with(connect, "conn1") { |c| c }
+        conn2 = pool.with(connect, "conn2") { |c| c }
 
         refute_equal conn1, conn2
       end
 
       def test_close_connections
         conn1 = mock
-        conn1.expects(:closed?).returns(false)
+        conn1.expects(:closed?).twice.returns(false)
         conn1.expects(:close)
-        entry1 = pool.checkout("conn1"){ conn1 }
-        pool.checkin entry1
-        # the following isn't closed if close_connections is called
-        pool.checkout("conn2", &connect)
 
-        pool.close_connections
+        conn2 = mock
+        conn2.expects(:closed?).returns(false)
+        conn2.expects(:close).never
+
+        pool.with(->(*) { conn1 }, "conn1") {}
+
+        # We are using conn2 when close_connections is called, so it should
+        # not be closed.
+        pool.with(->(*) { conn2 }, "conn2") do
+          pool.close_connections
+        end
       end
-
     end
   end
 end
