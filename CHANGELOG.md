@@ -4,34 +4,47 @@ This file is written in reverse chronological order, newer releases will
 appear at the top.
 
 ## `master` (Unreleased)
+
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
-  * Do not auto-include DSL in context of `require`. Load DSL with Gem and allow to include it.
-    [PR #219](https://github.com/capistrano/sshkit/pull/219)
+
+## 1.9.0.rc1
+
+### Potentially breaking changes
+
+  * The SSHKit DSL is no longer automatically included when you `require` it.
+    **This means you  must now explicitly `include SSHKit::DSL`.**
+    See [PR #219](https://github.com/capistrano/sshkit/pull/219) for details.
     @beatrichartz
+  * `SSHKit::Backend::Printer#test` now always returns true
+    [PR #312](https://github.com/capistrano/sshkit/pull/312) @mikz
+
+### New features
+
+  * `SSHKit::Formatter::Abstract` now accepts an optional Hash of options
+    [PR #308](https://github.com/capistrano/sshkit/pull/308) @mattbrictson
+  * Add `SSHKit::Backend.current` so that Capistrano plugin authors can refactor
+    helper methods and still have easy access to the currently-executing Backend
+    without having to use global variables.
+  * Add `SSHKit.config.default_runner` options that allows to override default command runner.
+    This option also accepts a name of the custom runner class.
+  * The ConnectionPool has been rewritten in this release to be more efficient
+    and have a cleaner internal API. You can still completely disable the pool
+    by setting `SSHKit::Backend::Netssh.pool.idle_timeout = 0`.
+    @mattbrictson @byroot [PR #328](https://github.com/capistrano/sshkit/pull/328)
+
+### Bug fixes
+
   * make sure working directory for commands is properly cleared after `within` blocks
     [PR #307](https://github.com/capistrano/sshkit/pull/307)
     @steved
   * display more accurate string for commands with spaces being output in `Formatter::Pretty`
     [PR #304](https://github.com/capistrano/sshkit/pull/304)
     @steved
-  * `SSHKit::Formatter::Abstract` now accepts an optional Hash of options
-    [PR #308](https://github.com/capistrano/sshkit/pull/308) @mattbrictson
-  * `SSHKit::Backend::Printer#test` now always returns true
-    [PR #312](https://github.com/capistrano/sshkit/pull/312) @mikz
-  * Add `SSHKit::Backend.current` so that Capistrano plugin authors can refactor
-    helper methods and still have easy access to the currently-executing Backend
-    without having to use global variables.
     [PR #319](https://github.com/capistrano/sshkit/pull/319) @mattbrictson
-  * Add `SSHKit.config.default_runner` options that allows to override default command runner.
-    This option also accepts a name of the custom runner class.
   * Fix a race condition experienced in JRuby that could cause multi-server
     deploys to fail. [PR #322](https://github.com/capistrano/sshkit/pull/322)
     @mattbrictson
-  * The ConnectionPool has been rewritten in this release to be more efficient
-    and have a cleaner internal API. You can still completely disable the pool
-    by setting `SSHKit::Backend::Netssh.pool.idle_timeout = 0`.
-    @mattbrictson @byroot [PR #328](https://github.com/capistrano/sshkit/pull/328)
 
 ## 1.8.1
 
