@@ -111,6 +111,14 @@ module SSHKit
         remove_instance_variable(:@group)
       end
 
+      def pwd_path
+        if @pwd.nil? || @pwd.empty?
+          nil
+        else
+          File.join(@pwd)
+        end
+      end
+
       class << self
         def config
           @config ||= OpenStruct.new
@@ -135,14 +143,6 @@ module SSHKit
 
       def create_command_and_execute(args, options)
         command(args, options).tap { |cmd| execute_command(cmd) }
-      end
-
-      def pwd_path
-        if @pwd.nil? || @pwd.empty?
-          nil
-        else
-          File.join(@pwd)
-        end
       end
 
       def command(args, options)
