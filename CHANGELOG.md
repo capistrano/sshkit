@@ -8,6 +8,12 @@ appear at the top.
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
 
+## 1.9.0
+
+**Refer to the 1.9.0.rc1 release notes for a full list of new features, fixes,
+and potentially breaking changes since SSHKit 1.8.1.** There are no changes
+since 1.9.0.rc1.
+
 ## 1.9.0.rc1
 
 ### Potentially breaking changes
