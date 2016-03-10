@@ -7,6 +7,15 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Allow command map entries (`SSHKit::CommandMap#[]`) to be Procs
+    [PR #310]((https://github.com/capistrano/sshkit/pull/310)
+    @mikz
+
+## 1.9.0
+
+**Refer to the 1.9.0.rc1 release notes for a full list of new features, fixes,
+and potentially breaking changes since SSHKit 1.8.1.** There are no changes
+since 1.9.0.rc1.
 
 ## 1.9.0.rc1
 
@@ -32,9 +41,6 @@ appear at the top.
     and have a cleaner internal API. You can still completely disable the pool
     by setting `SSHKit::Backend::Netssh.pool.idle_timeout = 0`.
     @mattbrictson @byroot [PR #328](https://github.com/capistrano/sshkit/pull/328)
-  * Allow command map entries (`SSHKit::CommandMap#[]`) to be Procs
-    [PR #310]((https://github.com/capistrano/sshkit/pull/310)
-    @mikz
 
 ### Bug fixes
 
