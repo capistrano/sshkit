@@ -28,7 +28,13 @@ module SSHKit
         attr_writer :ssh_options
 
         def ssh_options
-          @ssh_options ||= {}
+          default_options.merge(@ssh_options ||= {})
+        end
+
+        private
+
+        def default_options
+          @default_options ||= {known_hosts: SSHKit::Backend::Netssh::KnownHosts.new}
         end
       end
 

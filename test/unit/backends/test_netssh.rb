@@ -26,7 +26,7 @@ module SSHKit
         assert_equal %w(/home/user/.ssh/id_rsa),  backend.config.ssh_options[:keys]
         assert_equal false,                       backend.config.ssh_options[:forward_agent]
         assert_equal %w(publickey password),      backend.config.ssh_options[:auth_methods]
-
+        assert_instance_of backend::KnownHosts,   backend.config.ssh_options[:known_hosts]
       end
 
       def test_netssh_ext
