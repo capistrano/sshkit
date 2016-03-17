@@ -2,7 +2,7 @@ module SSHKit
 
   class Configuration
 
-    attr_accessor :umask, :output_verbosity
+    attr_accessor :umask
     attr_writer :output, :backend, :default_env, :default_runner
 
     def output
