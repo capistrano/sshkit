@@ -78,9 +78,11 @@ class SSHKit::Backend::ConnectionPool
     end
   end
 
-  private
+  protected
 
   attr_reader :caches, :timed_out_connections
+
+  private
 
   def cache_enabled?
     idle_timeout && idle_timeout > 0
