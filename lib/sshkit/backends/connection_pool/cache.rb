@@ -53,9 +53,11 @@ class SSHKit::Backend::ConnectionPool::Cache
     end
   end
 
-  private
+  protected
 
   attr_reader :connections, :idle_timeout, :closer
+
+  private
 
   def fresh?(expires_at)
     expires_at > Time.now
