@@ -99,7 +99,7 @@ module SSHKit
   class SimpleHostParser
 
     def self.suitable?(host_string)
-      !host_string.match(/[:|@]/)
+      !host_string.match(/:|@/)
     end
 
     def initialize(host_string)
@@ -127,7 +127,7 @@ module SSHKit
   class HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
-      !host_string.match(/[@|\[|\]]/)
+      !host_string.match(/@|\[|\]/)
     end
 
     def port

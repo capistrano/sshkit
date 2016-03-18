@@ -5,6 +5,8 @@ module Net
   module SSH
     class Config
       class << self
+        remove_method :default_files
+
         def default_files
           @@default_files + [File.join(Dir.pwd, '.ssh/config')]
         end
