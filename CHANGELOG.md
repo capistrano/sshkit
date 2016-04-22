@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+
+## 1.10.0 (2016-04-22)
+
   * You can now opt-in to caching of SSH's known_hosts file for a speed boost
     when deploying to a large fleet of servers. Refer to the
     [README](https://github.com/capistrano/sshkit#known-hosts-caching) for
@@ -16,7 +19,7 @@ appear at the top.
     this fixes `zlib(finalizer): the stream was freed prematurely` warnings
     [PR #343](https://github.com/capistrano/sshkit/pull/343) @mattbrictson
   * Allow command map entries (`SSHKit::CommandMap#[]`) to be Procs
-    [PR #310]((https://github.com/capistrano/sshkit/pull/310)
+    [PR #310](https://github.com/capistrano/sshkit/pull/310)
     @mikz
 
 ## 1.9.0
