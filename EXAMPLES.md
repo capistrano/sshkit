@@ -44,10 +44,10 @@ end
 ```ruby
 on hosts do |host|
   f = '/some/file'
-  if test("[ -d #{f} ]")
-    execute :touch, f
-  else
+  if test("[ -f #{f} ]")
     info "#{f} already exists on #{host}!"
+  else
+    execute :touch, f
   end
 end
 ```
