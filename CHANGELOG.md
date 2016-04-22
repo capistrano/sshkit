@@ -7,6 +7,11 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * You can now opt-in to caching of SSH's known_hosts file for a speed boost
+    when deploying to a large fleet of servers. Refer to the
+    [README](https://github.com/capistrano/sshkit#known-hosts-caching) for
+    details. We plan to turn this on by default in a future version of SSHKit.
+    [PR #330](https://github.com/capistrano/sshkit/pull/330) @byroot
   * SSHKit now explicitly closes its pooled SSH connections when Ruby exits;
     this fixes `zlib(finalizer): the stream was freed prematurely` warnings
     [PR #343](https://github.com/capistrano/sshkit/pull/343) @mattbrictson

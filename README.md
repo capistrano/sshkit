@@ -508,6 +508,19 @@ pooling behaviour entirely by setting the idle_timeout to zero:
 SSHKit::Backend::Netssh.pool.idle_timeout = 0 # disabled
 ```
 
+## Known hosts caching
+
+If you connect to many hosts with the `Netssh` backend, looking up `~/.ssh/known_hosts` can significantly impact performances.
+You can mitigate this by using SSHKit's lookup caching like this:
+
+```ruby
+SSHKit::Backend::Netssh.configure do |ssh|
+  ssh.ssh_options = {
+    known_hosts: SSHKit::Backend::Netssh::KnownHosts.new,
+  }
+end
+```
+
 ## Tunneling and other related SSH themes
 
 In order to do special gymnasitcs with SSH, tunneling, aliasing, complex options, etc with SSHKit it is possible to use [the underlying Net::SSH API](https://github.com/capistrano/sshkit/blob/master/EXAMPLES.md#setting-global-ssh-options) however in many cases it is preferred to use the system SSH configuration file at [`~/.ssh/config`](http://man.cx/ssh_config). This allows you to have personal configuration tied to your machine that does not have to be committed with the repository. If this is not suitable (everyone on the team needs a proxy command, or some special aliasing) a file in the same format can be placed in the project directory at `~/yourproject/.ssh/config`, this will be merged with the system settings in `~/.ssh/config`, and with any configuration specified in [`SSHKit::Backend::Netssh.config.ssh_options`](https://github.com/capistrano/sshkit/blob/master/lib/sshkit/backends/netssh.rb#L133).
