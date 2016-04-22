@@ -1,3 +1,4 @@
+require 'English'
 require 'net/ssh'
 require 'net/scp'
 
@@ -44,7 +45,12 @@ module SSHKit
         end
       end
 
+      # Note that this pool must be explicitly closed before Ruby exits to
+      # ensure the underlying IO objects are properly cleaned up. We register an
+      # at_exit handler to do this automatically, as long as Ruby is exiting
+      # cleanly (i.e. without an exception).
       @pool = SSHKit::Backend::ConnectionPool.new
+      at_exit { @pool.close_connections if @pool && !$ERROR_INFO }
 
       class << self
         attr_accessor :pool

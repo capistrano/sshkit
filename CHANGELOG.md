@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * SSHKit now explicitly closes its pooled SSH connections when Ruby exits;
+    this fixes `zlib(finalizer): the stream was freed prematurely` warnings
+    [PR #343](https://github.com/capistrano/sshkit/pull/343) @mattbrictson
   * Allow command map entries (`SSHKit::CommandMap#[]`) to be Procs
     [PR #310]((https://github.com/capistrano/sshkit/pull/310)
     @mikz
