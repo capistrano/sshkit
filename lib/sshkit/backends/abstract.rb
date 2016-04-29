@@ -83,12 +83,11 @@ module SSHKit
       end
 
       def with(environment, &_block)
-        @_env = (@env ||= {})
-        @env = @_env.merge environment
+        _env = (@env ||= {})
+        @env = _env.merge environment
         yield
       ensure
-        @env = @_env
-        remove_instance_variable(:@_env)
+        @env = _env
       end
 
       def as(who, &_block)
