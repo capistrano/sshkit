@@ -53,7 +53,7 @@ have no effect.**
 Typically, you would pass a Symbol for the command name and it's args as follows:
 
 ```ruby
-on '1.example.com'
+on '1.example.com' do
   if test("[ -f somefile.txt ]")
     execute(:cp, 'somefile.txt', 'somewhere_else.txt')
   end
