@@ -8,6 +8,8 @@ appear at the top.
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
   * Known hosts lookup optimization is now enabled by default. @byroot
+  * Fixed colorized output alignment in Logger::Pretty. @xavierholt
+    [PR #349](https://github.com/capistrano/sshkit/pull/349)
 
 ## 1.10.0 (2016-04-22)
 

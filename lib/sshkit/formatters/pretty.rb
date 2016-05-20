@@ -34,7 +34,7 @@ module SSHKit
 
       def log_command_exit(command)
         runtime = sprintf('%5.3f seconds', command.runtime)
-        successful_or_failed =  command.failure? ? colorize('failed', :red, :bold) : colorize('successful', :green, :bold)
+        successful_or_failed = command.failure? ? colorize('failed', :red, :bold) : colorize('successful', :green, :bold)
         message = "Finished in #{runtime} with exit status #{command.exit_status} (#{successful_or_failed})."
         write_message(command.verbosity, message, command.uuid)
       end
@@ -43,8 +43,8 @@ module SSHKit
 
       def format_message(verbosity, message, uuid=nil)
         message = "[#{colorize(uuid, :green)}] #{message}" unless uuid.nil?
-        level = colorize(Pretty::LEVEL_NAMES[verbosity], Pretty::LEVEL_COLORS[verbosity])
-        '%6s %s' % [level, message]
+        level = colorize(LEVEL_NAMES[verbosity].rjust(6), LEVEL_COLORS[verbosity])
+        "#{level} #{message}"
       end
 
       private
