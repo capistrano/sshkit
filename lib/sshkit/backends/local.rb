@@ -7,8 +7,7 @@ module SSHKit
     class Local < Abstract
 
       def initialize(_ = nil, &block)
-        @host = Host.new(:local) # just for logging
-        @block = block
+        super(Host.new(:local), &block)
       end
 
       def upload!(local, remote, _options = {})

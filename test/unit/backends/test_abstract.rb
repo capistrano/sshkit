@@ -161,6 +161,7 @@ module SSHKit
         def initialize(&block)
           block = block.nil? ? lambda {} : block
           super(ExampleBackend.example_host, &block)
+          @full_stdout = nil
         end
 
         def execute_command(command)
