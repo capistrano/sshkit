@@ -4,7 +4,6 @@ require 'tempfile'
 require 'minitest/autorun'
 require 'minitest/reporters'
 require 'mocha/setup'
-require 'unindent'
 require 'stringio'
 require 'json'
 
