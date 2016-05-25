@@ -10,7 +10,10 @@ module SSHKit
     end
 
     def deprecation_logger
-      self.deprecation_output = $stderr if @deprecation_logger.nil?
+      unless defined? @deprecation_logger
+        self.deprecation_output = $stderr
+      end
+
       @deprecation_logger
     end
 

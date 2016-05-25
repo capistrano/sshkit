@@ -17,10 +17,12 @@ module SSHKit
     end
 
     def keys
-      Array(@keys)
+      @keys
     end
 
     def initialize(host_string_or_options_hash)
+      @keys  = []
+      @local = false
 
       if host_string_or_options_hash == :local
         @local = true

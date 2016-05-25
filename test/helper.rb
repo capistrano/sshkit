@@ -4,7 +4,6 @@ require 'tempfile'
 require 'minitest/autorun'
 require 'minitest/reporters'
 require 'mocha/setup'
-require 'unindent'
 require 'stringio'
 require 'json'
 
@@ -21,6 +20,7 @@ class UnitTest < Minitest::Test
   end
 
   SSHKit::Backend::ConnectionPool.class_eval do
+    alias_method :old_flush_connections, :flush_connections
     def flush_connections
       Thread.current[:sshkit_pool] = {}
     end

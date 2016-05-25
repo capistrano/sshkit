@@ -35,6 +35,11 @@ module SSHKit
         raise "Must pass a Host object" unless host.is_a? Host
         @host  = host
         @block = block
+
+        @pwd   = nil
+        @env   = nil
+        @user  = nil
+        @group = nil
       end
 
       def make(commands=[])
