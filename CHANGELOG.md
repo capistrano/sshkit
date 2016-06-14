@@ -3,13 +3,23 @@
 This file is written in reverse chronological order, newer releases will
 appear at the top.
 
-## `master` (Unreleased)
+## [Unreleased][]
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
-  * Known hosts lookup optimization is now enabled by default. @byroot
+
+## [1.11.0][] (2016-06-14)
+
+### Bug fixes
+
   * Fixed colorized output alignment in Logger::Pretty. @xavierholt
     [PR #349](https://github.com/capistrano/sshkit/pull/349)
+  * Fixed a bug that prevented nested `with` calls
+    [#43](https://github.com/capistrano/sshkit/issues/43)
+
+### Other changes
+
+  * Known hosts lookup optimization is now enabled by default. @byroot
 
 ## 1.10.0 (2016-04-22)
 
@@ -618,3 +628,6 @@ version `0.0.5`.
 ## 0.0.1
 
 First release.
+
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/capistrano/sshkit/compare/v1.10.0...v1.11.0
