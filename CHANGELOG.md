@@ -7,8 +7,14 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
-  * Fixed compatibility with net-ssh > 3.1.0. @byroot
-    [#357](https://github.com/capistrano/sshkit/issues/357)
+
+## [1.11.1][] (2016-06-17)
+
+### Bug fixes
+
+  * Fixed a regression in 1.11.0 that would cause
+    `ArgumentError: invalid option(s): known_hosts` in some older versions of
+    net-ssh. @byroot [#357](https://github.com/capistrano/sshkit/issues/357)
 
 ## [1.11.0][] (2016-06-14)
 
@@ -631,5 +637,6 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.1...HEAD
+[1.11.1]: https://github.com/capistrano/sshkit/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/capistrano/sshkit/compare/v1.10.0...v1.11.0
