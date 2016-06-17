@@ -7,6 +7,8 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Fixed compatibility with net-ssh > 3.1.0. @byroot
+    [#357](https://github.com/capistrano/sshkit/issues/357)
 
 ## [1.11.0][] (2016-06-14)
 

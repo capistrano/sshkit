@@ -33,8 +33,14 @@ module SSHKit
 
         private
 
-        def default_options
-          @default_options ||= {known_hosts: SSHKit::Backend::Netssh::KnownHosts.new}
+        if Net::SSH::VALID_OPTIONS.include?(:known_hosts)
+          def default_options
+            @default_options ||= {known_hosts: SSHKit::Backend::Netssh::KnownHosts.new}
+          end
+        else
+          def default_options
+            @default_options ||= {}
+          end
         end
       end
 
