@@ -259,7 +259,7 @@ desirable.
 first argument before attempting to find it in the *command map*.
 
 ## Interactive commands
-> (BETA) (Added in version #.##)
+> (Added in version 1.8.0)
 
 By default, commands against remote servers are run in a *non-login, non-interactive* ssh session.
 This is by design, to try and isolate the environment and make sure that things work as expected,
@@ -335,7 +335,7 @@ You can also pass a Proc object to map the output line from the server:
 execute(:passwd, interaction_handler: lambda { |server_data|
   case server_data
   when '(current) UNIX password: '
-    "old_pw\n",
+    "old_pw\n"
   when /(Enter|Retype) new UNIX password: /
     "new_pw\n"
   end
@@ -362,14 +362,14 @@ in response. This can be helpful if you don't know exactly what the server is se
 
 ```ruby
   # Start with this and run your script
-  execute(:unfamiliar_command, MappingInteractionHandler.new({}, :debug))
-  # DEBUG log => Unable to find interaction handler mapping for stdout:
-  #              "Please type your input:\r\n" so no response was sent"
+  execute(:unfamiliar_command, interaction_handler: MappingInteractionHandler.new({}, :info))
+  # INFO log => Unable to find interaction handler mapping for stdout:
+  #             "Please type your input:\r\n" so no response was sent"
 
-  # Update mapping:
-  execute(:unfamiliar_command, MappingInteractionHandler.new(
-    {"Please type your input:\r\n" => "Some input\n"}
-    :debug
+  # Add missing mapping:
+  execute(:unfamiliar_command, interaction_handler: MappingInteractionHandler.new(
+    {"Please type your input:\r\n" => "Some input\n"},
+    :info
   ))
 ```
 
