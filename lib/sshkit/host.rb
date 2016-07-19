@@ -17,7 +17,7 @@ module SSHKit
     end
 
     def keys
-      @keys
+      Array(@keys)
     end
 
     def initialize(host_string_or_options_hash)
