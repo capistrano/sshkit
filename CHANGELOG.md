@@ -7,6 +7,8 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Fixed a crash occurring when `Host@keys` was set to a non-Enumerable.
+    @xavierholt [PR #360](https://github.com/capistrano/sshkit/pull/360)
 
 ## [1.11.1][] (2016-06-17)
 
