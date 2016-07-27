@@ -7,6 +7,8 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Fix known_hosts caching to match on the entire hostlist
+    [PR #364](https://github.com/capistrano/sshkit/pull/364) @byroot
 
 ## [1.11.0][] (2016-06-14)
 

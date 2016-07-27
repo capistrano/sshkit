@@ -18,10 +18,12 @@ module SSHKit
           parse_file unless keys && hashes
           keys, hashes = hosts_keys, hosts_hashes
 
-          hostlist.split(',').each do |host|
-            key_list = keys[host]
-            return key_list if key_list
+          host_names = hostlist.split(',')
 
+          keys_found = host_names.map { |h| keys[h] || [] }.compact.inject(:&)
+          return keys_found unless keys_found.empty?
+
+          host_names.each do |host|
             hashes.each do |(hmac, salt), hash_keys|
               if OpenSSL::HMAC.digest(sha1, salt, host) == hmac
                 return hash_keys
