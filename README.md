@@ -94,16 +94,16 @@ When used inside a block in this way, `as()` and `within()` will guard
 the block they are given with a check.
 
 In the case of `within()`, an error-raising check will be made that the directory
-exists; for `as()` a simple call to `sudo su -<user> whoami` wrapped in a check for
+exists; for `as()` a simple call to `sudo -u <user> -- sh -c <command>'` wrapped in a check for
 success, raising an error if unsuccessful.
 
 The directory check is implemented like this:
 
     if test ! -d <directory>; then echo "Directory doesn't exist" 2>&1; false; fi
 
-And the user switching test implemented like this:
+And the user switching test is implemented like this:
 
-    if ! sudo su <user> -c whoami > /dev/null; then echo "Can't switch user" 2>&1; false; fi
+    if ! sudo -u <user> whoami > /dev/null; then echo "Can't switch user" 2>&1; false; fi
 
 According to the defaults, any command that exits with a status other than 0
 raises an error (this can be changed). The body of the message is whatever was
