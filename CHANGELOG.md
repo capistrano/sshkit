@@ -7,6 +7,11 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+
+## [1.11.2][] (2016-07-29)
+
+### Bug fixes
+
   * Fixed a crash occurring when `Host@keys` was set to a non-Enumerable.
     @xavierholt [PR #360](https://github.com/capistrano/sshkit/pull/360)
 
@@ -639,6 +644,7 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.1...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.2...HEAD
+[1.11.2]: https://github.com/capistrano/sshkit/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/capistrano/sshkit/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/capistrano/sshkit/compare/v1.10.0...v1.11.0
