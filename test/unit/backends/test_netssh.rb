@@ -56,23 +56,28 @@ module SSHKit
 
       if Net::SSH::Version::CURRENT >= Net::SSH::Version[3, 1, 0]
         def test_known_hosts_for_when_all_hosts_are_recognized
-          perform_known_hosts_test("github")
+          perform_known_hosts_test('github', 'github.com')
         end
 
         def test_known_hosts_for_when_an_host_hash_is_recognized
-          perform_known_hosts_test("github_hash")
+          perform_known_hosts_test('github_hash', 'github.com')
+        end
+
+        def test_known_hosts_for_with_multiple_hosts
+          perform_known_hosts_test('github', '192.30.252.123,github.com', 0)
+          perform_known_hosts_test('github_ip', '192.30.252.123,github.com', 1)
         end
       end
 
       private
 
-      def perform_known_hosts_test(hostfile)
+      def perform_known_hosts_test(hostfile, hostlist, keys_count = 1)
         source = File.join(File.dirname(__FILE__), '../../known_hosts', hostfile)
         kh = Netssh::KnownHosts.new
-        keys = kh.search_for('github.com', user_known_hosts_file: source, global_known_hosts_file: Tempfile.new('sshkit-test').path)
+        keys = kh.search_for(hostlist, user_known_hosts_file: source, global_known_hosts_file: Tempfile.new('sshkit-test').path)
 
         assert_instance_of ::Net::SSH::HostKeys, keys
-        assert_equal(1, keys.count)
+        assert_equal(keys_count, keys.count)
         keys.each do |key|
           assert_equal("ssh-rsa", key.ssh_type)
         end
