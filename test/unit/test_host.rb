@@ -137,6 +137,25 @@ module SSHKit
       end
     end
 
-  end
+    def test_docker_host
+      h = Host.new(docker: {image: 'busybox'})
+      assert_equal true, h.docker?
+      assert_equal 'busybox', h.docker_options[:image]
+    end
 
+    def test_fails_to_create_docker_host_without_image_nor_container
+      assert_raises ArgumentError do
+        Host.new(docker: {foo: 'bar'})
+      end
+    end
+
+    def test_docker_host_with_any_options
+      h = Host.new(docker: {image: 'busybox', any: 'options', can: 'be', passed: 'to', chase: 'updates', on: 'docker.'})
+      h.docker_options.tap do |o|
+        assert_equal 'options', o[:any]
+        assert_equal 'updates', o[:chase]
+        assert_equal 'docker.', o[:on]
+      end
+    end
+  end
 end
