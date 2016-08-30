@@ -67,7 +67,7 @@ module SSHKit
       def run_image(image_name)
         IMAGE_CONTAINER_MAP[image_name] and return IMAGE_CONTAINER_MAP[image_name]
 
-        cmd = %w(docker run -i -u 65535:65535)
+        cmd = %w(docker run -i)
         %w(volume label label-file link link-local-ip runtime
         cpu-percent cpu-period cpu-quota cpu-shares cpuset-cpus cpuset-mems
         memory memory-reservation security-opt network network-alias
