@@ -17,6 +17,8 @@ module SSHKit
       def backend(host, &block)
         if host.local?
           SSHKit::Backend::Local.new(&block)
+        elsif host.docker?
+          SSHKit::Backend::Docker.new(host, &block)
         else
           SSHKit.config.backend.new(host, &block)
         end
