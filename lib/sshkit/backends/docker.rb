@@ -93,12 +93,10 @@ module SSHKit
         IMAGE_CONTAINER_MAP[image_name] and return IMAGE_CONTAINER_MAP[image_name]
 
         cmd = %w(docker run -i)
-        %w(volume label label-file link link-local-ip runtime
-        cpu-percent cpu-period cpu-quota cpu-shares cpuset-cpus cpuset-mems
-        memory memory-reservation security-opt network network-alias
-        dns dns-opt dns-search cap-add cap-drop).each do |opt|
-          [*host.docker_options[opt.tr('-', '_').to_sym]].each do |o|
-            cmd += ["--#{opt}", o]
+        host.docker_options.each do |key, val|
+          %w(container image env env_file).member?(key.to_s) and next
+          [*val].each do |v|
+            cmd << "--#{opt.tr('_', '-')}" << v
           end
         end
         merged_env.each do |key, val|
