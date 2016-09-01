@@ -96,7 +96,7 @@ module SSHKit
         host.docker_options.each do |key, val|
           %w(container image env env_file).member?(key.to_s) and next
           [*val].each do |v|
-            cmd << "--#{opt.tr('_', '-')}" << v
+            cmd << "--#{key.to_s.tr('_', '-')}" << v
           end
         end
         merged_env.each do |key, val|
