@@ -64,6 +64,31 @@ module SSHKit
           local_io.close
       end
 
+      def merged_env
+        menv = (SSHKit.config.default_env || {}).dup.symbolize_keys
+        [*host.docker_options[:env_file]].each do |ef|
+          File.foreach(ef) do |line|
+            line.include? "=" or next
+            key, val = line.chomp.split('=', 2)
+            menv[key.strip.to_sym] = val.strip
+          end
+        end
+        if host.docker_options[:env].is_a?(Hash)
+          host.docker_options[:env].each do |key, val|
+            menv[key.to_sym] = val
+          end
+        else
+          [*host.docker_options[:env]].each do |e|
+            key, val = e.split('=', 2)
+            menv[key.strip.to_sym] = val.strip
+          end
+        end
+        if menv[:rails_env]
+          menv[:RAILS_ENV] = menv.delete(:rails_env)
+        end
+        menv
+      end
+
       def run_image(image_name)
         IMAGE_CONTAINER_MAP[image_name] and return IMAGE_CONTAINER_MAP[image_name]
 
@@ -71,10 +96,13 @@ module SSHKit
         %w(volume label label-file link link-local-ip runtime
         cpu-percent cpu-period cpu-quota cpu-shares cpuset-cpus cpuset-mems
         memory memory-reservation security-opt network network-alias
-        env env-file dns dns-opt dns-search cap-add cap-drop).each do |opt|
+        dns dns-opt dns-search cap-add cap-drop).each do |opt|
           [*host.docker_options[opt.tr('-', '_').to_sym]].each do |o|
             cmd += ["--#{opt}", o]
           end
+        end
+        merged_env.each do |key, val|
+          cmd << "-e" << "#{key}=#{val}"
         end
         cmd += [image_name, 'sh', '-c', "# SSHkit \n hostname; read _"]
         cmd.unshift('sudo') if Docker.config.use_sudo

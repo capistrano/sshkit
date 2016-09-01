@@ -67,6 +67,20 @@ module SSHKit
         assert_equal pty, backend.config.pty
       end
 
+      def test_merged_env
+        SSHKit.config.default_env = {d1: 'default'}
+        d = backend.new Host.new(docker: {container: 'cid', env: 'E_A=V_A'})
+        assert_equal d.merged_env, {d1: 'default', E_A: 'V_A'}
+
+        SSHKit.config.default_env = {d1: 'default', same: '1'}
+        d = backend.new Host.new(docker: {container: 'cid', env: ['ARRAY=test', 'same=2']})
+        assert_equal d.merged_env, {d1: 'default', same: '2', ARRAY: 'test'}
+
+        SSHKit.config.default_env = {d1: 'def'}
+        d = backend.new Host.new(docker: {container: 'cid', env: {with: 'hash', d1: 'override'}})
+        assert_equal d.merged_env, {d1: 'override', with: 'hash'}
+      end
+
     end
   end
 end
