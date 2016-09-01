@@ -13,8 +13,16 @@ module SSHKit
       CONTAINER_WAIT_IO = {}
       attr_accessor :docker_open_stdin
 
+      def self.host_container_map_key(host)
+        key = host.docker_options.dup || {}
+        key.delete :container
+        key.delete :commit
+        key
+      end
+
       def self.find_cntainer_by_host(host)
-        host.docker_options[:container] || CONTAINER_MAP[host.docker_options]
+        host.docker_options[:container] ||
+          CONTAINER_MAP[host_container_map_key(host)]
       end
 
       def initialize(host, &block)
@@ -94,8 +102,10 @@ module SSHKit
 
       def run_image(host = nil)
         host ||= self.host
-        CONTAINER_MAP[host.docker_options] and
-          return CONTAINER_MAP[host.docker_options]
+
+        map_key = self.class.host_container_map_key(host)
+        CONTAINER_MAP[map_key] and
+          return CONTAINER_MAP[map_key]
 
         image_name = host.docker_options[:image]
         cmd = %w(docker run -i)
@@ -114,8 +124,9 @@ module SSHKit
         cid = io.gets
         cid.nil? and raise "Failed to get container ID! (cmd: #{cmd.inspect})"
         at_exit { io.close }
-        CONTAINER_WAIT_IO[host.docker_options] = io
-        CONTAINER_MAP[host.docker_options] = cid.strip
+        CONTAINER_WAIT_IO[map_key] = io
+        CONTAINER_MAP[map_key] = cid.strip
+      end
       end
 
       def docker_cmd(*args)
