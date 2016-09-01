@@ -58,16 +58,24 @@ module SSHKit
       end
 
       def test_upload
-        docker.upload! 'Rakefile', '/tmp/Rakefile'
-        assert_equal File.size('Rakefile'), docker.capture('stat -c %s /tmp/Rakefile').to_i
+        c_size = nil
+        docker do |_host|
+          upload! 'Rakefile', '/tmp/Rakefile'
+          c_size = capture('stat -c %s /tmp/Rakefile').to_i
+        end.run
+        assert_equal File.size('Rakefile'), c_size
       end
 
       def test_download
         f = Tempfile.new
-        docker.download! '/etc/passwd', f
+        c_size = nil
+        docker do |host|
+          download! '/etc/passwd', f
+          c_size = capture('stat -c %s /etc/passwd').to_i
+        end.run
+        assert_equal c_size, f.size
         f.rewind
         assert f.gets.include?('root:x:0:0:')
-        assert_equal docker.capture('stat -c %s /etc/passwd').to_i, f.size
       end
     end
   end
