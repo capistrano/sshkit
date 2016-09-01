@@ -104,7 +104,7 @@ module SSHKit
       @docker = true
       @hostname = "(docker "
       @user ||= 'root'
-      @docker_options.update hash
+      @docker_options.update hash.symbolize_keys
       if @docker_options.has_key?(:image)
         @hostname << "image: #{@docker_options[:image]})"
       elsif @docker_options.has_key?(:container)
