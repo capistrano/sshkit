@@ -1,5 +1,6 @@
 require 'open3'
 require 'fileutils'
+require 'json'
 module SSHKit
 
   module Backend
@@ -127,6 +128,76 @@ module SSHKit
         CONTAINER_WAIT_IO[map_key] = io
         CONTAINER_MAP[map_key] = cid.strip
       end
+
+      def docker_commit(host = nil)
+        host ||= self.host
+
+        if host.is_a?(String)
+          commit_id = host
+          host = _deep_dup(self.host)
+          host.docker_options[:commit] = commit_id
+        elsif host.is_a?(Hash)
+          commit_info = host
+          host = _deep_dup(self.host)
+          host.docker_options[:commit] ||= {}
+          host.docker_options[:commit].update commit_info.symbolize_keys
+        end
+
+        host.docker_options[:commit] or return
+
+        container = self.class.find_cntainer_by_host(host) or
+          raise "Cannot find container for host #{host.inspect}"
+
+        cmd = %w(docker commit)
+
+        if host.docker_options[:image]
+          # if container is delivered from image, recover USER and CMD.
+          image_config = {}
+          IO.popen ['docker', 'inspect', '-f', '{{json .Config}}', host.docker_options[:image]], 'rb' do |f|
+            image_config = JSON.parse(f.read.chomp)
+          end
+
+          if image_config["User"].to_s.length > 1
+            cmd << '-c' << "USER #{image_config["User"]}"
+          end
+
+          c = image_config["Cmd"]
+          if c[0] == "/bin/sh" && c[1] == "-c"
+            c.shift; c.shift;
+          end
+          unless c.empty?
+            cmd << '-c' << "CMD #{c.join(' ')}"
+          end
+        end
+
+        image_name = host.docker_options[:commit]
+        if image_name.is_a?(Hash)
+          image_name.symbolize_keys.each do |key, val|
+            if key == :name
+              image_name = val
+            else
+              [*val].each do |v|
+                cmd << "--#{key.to_s.tr('_', '-')}" << v
+              end
+            end
+          end
+        end
+        cmd << container
+        image_name == true or
+          cmd << image_name
+
+        image_hash = nil
+        pid = nil
+        IO.popen cmd, 'rb' do |f|
+          pid = f.pid
+          image_hash = f.gets
+        end
+        image_hash.nil? and
+          output.error "Docker: Failed to get image hash. Commit may be failed!"
+        image_hash.chomp!
+        ret = image_name == true ? image_hash : image_name
+        output.info "Docker: commit #{container} as #{ret}"
+        ret
       end
 
       def docker_cmd(*args)
@@ -178,6 +249,10 @@ module SSHKit
 
           output.log_command_exit(cmd)
         end
+      end
+
+      def _deep_dup(obj)
+        Marshal.load Marshal.dump(obj)
       end
 
     end

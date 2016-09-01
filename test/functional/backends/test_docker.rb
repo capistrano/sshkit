@@ -77,6 +77,60 @@ module SSHKit
         f.rewind
         assert f.gets.include?('root:x:0:0:')
       end
+
+      def test_commit
+        try_commit_id = "commit-test-#{$$}-#{rand}"
+        ret_commit_id = nil
+        Docker.new(Host.new(docker: {image: 'busybox', commit: try_commit_id})) do |host|
+          upload! '/etc/hostname', '/tmp/hostname'
+          ret_commit_id = docker_commit
+        end.run
+        assert ret_commit_id
+        assert_equal try_commit_id, ret_commit_id
+
+        ret_commit_id and
+          system *%W(docker rmi #{ret_commit_id}), out: :close
+      end
+
+      def test_commit_without_name
+        ret_commit_id = nil
+        Docker.new(Host.new(docker: {image: 'busybox', commit: true})) do |host|
+          upload! '/etc/hostname', '/tmp/hostname'
+          ret_commit_id = docker_commit
+        end.run
+        assert ret_commit_id
+
+        ret_commit_id and
+          system *%W(docker rmi #{ret_commit_id}), out: :close
+      end
+
+      def test_commit_with_options
+        try_commit_id = "commit-test-#{$$}-#{rand}"
+        ret_commit_id = nil
+        Docker.new(Host.new(docker: {image: 'busybox', commit: {author: 'hoge', name: try_commit_id}})) do |host|
+          upload! '/etc/hostname', '/tmp/hostname'
+          ret_commit_id = docker_commit
+        end.run
+        assert ret_commit_id
+        assert_equal try_commit_id, ret_commit_id
+
+        ret_commit_id and
+          system *%W(docker rmi #{ret_commit_id}), out: :close
+      end
+
+      def test_commit_with_runtime_option
+        try_commit_id = "commit-test-#{$$}-#{rand}"
+        ret_commit_id = nil
+        docker do |host|
+          upload! '/etc/hostname', '/tmp/hostname'
+          ret_commit_id = docker_commit(try_commit_id)
+        end.run
+        assert ret_commit_id
+        assert_equal try_commit_id, ret_commit_id
+
+        ret_commit_id and
+          system *%W(docker rmi #{ret_commit_id}), out: :close
+      end
     end
   end
 end
