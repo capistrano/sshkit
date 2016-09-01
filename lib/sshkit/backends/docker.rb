@@ -94,7 +94,7 @@ module SSHKit
 
         cmd = %w(docker run -i)
         host.docker_options.each do |key, val|
-          %w(container image env env_file).member?(key.to_s) and next
+          %w(container image env env_file commit).member?(key.to_s) and next
           [*val].each do |v|
             cmd << "--#{key.to_s.tr('_', '-')}" << v
           end
