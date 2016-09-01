@@ -104,6 +104,16 @@ module SSHKit
       def run_image(host = nil)
         host ||= self.host
 
+        if host.is_a?(String)
+          image_name = host
+          host = _deep_dup(self.host)
+          host.docker_options[:image] = image_name
+        elsif host.is_a?(Hash)
+          d_opts = host
+          host = _deep_dup(self.host)
+          host.docker_options = d_opts.symbolize_keys
+        end
+
         map_key = self.class.host_container_map_key(host)
         CONTAINER_MAP[map_key] and
           return CONTAINER_MAP[map_key]

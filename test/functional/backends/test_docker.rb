@@ -12,9 +12,9 @@ module SSHKit
         assert docker.run_image
       end
 
-      def test_run_image_returns_same_container_id_for_same_image
-        cid1 = docker.run_image Host.new(docker: {image: 'busybox'})
-        cid2 = docker.run_image Host.new(docker: {image: 'busybox'})
+      def test_run_image_returns_same_container_id_for_same_docker_opts
+        cid1 = docker.run_image 'busybox'
+        cid2 = docker.run_image image: 'busybox'
         cid3 = docker.run_image Host.new(docker: {image: 'busybox'})
         assert cid1
         assert_equal cid1, cid2
@@ -22,9 +22,9 @@ module SSHKit
       end
 
       def test_run_image_returns_different_container_id_for_each_image
-        cid1 = docker.run_image Host.new(docker: {image: 'busybox:musl'})
-        cid2 = docker.run_image Host.new(docker: {image: 'busybox:glibc'})
-        cid3 = docker.run_image Host.new(docker: {image: 'busybox:uclibc'})
+        cid1 = docker.run_image 'busybox:musl'
+        cid2 = docker.run_image 'busybox:glibc'
+        cid3 = docker.run_image 'busybox:uclibc'
         assert cid1
         assert cid2
         assert cid3
