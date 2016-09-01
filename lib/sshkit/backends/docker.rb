@@ -9,9 +9,13 @@ module SSHKit
         attr_accessor :pty, :use_sudo
       end
 
-      IMAGE_CONTAINER_MAP = {}
+      CONTAINER_MAP = {}
       CONTAINER_WAIT_IO = {}
       attr_accessor :docker_open_stdin
+
+      def self.find_cntainer_by_host(host)
+        host.docker_options[:container] || CONTAINER_MAP(host.docker_options)
+      end
 
       def initialize(host, &block)
         super
@@ -23,8 +27,7 @@ module SSHKit
         if host.docker_options[:container]
           @container = host.docker_options[:container]
         else
-          image = host.docker_options[:image]
-          @container = run_image(image)
+          @container = run_image
           host.hostname.chop! << ", container: #{@container})"
         end
         @container
@@ -89,9 +92,12 @@ module SSHKit
         menv
       end
 
-      def run_image(image_name)
-        IMAGE_CONTAINER_MAP[image_name] and return IMAGE_CONTAINER_MAP[image_name]
+      def run_image(host = nil)
+        host ||= self.host
+        CONTAINER_MAP[host.docker_options] and
+          return CONTAINER_MAP[host.docker_options]
 
+        image_name = host.docker_options[:image]
         cmd = %w(docker run -i)
         host.docker_options.each do |key, val|
           %w(container image env env_file commit).member?(key.to_s) and next
@@ -108,8 +114,8 @@ module SSHKit
         cid = io.gets
         cid.nil? and raise "Failed to get container ID! (cmd: #{cmd.inspect})"
         at_exit { io.close }
-        CONTAINER_WAIT_IO[image_name] = io
-        IMAGE_CONTAINER_MAP[image_name] = cid.strip
+        CONTAINER_WAIT_IO[host.docker_options] = io
+        CONTAINER_MAP[host.docker_options] = cid.strip
       end
 
       def docker_cmd(*args)
