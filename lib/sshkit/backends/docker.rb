@@ -14,7 +14,7 @@ module SSHKit
       attr_accessor :docker_open_stdin
 
       def self.find_cntainer_by_host(host)
-        host.docker_options[:container] || CONTAINER_MAP(host.docker_options)
+        host.docker_options[:container] || CONTAINER_MAP[host.docker_options]
       end
 
       def initialize(host, &block)
