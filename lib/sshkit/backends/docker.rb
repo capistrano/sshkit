@@ -36,7 +36,7 @@ module SSHKit
         if host.docker_options[:container]
           @container = host.docker_options[:container]
         else
-          @container = run_image
+          @container = docker_run_image
           host.hostname.chop! << ", container: #{@container})"
         end
         @container
@@ -49,7 +49,7 @@ module SSHKit
         @docker_open_stdin = true
 
         with_pty(false) do
-          IO.popen(docker_cmd('sh', '-c', "cat > '#{remote}'"), 'wb') do |f|
+          IO.popen(to_docker_cmd('sh', '-c', "cat > '#{remote}'"), 'wb') do |f|
             IO.copy_stream(local_io, f)
           end
         end
@@ -67,7 +67,7 @@ module SSHKit
           local_io = File.open(local_io, 'wb')
 
         with_pty(false) do
-          IO.popen(docker_cmd('cat', remote), 'rb') do |f|
+          IO.popen(to_docker_cmd('cat', remote), 'rb') do |f|
             IO.copy_stream(f, local_io)
           end
         end
@@ -101,7 +101,7 @@ module SSHKit
         menv
       end
 
-      def run_image(host = nil)
+      def docker_run_image(host = nil)
         host ||= self.host
 
         if host.is_a?(String)
@@ -210,7 +210,7 @@ module SSHKit
         ret
       end
 
-      def docker_cmd(*args)
+      def to_docker_cmd(*args)
         cmd = %w(docker exec)
         cmd << '-it' if Docker.config.pty
         cmd << '-i' if docker_open_stdin
@@ -237,7 +237,7 @@ module SSHKit
 
         cmd.started = Time.now
 
-        Open3.popen3(*docker_cmd('sh', '-c', cmd.to_command)) do |stdin, stdout, stderr, wait_thr|
+        Open3.popen3(*to_docker_cmd('sh', '-c', cmd.to_command)) do |stdin, stdout, stderr, wait_thr|
           stdout_thread = Thread.new do
             while (line = stdout.gets) do
               cmd.on_stdout(stdin, line)

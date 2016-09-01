@@ -21,30 +21,30 @@ module SSHKit
         assert_equal true, backend.config.use_sudo
       end
 
-      def test_docker_cmd
+      def test_to_docker_cmd
         backend.configure do |docker|
           docker.pty = false
           docker.use_sudo = false
         end
-        cmd = docker.docker_cmd(*%w(date +%s))
+        cmd = docker.to_docker_cmd(*%w(date +%s))
         assert_equal %w(docker exec), cmd[0, 2]
         assert cmd.member?('container-id')
         assert cmd.member?('+%s')
       end
 
-      def test_docker_cmd_with_sudo
+      def test_to_docker_cmd_with_sudo
         backend.configure do |docker|
           docker.use_sudo = true
         end
-        cmd = docker.docker_cmd('date')
+        cmd = docker.to_docker_cmd('date')
         assert_equal %w(sudo docker exec), cmd[0, 3]
       end
 
-      def test_docker_cmd_with_pty
+      def test_to_docker_cmd_with_pty
         backend.configure do |docker|
           docker.pty = true
         end
-        cmd = docker.docker_cmd('date')
+        cmd = docker.to_docker_cmd('date')
         assert cmd.member?('-it')
       end
 

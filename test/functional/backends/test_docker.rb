@@ -9,22 +9,22 @@ module SSHKit
       end
 
       def test_run_image
-        assert docker.run_image
+        assert docker.docker_run_image
       end
 
       def test_run_image_returns_same_container_id_for_same_docker_opts
-        cid1 = docker.run_image 'busybox'
-        cid2 = docker.run_image image: 'busybox'
-        cid3 = docker.run_image Host.new(docker: {image: 'busybox'})
+        cid1 = docker.docker_run_image 'busybox'
+        cid2 = docker.docker_run_image image: 'busybox'
+        cid3 = docker.docker_run_image Host.new(docker: {image: 'busybox'})
         assert cid1
         assert_equal cid1, cid2
         assert_equal cid1, cid3
       end
 
       def test_run_image_returns_different_container_id_for_each_image
-        cid1 = docker.run_image 'busybox:musl'
-        cid2 = docker.run_image 'busybox:glibc'
-        cid3 = docker.run_image 'busybox:uclibc'
+        cid1 = docker.docker_run_image 'busybox:musl'
+        cid2 = docker.docker_run_image 'busybox:glibc'
+        cid3 = docker.docker_run_image 'busybox:uclibc'
         assert cid1
         assert cid2
         assert cid3
@@ -35,7 +35,7 @@ module SSHKit
 
       def test_run_image_fails_to_run_missing_image
         assert_raises do
-          docker.run_image Host.new(docker: {image: 'do-not-exist-image'})
+          docker.docker_run_image Host.new(docker: {image: 'do-not-exist-image'})
         end
       end
 
