@@ -133,10 +133,15 @@ module SSHKit
         cmd.unshift('sudo') if Docker.config.use_sudo
         io = IO.popen cmd, 'r+b'
         cid = io.gets
-        cid.nil? and raise "Failed to get container ID! (cmd: #{cmd.inspect})"
+        if cid.nil?
+          output.fatal "Docker: Failed to run image #{image_name}"
+          raise "Failed to get container ID! (cmd: #{cmd.inspect})"
+        end
         at_exit { io.close }
         CONTAINER_WAIT_IO[map_key] = io
         CONTAINER_MAP[map_key] = cid.strip
+        output.info "Docker: run new container #{CONTAINER_MAP[map_key]} from image #{image_name}"
+        CONTAINER_MAP[map_key]
       end
 
       def docker_commit(host = nil)
