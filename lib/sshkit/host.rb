@@ -6,7 +6,7 @@ module SSHKit
 
   class Host
 
-    attr_accessor :password, :hostname, :port, :user, :ssh_options
+    attr_accessor :password, :hostname, :port, :user, :ssh_options, :docker_options
 
     def key=(new_key)
       @keys = [new_key]
@@ -23,6 +23,8 @@ module SSHKit
     def initialize(host_string_or_options_hash)
       @keys  = []
       @local = false
+      @docker = false
+      @docker_options = {}
 
       if host_string_or_options_hash == :local
         @local = true
@@ -61,6 +63,10 @@ module SSHKit
       @local
     end
 
+    def docker?
+      @docker
+    end
+
     def hash
       user.hash ^ hostname.hash ^ port.hash
     end
@@ -92,6 +98,20 @@ module SSHKit
 
     def properties
       @properties ||= OpenStruct.new
+    end
+
+    def docker=(hash)
+      @docker = true
+      @hostname = "(docker "
+      @user ||= 'root'
+      @docker_options.update hash.symbolize_keys
+      if @docker_options.has_key?(:image)
+        @hostname << "image: #{@docker_options[:image]})"
+      elsif @docker_options.has_key?(:container)
+        @hostname << "container: #{@docker_options[:container]})"
+      else
+        raise ArgumentError, "Please specify image or container for docker! (ex; docker: {image: 'ruby:2.2'})"
+      end
     end
 
   end
