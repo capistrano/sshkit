@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+
+## [1.11.3][] (2016-09-16)
+
   * Fix known_hosts caching to match on the entire hostlist
     [PR #364](https://github.com/capistrano/sshkit/pull/364) @byroot
 
@@ -646,7 +649,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.2...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.3...HEAD
+[1.11.3]: https://github.com/capistrano/sshkit/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/capistrano/sshkit/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/capistrano/sshkit/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/capistrano/sshkit/compare/v1.10.0...v1.11.0
