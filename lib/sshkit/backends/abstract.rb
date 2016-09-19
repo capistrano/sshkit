@@ -150,7 +150,7 @@ module SSHKit
       end
 
       def command(args, options)
-        SSHKit::Command.new(*[*args, options.merge({in: pwd_path, env: @env, host: @host, user: @user, group: @group})])
+        SSHKit::Command.new(*args, options.merge({in: pwd_path, env: @env, host: @host, user: @user, group: @group}))
       end
 
     end
