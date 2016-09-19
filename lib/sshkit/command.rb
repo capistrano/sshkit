@@ -163,7 +163,7 @@ module SSHKit
 
     def with(&_block)
       return yield unless environment_hash.any?
-      sprintf("( export #{environment_string} ; %s )", yield)
+      sprintf("( export #{environment_string} && %s )", yield)
     end
 
     def user(&_block)

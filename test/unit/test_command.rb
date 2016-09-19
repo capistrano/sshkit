@@ -28,44 +28,44 @@ module SSHKit
     def test_including_the_env
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {rails_env: :production})
-      assert_equal %{( export RAILS_ENV="production" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export RAILS_ENV="production" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_including_the_env_with_multiple_keys
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {rails_env: :production, foo: 'bar'})
-      assert_equal %{( export RAILS_ENV="production" FOO="bar" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export RAILS_ENV="production" FOO="bar" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_including_the_env_with_string_keys
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {'FACTER_env' => :production, foo: 'bar'})
-      assert_equal %{( export FACTER_env="production" FOO="bar" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export FACTER_env="production" FOO="bar" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_double_quotes_are_escaped_in_env
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {foo: 'asdf"hjkl'})
-      assert_equal %{( export FOO="asdf\\\"hjkl" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export FOO="asdf\\\"hjkl" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_including_the_env_doesnt_addressively_escape
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {path: '/example:$PATH'})
-      assert_equal %{( export PATH="/example:$PATH" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export PATH="/example:$PATH" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_global_env
       SSHKit.config = nil
       SSHKit.config.default_env = { default: 'env' }
       c = Command.new(:rails, 'server', env: {})
-      assert_equal %{( export DEFAULT="env" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export DEFAULT="env" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_default_env_is_overwritten_with_locally_defined
       SSHKit.config.default_env = { foo: 'bar', over: 'under' }
       c = Command.new(:rails, 'server', env: { over: 'write'})
-      assert_equal %{( export FOO="bar" OVER="write" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export FOO="bar" OVER="write" && /usr/bin/env rails server )}, c.to_command
     end
 
     def test_working_in_a_given_directory
@@ -75,7 +75,7 @@ module SSHKit
 
     def test_working_in_a_given_directory_with_env
       c = Command.new(:ls, '-l', in: "/opt/sites", env: {a: :b})
-      assert_equal %{cd /opt/sites && ( export A="b" ; /usr/bin/env ls -l )}, c.to_command
+      assert_equal %{cd /opt/sites && ( export A="b" && /usr/bin/env ls -l )}, c.to_command
     end
 
     def test_having_a_host_passed
@@ -120,7 +120,7 @@ module SSHKit
     def test_umask_with_env_and_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var')
-      assert_equal %{cd /var && umask 007 && ( export A="b" ; sudo -u bob A="b" -- sh -c '/usr/bin/env touch somefile' )}, c.to_command
+      assert_equal %{cd /var && umask 007 && ( export A="b" && sudo -u bob A="b" -- sh -c '/usr/bin/env touch somefile' )}, c.to_command
     end
 
     def test_verbosity_defaults_to_logger_info
