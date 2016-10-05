@@ -49,7 +49,7 @@ module SSHKit
       assert_equal %{( export FOO="asdf\\\"hjkl" ; /usr/bin/env rails server )}, c.to_command
     end
 
-    def test_percentage_symbol_escaped_before_sprintf
+    def test_percentage_symbol_handled_in_env
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {foo: 'asdf%hjkl'}, user: "anotheruser")
       assert_equal %{( export FOO="asdf%hjkl" ; sudo -u anotheruser FOO=\"asdf%hjkl\" -- sh -c '/usr/bin/env rails server' )}, c.to_command

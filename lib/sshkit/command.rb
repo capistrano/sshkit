@@ -161,18 +161,14 @@ module SSHKit
       end.join(' ')
     end
 
-    def sprintf_escaped_environment_string
-      environment_string.gsub('%', '%%')
-    end
-
     def with(&_block)
       return yield unless environment_hash.any?
-      sprintf("( export #{sprintf_escaped_environment_string} ; %s )", yield)
+      "( export #{environment_string} ; #{yield} )"
     end
 
     def user(&_block)
       return yield unless options[:user]
-      "sudo -u #{options[:user]} #{sprintf_escaped_environment_string + " " unless sprintf_escaped_environment_string.empty?}-- sh -c '%s'" % %Q{#{yield}}
+      "sudo -u #{options[:user]} #{environment_string + " " unless environment_string.empty?}-- sh -c '#{yield}'"
     end
 
     def in_background(&_block)
