@@ -7,6 +7,10 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Use string interpolation for environment variables to avoid escaping issues
+    with sprintf
+    [PR #280](https://github.com/capistrano/sshkit/pull/280)
+    @Sinjo - Chris Sinjakli
 
 ## [1.11.3][] (2016-09-16)
 
