@@ -79,10 +79,8 @@ module SSHKit
     end
 
     def first_suitable_parser(host)
-      unless (parser = PARSERS.find{|p| p.suitable?(host) })
-        fail UnparsableHostStringError, "Cannot parse host string #{host}"
-      end
-
+      parser = PARSERS.find{|p| p.suitable?(host) }
+      fail UnparsableHostStringError, "Cannot parse host string #{host}" if parser.nil?
       parser.new(host)
     end
   end
