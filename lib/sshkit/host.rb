@@ -187,6 +187,6 @@ module SSHKit
     HostWithUsernameAndPortParser,
     IPv6HostWithPortParser,
     HostWithUsernameParser,
-  ]
+  ].freeze
 
 end
