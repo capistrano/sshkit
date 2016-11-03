@@ -7,6 +7,9 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+
+## [1.11.4][] (2016-11-02)
+
   * Use string interpolation for environment variables to avoid escaping issues
     with sprintf
     [PR #280](https://github.com/capistrano/sshkit/pull/280)
@@ -653,7 +656,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.3...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.4...HEAD
+[1.11.4]: https://github.com/capistrano/sshkit/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/capistrano/sshkit/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/capistrano/sshkit/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/capistrano/sshkit/compare/v1.11.0...v1.11.1
