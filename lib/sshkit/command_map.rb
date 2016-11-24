@@ -62,7 +62,7 @@ module SSHKit
 
     def defaults
       Hash.new do |hash, command|
-        if %w{if test time}.include? command.to_s
+        if %w{if test time exec}.include? command.to_s
           hash[command] = command.to_s
         else
           hash[command] = "/usr/bin/env #{command}"

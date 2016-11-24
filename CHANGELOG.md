@@ -7,6 +7,8 @@ appear at the top.
 
   * Add your entries below here, remember to credit yourself however you want
     to be credited!
+  * Do not prefix `exec` command
+    [PR #378](https://github.com/capistrano/sshkit/pull/378) @dreyks
 
 ## [1.11.4][] (2016-11-02)
 
