@@ -5,8 +5,7 @@ appear at the top.
 
 ## [Unreleased][]
 
-  * Add your entries below here, remember to credit yourself however you want
-    to be credited!
+  * Your contribution here!
   * Do not prefix `exec` command
     [PR #378](https://github.com/capistrano/sshkit/pull/378) @dreyks
 
