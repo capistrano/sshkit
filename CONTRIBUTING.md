@@ -1,7 +1,19 @@
 # Contributing to SSHKit
 
+ * Use [Stack Overflow][so] for Capistrano-related how-to questions and support
  * [**Don't** push your pull request](http://www.igvita.com/2011/12/19/dont-push-your-pull-requests/)
  * [**Do** write a good commit message](http://365git.tumblr.com/post/3308646748/writing-git-commit-messages)
+
+
+## Getting help
+
+Most users encounter SSHKit primarily by using Capistrano. If you have a question about using
+SSHKit in context of Capistrano, please use the [capistrano tag on Stack Overflow][so].
+
+If you are using SSHKit directly, or if you think you've found a bug in SSHKit, please open a
+[GitHub issue](https://github.com/capistrano/sshkit/issues).
+
+[so]: http://stackoverflow.com/questions/tagged/capistrano
 
 ## Ruby versions
 
