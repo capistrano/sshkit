@@ -6,6 +6,11 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.11.5][] (2016-12-16)
+
+### Bug fixes
+
   * Do not prefix `exec` command
     [PR #378](https://github.com/capistrano/sshkit/pull/378) @dreyks
 
@@ -657,7 +662,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.4...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.5...HEAD
+[1.11.5]: https://github.com/capistrano/sshkit/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/capistrano/sshkit/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/capistrano/sshkit/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/capistrano/sshkit/compare/v1.11.1...v1.11.2
