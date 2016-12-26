@@ -50,8 +50,8 @@ module SSHKit
       end
 
       def test_connections_are_reused_if_checked_in
-        conn1 = pool.with(connect, "conn") {}
-        conn2 = pool.with(connect, "conn") {}
+        conn1 = pool.with(connect, "conn") { |c| c }
+        conn2 = pool.with(connect, "conn") { |c| c }
 
         assert_equal conn1, conn2
       end

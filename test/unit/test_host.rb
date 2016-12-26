@@ -75,7 +75,7 @@ module SSHKit
 
     def test_arbitrary_host_properties
       h = Host.new('example.com')
-      assert_equal nil, h.properties.roles
+      assert_nil h.properties.roles
       assert h.properties.roles = [:web, :app]
       assert_equal [:web, :app], h.properties.roles
     end

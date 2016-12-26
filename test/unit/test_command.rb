@@ -218,7 +218,7 @@ module SSHKit
 
     def test_setting_exit_status
       c = Command.new(:whoami, raise_on_non_zero_exit: false)
-      assert_equal nil, c.exit_status
+      assert_nil c.exit_status
       assert c.exit_status = 1
       assert_equal 1, c.exit_status
     end
