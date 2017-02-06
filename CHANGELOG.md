@@ -5,7 +5,7 @@ appear at the top.
 
 ## [Unreleased][]
 
-  * Your contribution here!
+  * Add `SSHKit.config.default_runner_config` option that allows overriding default runner configs.
 
 ## [1.11.5][] (2016-12-16)
 
