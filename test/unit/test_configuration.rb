@@ -59,9 +59,15 @@ module SSHKit
 
     def test_default_runner_config
       config_hash = { wait: 5 }
-      assert_equal Hash.new, SSHKit.config.default_runner_config
-      SSHKit.config.default_runner = config_hash
-      assert_equal config_hash, SSHKit.config.default_runner
+      config_hash_with_runner = { in: :groups, limit: 5 }
+      default_hash = { in: SSHKit.config.default_runner }
+
+      assert_equal default_hash, SSHKit.config.default_runner_config
+      SSHKit.config.default_runner_config = config_hash
+      assert_equal default_hash.merge(config_hash), SSHKit.config.default_runner_config
+      SSHKit.config.default_runner_config = config_hash_with_runner
+      assert_equal config_hash_with_runner, SSHKit.config.default_runner_config
+      assert_equal config_hash_with_runner[:in], SSHKit.config.default_runner
     end
 
     def test_backend
