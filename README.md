@@ -136,6 +136,26 @@ it too hard.
 Sequential runs were intended to be used for rolling restarts, amongst other
 similar use-cases.
 
+The default runner can be set with the `SSHKit.config.default_runner` option.  For
+example:
+ ```ruby
+SSHKit.config.default_runner = :parallel
+SSHKit.config.default_runner = :sequence
+SSHKit.config.default_runner = :groups
+SSHKit.config.default_runner = MyRunner # A custom runner
+```
+
+If more control over the default runner is needed, the `SSHKit.config.default_runner_config`
+can be set.
+```ruby
+# Set the runner and then the config for the runner
+SSHKit.config.default_runner = :sequence
+SSHKit.config.default_runner_config = { wait: 5 }
+
+# Or just set everything once
+SSHKit.config.default_runner_config = { in: :sequence, wait: 5 }
+```
+
 ## Synchronisation
 
 The `on()` block is the unit of synchronisation, one `on()` block will wait
