@@ -27,7 +27,7 @@ module SSHKit
     private
 
     def default_options
-      { in: SSHKit.config.default_runner }
+      SSHKit.config.default_runner_config
     end
 
     def resolve_hosts

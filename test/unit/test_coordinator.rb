@@ -82,6 +82,32 @@ module SSHKit
       end
     end
 
+    def test_the_connection_manager_can_run_things_with_custom_runner_configs
+      begin
+        $original_runner = SSHKit.config.default_runner
+        SSHKit.config.default_runner = :groups
+        $original_runner_config = SSHKit.config.default_runner_config
+        SSHKit.config.default_runner_config = { limit: 2, wait: 5 }
+
+        Coordinator.new(
+          %w{
+            1.example.com
+            2.example.com
+            3.example.com
+            4.example.com
+          }
+        ).each(&echo_time)
+        assert_equal 4, actual_execution_times.length
+        assert_within_10_ms(actual_execution_times[0..1])
+        assert_within_10_ms(actual_execution_times[2..3])
+        assert_at_least_5_sec_apart(actual_execution_times[0], actual_execution_times[2])
+        assert_at_least_5_sec_apart(actual_execution_times[1], actual_execution_times[3])
+      ensure
+        SSHKit.config.default_runner = $original_runner
+        SSHKit.config.default_runner_config = $original_runner_config
+      end
+    end
+
     def test_the_connection_manager_can_run_things_in_sequence_with_wait
       start = Time.now
       Coordinator.new(%w{1.example.com 2.example.com}).each in: :sequence, wait: 10, &echo_time
@@ -112,6 +138,10 @@ module SSHKit
 
     def assert_at_least_1_sec_apart(first_time, last_time)
       assert_operator(last_time - first_time, :>, 1.0)
+    end
+
+    def assert_at_least_5_sec_apart(first_time, last_time)
+      assert_operator(last_time - first_time, :>, 5.0)
     end
 
     def assert_within_10_ms(array)

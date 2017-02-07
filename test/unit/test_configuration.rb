@@ -57,6 +57,19 @@ module SSHKit
       assert_equal :sequence, SSHKit.config.default_runner
     end
 
+    def test_default_runner_config
+      config_hash = { wait: 5 }
+      config_hash_with_runner = { in: :groups, limit: 5 }
+      default_hash = { in: SSHKit.config.default_runner }
+
+      assert_equal default_hash, SSHKit.config.default_runner_config
+      SSHKit.config.default_runner_config = config_hash
+      assert_equal default_hash.merge(config_hash), SSHKit.config.default_runner_config
+      SSHKit.config.default_runner_config = config_hash_with_runner
+      assert_equal config_hash_with_runner, SSHKit.config.default_runner_config
+      assert_equal config_hash_with_runner[:in], SSHKit.config.default_runner
+    end
+
     def test_backend
       assert_equal SSHKit::Backend::Netssh, SSHKit.config.backend
       assert SSHKit.config.backend = SSHKit::Backend::Printer
