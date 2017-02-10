@@ -6,6 +6,15 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.12.0][] (2017-02-10)
+
+### Breaking changes
+
+  * None
+
+### New features
+
   * Add `SSHKit.config.default_runner_config` option that allows overriding default runner configs.
 
 ## [1.11.5][] (2016-12-16)
@@ -663,7 +672,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.11.5...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/capistrano/sshkit/compare/v1.11.5...v1.12.0
 [1.11.5]: https://github.com/capistrano/sshkit/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/capistrano/sshkit/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/capistrano/sshkit/compare/v1.11.2...v1.11.3
