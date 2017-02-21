@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#390](https://github.com/capistrano/sshkit/pull/390): Properly wrap Ruby StandardError w/ add'l context - [@mattbrictson](https://github.com/mattbrictson)
 
 ## [1.12.0][] (2017-02-10)
 
