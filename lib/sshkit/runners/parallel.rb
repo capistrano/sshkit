@@ -10,7 +10,7 @@ module SSHKit
           Thread.new(host) do |h|
             begin
               backend(h, &block).run
-            rescue StandardError => e
+            rescue ::StandardError => e
               e2 = ExecuteError.new e
               raise e2, "Exception while executing #{host.user ? "as #{host.user}@" : "on host "}#{host}: #{e.message}"
             end
