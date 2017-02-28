@@ -134,6 +134,17 @@ module SSHKit
           pool.close_connections
         end
       end
+
+      def test_connections_with_changed_args_is_reused
+        connect_change_args = ->(*args) { args[2][:a] << "a"; args[2][:b] = []; Object.new }
+        ssh_options = { :a => [] }
+        option1 = ["conn", "user", ssh_options.dup]
+        conn1 = pool.with(connect_change_args, *option1) { |c| c }
+        option2 = ["conn", "user", ssh_options.dup]
+        conn2 = pool.with(connect_change_args, *option2) { |c| c }
+
+        assert_equal conn1, conn2
+      end
     end
   end
 end

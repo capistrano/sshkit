@@ -54,6 +54,9 @@ class SSHKit::Backend::ConnectionPool
   # invoking the `connection_factory` proc with the given `args`. The arguments
   # are used to construct a key used for caching.
   def with(connection_factory, *args)
+    ssh_options = args.last
+    ssh_options_keys = ssh_options.keys if ssh_options.is_a? Hash
+    cache_key = args.to_s
     cache = find_cache(args)
     conn = cache.pop || begin
       connection_factory.call(*args)
@@ -61,6 +64,19 @@ class SSHKit::Backend::ConnectionPool
     yield(conn)
   ensure
     cache.push(conn) unless conn.nil?
+    update_cache_key(ssh_options, ssh_options_keys, cache_key, args)
+  end
+
+  # Update cache key with changed args to prevent cache miss
+  def update_cache_key(ssh_options, ssh_options_keys, cache_key, args)
+    return unless ssh_options_keys
+    args[args.size - 1] = ssh_options.reject { |k, _| !ssh_options_keys.include?(k) }
+    new_key = args.to_s
+    if cache_key != new_key
+      caches.synchronize do
+        caches[new_key] = caches.delete(cache_key)
+      end
+    end
   end
 
   # Immediately remove all cached connections, without closing them. This only
