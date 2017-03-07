@@ -136,12 +136,10 @@ module SSHKit
       end
 
       def test_connections_with_changed_args_is_reused
-        connect_change_args = ->(*args) { args[2][:a] << "a"; args[2][:b] = []; Object.new }
-        ssh_options = { :a => [] }
-        option1 = ["conn", "user", ssh_options.dup]
-        conn1 = pool.with(connect_change_args, *option1) { |c| c }
-        option2 = ["conn", "user", ssh_options.dup]
-        conn2 = pool.with(connect_change_args, *option2) { |c| c }
+        options = { known_hosts: "foo" }
+        connect_change_options = ->(*args) { args.last[:known_hosts] = "bar"; Object.new }
+        conn1 = pool.with(connect_change_options, "arg", options) { |c| c }
+        conn2 = pool.with(connect_change_options, "arg", options) { |c| c }
 
         assert_equal conn1, conn2
       end

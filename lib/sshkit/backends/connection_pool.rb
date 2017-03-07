@@ -54,9 +54,6 @@ class SSHKit::Backend::ConnectionPool
   # invoking the `connection_factory` proc with the given `args`. The arguments
   # are used to construct a key used for caching.
   def with(connection_factory, *args)
-    ssh_options = args.last
-    ssh_options_keys = ssh_options.keys if ssh_options.is_a? Hash
-    cache_key = args.to_s
     cache = find_cache(args)
     conn = cache.pop || begin
       connection_factory.call(*args)
@@ -64,19 +61,9 @@ class SSHKit::Backend::ConnectionPool
     yield(conn)
   ensure
     cache.push(conn) unless conn.nil?
-    update_cache_key(ssh_options, ssh_options_keys, cache_key, args)
-  end
-
-  # Update cache key with changed args to prevent cache miss
-  def update_cache_key(ssh_options, ssh_options_keys, cache_key, args)
-    return unless ssh_options_keys
-    args[args.size - 1] = ssh_options.reject { |k, _| !ssh_options_keys.include?(k) }
-    new_key = args.to_s
-    if cache_key != new_key
-      caches.synchronize do
-        caches[new_key] = caches.delete(cache_key)
-      end
-    end
+    # Sometimes the args mutate as a result of opening a connection. In this
+    # case we need to update the cache key to match the new args.
+    update_key_if_args_changed(cache, args)
   end
 
   # Immediately remove all cached connections, without closing them. This only
@@ -100,6 +87,10 @@ class SSHKit::Backend::ConnectionPool
 
   private
 
+  def cache_key_for_connection_args(args)
+    args.to_s
+  end
+
   def cache_enabled?
     idle_timeout && idle_timeout > 0
   end
@@ -107,7 +98,7 @@ class SSHKit::Backend::ConnectionPool
   # Look up a Cache that matches the given connection arguments.
   def find_cache(args)
     if cache_enabled?
-      key = args.to_s
+      key = cache_key_for_connection_args(args)
       caches[key] || thread_safe_find_or_create_cache(key)
     else
       NilCache.new(method(:silently_close_connection))
@@ -119,8 +110,18 @@ class SSHKit::Backend::ConnectionPool
   def thread_safe_find_or_create_cache(key)
     caches.synchronize do
       caches[key] ||= begin
-        Cache.new(idle_timeout, method(:silently_close_connection_later))
+        Cache.new(key, idle_timeout, method(:silently_close_connection_later))
       end
+    end
+  end
+
+  # Update cache key with changed args to prevent cache miss
+  def update_key_if_args_changed(cache, args)
+    new_key = cache_key_for_connection_args(args)
+    return if cache.same_key?(new_key)
+
+    caches.synchronize do
+      caches[new_key] = caches.delete(cache.key)
     end
   end
 
