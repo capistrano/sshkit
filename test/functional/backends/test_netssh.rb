@@ -59,7 +59,7 @@ module SSHKit
           capture(:uname)
           host_ssh_options = host.ssh_options
         end.run
-        assert_equal [:forward_agent, :paranoid, :known_hosts].sort, host_ssh_options.keys.sort
+        assert_equal [:forward_agent, :paranoid, :known_hosts, :logger, :password_prompt].sort, host_ssh_options.keys.sort
         assert_equal false, host_ssh_options[:forward_agent]
         assert_equal true, host_ssh_options[:paranoid]
         assert_instance_of SSHKit::Backend::Netssh::KnownHosts, host_ssh_options[:known_hosts]

@@ -122,6 +122,7 @@ class SSHKit::Backend::ConnectionPool
 
     caches.synchronize do
       caches[new_key] = caches.delete(cache.key)
+      cache.key = new_key
     end
   end
 

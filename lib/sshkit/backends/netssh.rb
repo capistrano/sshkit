@@ -36,11 +36,19 @@ module SSHKit
         if Net::SSH::VALID_OPTIONS.include?(:known_hosts)
           def default_options
             @default_options ||= {known_hosts: SSHKit::Backend::Netssh::KnownHosts.new}
+            assign_defaults
           end
         else
           def default_options
             @default_options ||= {}
+            assign_defaults
           end
+        end
+
+        # Set default options early for ConnectionPool cache key
+        def assign_defaults
+          Net::SSH.assign_defaults(@default_options)
+          @default_options
         end
       end
 
