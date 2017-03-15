@@ -10,6 +10,30 @@ module SSHKit
         SSHKit.config.output = SSHKit::Formatter::BlackHole.new($stdout)
       end
 
+      def test_upload
+        Dir.mktmpdir do |dir|
+          File.new("#{dir}/local", 'w')
+          Local.new do
+            upload!("#{dir}/local", "#{dir}/remote")
+          end.run
+          assert File.exist?("#{dir}/remote")
+        end
+      end
+
+      def test_upload_recursive
+        Dir.mktmpdir do |dir|
+          Dir.mkdir("#{dir}/local")
+          File.new("#{dir}/local/file1", 'w')
+          File.new("#{dir}/local/file2", 'w')
+          Local.new do
+            upload!("#{dir}/local", "#{dir}/remote", recursive: true)
+          end.run
+          assert File.directory?("#{dir}/remote")
+          assert File.exist?("#{dir}/remote/file1")
+          assert File.exist?("#{dir}/remote/file2")
+        end
+      end
+
       def test_capture
         captured_command_result = ''
         Local.new do

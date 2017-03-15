@@ -10,9 +10,13 @@ module SSHKit
         super(Host.new(:local), &block)
       end
 
-      def upload!(local, remote, _options = {})
+      def upload!(local, remote, options = {})
         if local.is_a?(String)
-          FileUtils.cp(local, remote)
+          if options[:recursive]
+            FileUtils.cp_r(local, remote)
+          else
+            FileUtils.cp(local, remote)
+          end
         else
           File.open(remote, "wb") do |f|
             IO.copy_stream(local, f)
