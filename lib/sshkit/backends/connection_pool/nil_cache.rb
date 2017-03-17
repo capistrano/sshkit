@@ -8,4 +8,8 @@ SSHKit::Backend::ConnectionPool::NilCache = Struct.new(:closer) do
   def push(conn)
     closer.call(conn)
   end
+
+  def same_key?(_key)
+    true
+  end
 end

@@ -61,6 +61,9 @@ class SSHKit::Backend::ConnectionPool
     yield(conn)
   ensure
     cache.push(conn) unless conn.nil?
+    # Sometimes the args mutate as a result of opening a connection. In this
+    # case we need to update the cache key to match the new args.
+    update_key_if_args_changed(cache, args)
   end
 
   # Immediately remove all cached connections, without closing them. This only
@@ -84,6 +87,10 @@ class SSHKit::Backend::ConnectionPool
 
   private
 
+  def cache_key_for_connection_args(args)
+    args.to_s
+  end
+
   def cache_enabled?
     idle_timeout && idle_timeout > 0
   end
@@ -91,7 +98,7 @@ class SSHKit::Backend::ConnectionPool
   # Look up a Cache that matches the given connection arguments.
   def find_cache(args)
     if cache_enabled?
-      key = args.to_s
+      key = cache_key_for_connection_args(args)
       caches[key] || thread_safe_find_or_create_cache(key)
     else
       NilCache.new(method(:silently_close_connection))
@@ -103,8 +110,19 @@ class SSHKit::Backend::ConnectionPool
   def thread_safe_find_or_create_cache(key)
     caches.synchronize do
       caches[key] ||= begin
-        Cache.new(idle_timeout, method(:silently_close_connection_later))
+        Cache.new(key, idle_timeout, method(:silently_close_connection_later))
       end
+    end
+  end
+
+  # Update cache key with changed args to prevent cache miss
+  def update_key_if_args_changed(cache, args)
+    new_key = cache_key_for_connection_args(args)
+    return if cache.same_key?(new_key)
+
+    caches.synchronize do
+      caches[new_key] = caches.delete(cache.key)
+      cache.key = new_key
     end
   end
 

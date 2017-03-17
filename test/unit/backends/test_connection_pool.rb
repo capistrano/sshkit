@@ -134,6 +134,15 @@ module SSHKit
           pool.close_connections
         end
       end
+
+      def test_connections_with_changed_args_is_reused
+        options = { known_hosts: "foo" }
+        connect_change_options = ->(*args) { args.last[:known_hosts] = "bar"; Object.new }
+        conn1 = pool.with(connect_change_options, "arg", options) { |c| c }
+        conn2 = pool.with(connect_change_options, "arg", options) { |c| c }
+
+        assert_equal conn1, conn2
+      end
     end
   end
 end

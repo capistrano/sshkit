@@ -1,7 +1,10 @@
 # A Cache holds connections for a given key. Each connection is stored along
 # with an expiration time so that its idle duration can be measured.
 class SSHKit::Backend::ConnectionPool::Cache
-  def initialize(idle_timeout, closer)
+  attr_accessor :key
+
+  def initialize(key, idle_timeout, closer)
+    @key = key
     @connections = []
     @connections.extend(MonitorMixin)
     @idle_timeout = idle_timeout
@@ -51,6 +54,10 @@ class SSHKit::Backend::ConnectionPool::Cache
       connections.map(&:last).each(&closer)
       connections.clear
     end
+  end
+
+  def same_key?(other_key)
+    key == other_key
   end
 
   protected
