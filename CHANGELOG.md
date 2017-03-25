@@ -6,8 +6,20 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
-  * [#390](https://github.com/capistrano/sshkit/pull/390): Properly wrap Ruby StandardError w/ add'l context - [@mattbrictson](https://github.com/mattbrictson)
+
+## [1.13.0][] (2017-03-24)
+
+### Breaking changes
+
+  * None
+
+### New features
+
   * [#372](https://github.com/capistrano/sshkit/pull/372): Use cp_r in local backend with recursive option - [@okuramasafumi](https://github.com/okuramasafumi)
+
+### Bug fixes
+
+  * [#390](https://github.com/capistrano/sshkit/pull/390): Properly wrap Ruby StandardError w/ add'l context - [@mattbrictson](https://github.com/mattbrictson)
   * [#392](https://github.com/capistrano/sshkit/pull/392): Fix open two connections with changed cache key - [@shirosaki](https://github.com/shirosaki)
 
 ## [1.12.0][] (2017-02-10)
