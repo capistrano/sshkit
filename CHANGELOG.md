@@ -687,7 +687,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/capistrano/sshkit/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/capistrano/sshkit/compare/v1.11.5...v1.12.0
 [1.11.5]: https://github.com/capistrano/sshkit/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/capistrano/sshkit/compare/v1.11.3...v1.11.4
