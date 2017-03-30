@@ -47,7 +47,16 @@ module SSHKit
 
         # Set default options early for ConnectionPool cache key
         def assign_defaults
-          Net::SSH.assign_defaults(@default_options)
+          if Net::SSH.respond_to?(:assign_defaults)
+            Net::SSH.assign_defaults(@default_options)
+          else
+            # net-ssh < 4.0.0 doesn't have assign_defaults
+            unless @default_options.key?(:logger)
+              require 'logger'
+              @default_options[:logger] = ::Logger.new(STDERR)
+              @default_options[:logger].level = ::Logger::FATAL
+            end
+          end
           @default_options
         end
       end
