@@ -156,7 +156,7 @@ module SSHKit
     def environment_string
       environment_hash.collect do |key,value|
         key_string = key.is_a?(Symbol) ? key.to_s.upcase : key.to_s
-        escaped_value = value.to_s.gsub(/"/, '\"')
+        escaped_value = value.to_s.gsub(/"/, '\"').gsub("%", "%%")
         %{#{key_string}="#{escaped_value}"}
       end.join(' ')
     end
