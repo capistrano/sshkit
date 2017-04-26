@@ -16,13 +16,18 @@ module SSHKit
       end
     end
 
-    def test_using_a_heredoc
+    def test_multiple_lines_are_stripped_of_extra_space_and_joined_by_semicolons
       c = Command.new <<-EOHEREDOC
         if test ! -d /var/log; then
           echo "Example"
         fi
       EOHEREDOC
       assert_equal "if test ! -d /var/log; then; echo \"Example\"; fi", c.to_command
+    end
+
+    def test_leading_and_trailing_space_is_stripped
+      c = Command.new(" echo hi ")
+      assert_equal "echo hi", c.to_command
     end
 
     def test_including_the_env

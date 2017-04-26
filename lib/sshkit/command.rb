@@ -21,10 +21,9 @@ module SSHKit
     def initialize(*args)
       raise ArgumentError, "Must pass arguments to Command.new" if args.empty?
       @options = default_options.merge(args.extract_options!)
-      @command = args.shift.to_s.strip.to_sym
+      @command = sanitize_command(args.shift)
       @args    = args
       @options.symbolize_keys!
-      sanitize_command!
       @stdout, @stderr, @full_stdout, @full_stderr = String.new, String.new, String.new, String.new
     end
 
@@ -222,16 +221,8 @@ module SSHKit
       }
     end
 
-    def sanitize_command!
-      command.to_s.strip!
-      if command.to_s.match("\n")
-        @command = String.new.tap do |cs|
-          command.to_s.lines.each do |line|
-            cs << line.strip
-            cs << '; ' unless line == command.to_s.lines.to_a.last
-          end
-        end
-      end
+    def sanitize_command(cmd)
+      cmd.to_s.lines.map(&:strip).join("; ")
     end
 
     def call_interaction_handler(stream_name, data, channel)
