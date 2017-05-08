@@ -15,7 +15,7 @@ appear at the top.
 
 ### Bug fixes
 
-  * [#397](https://github.com/capistrano/sshkt/pull/397): Fix NoMethodError assign_defaults with net-ssh older than 4.0.0 - [@shirosaki](https://github.com/shirosaki)
+  * [#397](https://github.com/capistrano/sshkit/pull/397): Fix NoMethodError assign_defaults with net-ssh older than 4.0.0 - [@shirosaki](https://github.com/shirosaki)
 
 ## [1.13.0][] (2017-03-24)
 
