@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#401](https://github.com/capistrano/sshkit/pull/401): Add :log_percent option to specify upload!/download! transfer log percentage - [@aubergene](https://github.com/aubergene)
 
 ## [1.13.1][] (2017-03-31)
 

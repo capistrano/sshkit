@@ -72,7 +72,7 @@ For the remote backend, the file is tranferred with scp.
 ```ruby
 on '1.example.com' do
   upload! 'some_local_file.txt', '/home/some_user/somewhere'
-  download! '/home/some_user/some_remote_file.txt', 'somewhere_local'
+  download! '/home/some_user/some_remote_file.txt', 'somewhere_local', :log_percent 25
 end
 ```
 
