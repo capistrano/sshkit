@@ -62,14 +62,14 @@ module SSHKit
       end
 
       def upload!(local, remote, options = {})
-        summarizer = transfer_summarizer('Uploading')
+        summarizer = transfer_summarizer('Uploading', options)
         with_ssh do |ssh|
           ssh.scp.upload!(local, remote, options, &summarizer)
         end
       end
 
       def download!(remote, local=nil, options = {})
-        summarizer = transfer_summarizer('Downloading')
+        summarizer = transfer_summarizer('Downloading', options)
         with_ssh do |ssh|
           ssh.scp.download!(remote, local, options, &summarizer)
         end
@@ -96,14 +96,16 @@ module SSHKit
 
       private
 
-      def transfer_summarizer(action)
+      def transfer_summarizer(action, options = {})
+        log_percent = options[:log_percent] || 10
+        log_percent = 100 if log_percent <= 0
         last_name = nil
         last_percentage = nil
         proc do |_ch, name, transferred, total|
           percentage = (transferred.to_f * 100 / total.to_f)
           unless percentage.nan?
             message = "#{action} #{name} #{percentage.round(2)}%"
-            percentage_r = (percentage / 10).truncate * 10
+            percentage_r = (percentage / log_percent).truncate * log_percent
             if percentage_r > 0 && (last_name != name || last_percentage != percentage_r)
               info message
               last_name = name
