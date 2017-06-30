@@ -27,4 +27,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('rake')
   gem.add_development_dependency('rubocop', "~> 0.49.1")
   gem.add_development_dependency('mocha')
+
+  gem.add_development_dependency('bcrypt_pbkdf')
+  gem.add_development_dependency('rbnacl', '~> 3.4')
+  gem.add_development_dependency('rbnacl-libsodium')
 end

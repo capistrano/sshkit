@@ -6,6 +6,15 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.14.0][] (2017-06-30)
+
+### Breaking changes
+
+  * None
+
+### New features
+
   * [#401](https://github.com/capistrano/sshkit/pull/401): Add :log_percent option to specify upload!/download! transfer log percentage - [@aubergene](https://github.com/aubergene)
 
 ## [1.13.1][] (2017-03-31)
@@ -698,7 +707,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.13.1...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.14.0...HEAD
+[1.14.0]: https://github.com/capistrano/sshkit/compare/v1.13.1...v1.14.0
 [1.13.1]: https://github.com/capistrano/sshkit/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/capistrano/sshkit/compare/v1.12.0...v1.13.0
 [1.12.0]: https://github.com/capistrano/sshkit/compare/v1.11.5...v1.12.0
