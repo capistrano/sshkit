@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#408](https://github.com/capistrano/sshkit/pull/408): Teach upload! and download! to respect within(...) - [@sj26](https://github.com/sj26)
 
 ## [1.14.0][] (2017-06-30)
 
