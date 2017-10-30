@@ -20,6 +20,23 @@ module SSHKit
         end
       end
 
+      def test_upload_within
+        file_contents = "Some Content"
+        actual_file_contents = nil
+        Dir.mktmpdir do |dir|
+          Local.new do
+            within dir do
+              execute(:mkdir, "-p", "foo")
+              within "foo" do
+                upload!(StringIO.new(file_contents), "bar")
+              end
+            end
+            actual_file_contents = capture(:cat, File.join(dir, "foo", "bar"))
+          end.run
+          assert_equal file_contents, actual_file_contents
+        end
+      end
+
       def test_upload_recursive
         Dir.mktmpdir do |dir|
           Dir.mkdir("#{dir}/local")

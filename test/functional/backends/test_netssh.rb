@@ -103,6 +103,23 @@ module SSHKit
         assert_equal "Some Content\nWith a newline and trailing spaces    \n ", actual_file_contents
       end
 
+      def test_upload_within
+        file_name = SecureRandom.uuid
+        file_contents = "Some Content"
+        dir_name = SecureRandom.uuid
+        actual_file_contents = ""
+        Netssh.new(a_host) do |_host|
+          within("/tmp") do
+            execute :mkdir, "-p", dir_name
+            within(dir_name) do
+              upload!(StringIO.new(file_contents), file_name)
+            end
+          end
+          actual_file_contents = capture(:cat, "/tmp/#{dir_name}/#{file_name}", strip: false)
+        end.run
+        assert_equal file_contents, actual_file_contents
+      end
+
       def test_upload_string_io
         file_contents = ""
         Netssh.new(a_host) do |_host|

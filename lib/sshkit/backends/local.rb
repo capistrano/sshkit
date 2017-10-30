@@ -11,6 +11,7 @@ module SSHKit
       end
 
       def upload!(local, remote, options = {})
+        remote = File.join(pwd_path, remote) unless remote.start_with?("/")
         if local.is_a?(String)
           if options[:recursive]
             FileUtils.cp_r(local, remote)
@@ -25,6 +26,7 @@ module SSHKit
       end
 
       def download!(remote, local=nil, _options = {})
+        remote = File.join(pwd_path, remote) unless remote.start_with?("/")
         if local.nil?
           FileUtils.cp(remote, File.basename(remote))
         else
