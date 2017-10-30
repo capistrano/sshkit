@@ -63,7 +63,7 @@ module SSHKit
 
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading', options)
-        remote = File.join(pwd_path, remote) unless remote[0] == "/"
+        remote = File.join(pwd_path, remote) unless remote.start_with?("/")
         with_ssh do |ssh|
           ssh.scp.upload!(local, remote, options, &summarizer)
         end
@@ -71,7 +71,7 @@ module SSHKit
 
       def download!(remote, local=nil, options = {})
         summarizer = transfer_summarizer('Downloading', options)
-        remote = File.join(pwd_path, remote) unless remote[0] == "/"
+        remote = File.join(pwd_path, remote) unless remote.start_with?("/")
         with_ssh do |ssh|
           ssh.scp.download!(remote, local, options, &summarizer)
         end
