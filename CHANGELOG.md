@@ -6,11 +6,16 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
-  * [#408](https://github.com/capistrano/sshkit/pull/408): Teach upload! and download! to respect within(...) - [@sj26](https://github.com/sj26)
+
+## [1.15.0][] (2017-11-03)
+
+### New features
+
+  * [#408](https://github.com/capistrano/sshkit/pull/408): upload! and download! now respect `within` - [@sj26](https://github.com/sj26)
 
 ### Potentially breaking changes
 
-  * `upload!` and `download!` now support relative remote paths which are
+  * `upload!` and `download!` now support remote paths which are
     relative to the `within` working directory. They were previously documented
     as only supporting absolute paths, but relative paths still worked relative
     to the remote working directory. If you rely on the previous behaviour you
@@ -716,7 +721,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.14.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.15.0...HEAD
+[1.15.0]: https://github.com/capistrano/sshkit/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/capistrano/sshkit/compare/v1.13.1...v1.14.0
 [1.13.1]: https://github.com/capistrano/sshkit/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/capistrano/sshkit/compare/v1.12.0...v1.13.0
