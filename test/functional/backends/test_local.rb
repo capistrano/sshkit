@@ -20,6 +20,16 @@ module SSHKit
         end
       end
 
+      def test_upload_via_pathname
+        Dir.mktmpdir do |dir|
+          File.new("#{dir}/local", 'w')
+          Local.new do
+            upload!("#{dir}/local", Pathname.new("#{dir}/remote"))
+          end.run
+          assert File.exist?("#{dir}/remote")
+        end
+      end
+
       def test_upload_within
         file_contents = "Some Content"
         actual_file_contents = nil

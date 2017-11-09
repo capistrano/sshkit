@@ -145,6 +145,16 @@ module SSHKit
         assert_equal File.open(file_name).read, file_contents
       end
 
+      def test_upload_via_pathname
+        file_contents = ""
+        Netssh.new(a_host) do |_host|
+          file_name = Pathname.new(File.join("/tmp", SecureRandom.uuid))
+          upload!(StringIO.new('example_io'), file_name)
+          file_contents = download!(file_name)
+        end.run
+        assert_equal "example_io", file_contents
+      end
+
       def test_interaction_handler
         captured_command_result = nil
         Netssh.new(a_host) do
