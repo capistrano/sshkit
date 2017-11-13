@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#410](https://github.com/capistrano/sshkit/pull/410): call #to_s on remote so Pathnames don't go :boom: - [@UnderpantsGnome](https://github.com/UnderpantsGnome)
 
 ## [1.15.0][] (2017-11-03)
 
