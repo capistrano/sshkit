@@ -7,7 +7,7 @@ appear at the top.
 
   * Your contribution here!
   * [#410](https://github.com/capistrano/sshkit/pull/410): call #to_s on remote so Pathnames don't go :boom: - [@UnderpantsGnome](https://github.com/UnderpantsGnome)
-  * [#411](https://github.com/capistrano/sshkit/pull/410): fix upload!/dowbload! relative to user dir that broke in #408 -  [@Fjan](https://github.com/Fjan)
+  * [#411](https://github.com/capistrano/sshkit/pull/410): fix upload!/download! relative to user dir that broke in #408 -  [@Fjan](https://github.com/Fjan)
 
 ## [1.15.0][] (2017-11-03)
 
