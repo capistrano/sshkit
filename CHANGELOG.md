@@ -6,8 +6,19 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
-  * [#410](https://github.com/capistrano/sshkit/pull/410): call #to_s on remote so Pathnames don't go :boom: - [@UnderpantsGnome](https://github.com/UnderpantsGnome)
-  * [#411](https://github.com/capistrano/sshkit/pull/410): fix upload!/download! relative to user dir that broke in #408 -  [@Fjan](https://github.com/Fjan)
+
+## [1.15.1][] (2017-11-18)
+
+This is a small bug-fix release that fixes problems with `upload!` and `download!` that were inadvertently introduced in 1.15.0.
+
+### Breaking changes
+
+  * None
+
+### Bug fixes
+
+  * [#410](https://github.com/capistrano/sshkit/pull/410): fix NoMethodError when using upload!/download! with Pathnames - [@UnderpantsGnome](https://github.com/UnderpantsGnome)
+  * [#411](https://github.com/capistrano/sshkit/pull/410): fix upload!/download! when using relative paths outside of `within` blocks -  [@Fjan](https://github.com/Fjan)
 
 ## [1.15.0][] (2017-11-03)
 
@@ -723,7 +734,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.15.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.15.1...HEAD
+[1.15.1]: https://github.com/capistrano/sshkit/compare/v1.15.0...v1.15.1
 [1.15.0]: https://github.com/capistrano/sshkit/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/capistrano/sshkit/compare/v1.13.1...v1.14.0
 [1.13.1]: https://github.com/capistrano/sshkit/compare/v1.13.0...v1.13.1
