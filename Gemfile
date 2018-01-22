@@ -18,3 +18,8 @@ end
 if Gem::Requirement.new('< 2.1').satisfied_by?(Gem::Version.new(RUBY_VERSION))
   gem 'public_suffix', '< 3'
 end
+
+# rbnacl-libsodium > 1.0.15.1 requires Ruby 2.2.6+
+if Gem::Requirement.new('< 2.2.6').satisfied_by?(Gem::Version.new(RUBY_VERSION))
+  gem 'rbnacl-libsodium', '<= 1.0.15.1'
+end
