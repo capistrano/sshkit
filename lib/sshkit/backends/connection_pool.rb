@@ -88,7 +88,7 @@ class SSHKit::Backend::ConnectionPool
   private
 
   def cache_key_for_connection_args(args)
-    args.to_s
+    args.hash
   end
 
   def cache_enabled?
