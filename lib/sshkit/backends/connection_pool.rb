@@ -51,7 +51,7 @@ class SSHKit::Backend::ConnectionPool
 
   # Creates a new connection or reuses a cached connection (if possible) and
   # yields the connection to the given block. Connections are created by
-  # invoking the `connection_factory` proc with the given `args`. The arguments
+  # invoking the `connection_factory` proc with the given `args`. The first two arguments
   # are used to construct a key used for caching.
   def with(connection_factory, *args)
     cache = find_cache(args)
@@ -61,9 +61,6 @@ class SSHKit::Backend::ConnectionPool
     yield(conn)
   ensure
     cache.push(conn) unless conn.nil?
-    # Sometimes the args mutate as a result of opening a connection. In this
-    # case we need to update the cache key to match the new args.
-    update_key_if_args_changed(cache, args)
   end
 
   # Immediately remove all cached connections, without closing them. This only
@@ -87,8 +84,9 @@ class SSHKit::Backend::ConnectionPool
 
   private
 
+  # First two arguments are hostname and username.
   def cache_key_for_connection_args(args)
-    args.to_s
+    args[0, 2]
   end
 
   def cache_enabled?
@@ -112,17 +110,6 @@ class SSHKit::Backend::ConnectionPool
       caches[key] ||= begin
         Cache.new(key, idle_timeout, method(:silently_close_connection_later))
       end
-    end
-  end
-
-  # Update cache key with changed args to prevent cache miss
-  def update_key_if_args_changed(cache, args)
-    new_key = cache_key_for_connection_args(args)
-    return if cache.same_key?(new_key)
-
-    caches.synchronize do
-      caches[new_key] = caches.delete(cache.key)
-      cache.key = new_key
     end
   end
 

@@ -49,9 +49,9 @@ module SSHKit
         refute_equal conn1, conn2
       end
 
-      def test_connections_are_reused_if_checked_in
-        conn1 = pool.with(connect, "conn") { |c| c }
-        conn2 = pool.with(connect, "conn") { |c| c }
+      def test_connections_are_reused_if_hostname_and_username_are_same
+        conn1 = pool.with(connect, "example.com", "deploy") { |c| c }
+        conn2 = pool.with(connect, "example.com", "deploy") { |c| c }
 
         assert_equal conn1, conn2
       end
@@ -110,9 +110,16 @@ module SSHKit
         refute_equal conn1, conn2
       end
 
-      def test_connections_with_different_args_are_not_reused
+      def test_connections_with_different_hostnames_are_not_reused
         conn1 = pool.with(connect, "conn1") { |c| c }
         conn2 = pool.with(connect, "conn2") { |c| c }
+
+        refute_equal conn1, conn2
+      end
+
+      def test_connections_with_same_hostnames_and_different_usernames_are_not_reused
+        conn1 = pool.with(connect, "example.com", "deploy") { |c| c }
+        conn2 = pool.with(connect, "example.com", "root") { |c| c }
 
         refute_equal conn1, conn2
       end
@@ -135,11 +142,11 @@ module SSHKit
         end
       end
 
-      def test_connections_with_changed_args_is_reused
+      def test_connections_are_reused_even_if_the_other_args_are_different
         options = { known_hosts: "foo" }
         connect_change_options = ->(*args) { args.last[:known_hosts] = "bar"; Object.new }
-        conn1 = pool.with(connect_change_options, "arg", options) { |c| c }
-        conn2 = pool.with(connect_change_options, "arg", options) { |c| c }
+        conn1 = pool.with(connect_change_options, "example.com", "deploy", options) { |c| c }
+        conn2 = pool.with(connect_change_options, "example.com", "deploy", options) { |c| c }
 
         assert_equal conn1, conn2
       end
