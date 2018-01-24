@@ -51,7 +51,7 @@ class SSHKit::Backend::ConnectionPool
 
   # Creates a new connection or reuses a cached connection (if possible) and
   # yields the connection to the given block. Connections are created by
-  # invoking the `connection_factory` proc with the given `args`. The arguments
+  # invoking the `connection_factory` proc with the given `args`. The first two arguments
   # are used to construct a key used for caching.
   def with(connection_factory, *args)
     cache = find_cache(args)
