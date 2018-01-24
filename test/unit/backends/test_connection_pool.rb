@@ -124,7 +124,6 @@ module SSHKit
         refute_equal conn1, conn2
       end
 
-
       def test_close_connections
         conn1 = mock
         conn1.expects(:closed?).twice.returns(false)
