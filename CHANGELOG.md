@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#417](https://github.com/capistrano/sshkit/pull/417): Cache key generation for connections becomes slow when `known_hosts` is a valid `net/ssh` options and `known_hosts` file is big. This changes the cache key generation and fixes performance issue - [@ElvinEfendi](https://github.com/ElvinEfendi).
 
 ## [1.15.1][] (2017-11-18)
 
