@@ -1,12 +1,14 @@
 language: ruby
 rvm:
-  - 2.3.3
-  - 2.2.4
-  - 2.1.8
-  - 2.0.0
+  - 2.5
+  - 2.4
+  - 2.3
+  - 2.2
+  - 2.1
+  - 2.0
 matrix:
   include:
-    # Run Danger only once, on 2.3.3
-    - rvm: 2.3.3
+    # Run Danger only once, on 2.5
+    - rvm: 2.5
       script: bundle exec danger
 script: bundle exec rake test:units lint
