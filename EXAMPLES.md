@@ -32,6 +32,10 @@ end
 ## Run a command with specific environmental variables
 
 ```ruby
+# Please see the documentation for caveats related to commands that do not use
+# the command map [such as simple strings].
+#
+# https://github.com/capistrano/sshkit#the-command-map
 on hosts do |host|
   with rack_env: :test do
     puts capture("env | grep RACK_ENV")
