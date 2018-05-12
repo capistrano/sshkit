@@ -5,6 +5,7 @@ appear at the top.
 
 ## [Unreleased][]
 
+  * [#422](https://github.com/capistrano/sshkit/pull/422): Command#group incorrectly escapes double quotes, resulting in a a syntax error when specifying the group execution using `as`. This issue manifested when user command quotes changed from double quotes to single quotes. This fix removes the double quote escaping - [@pblesi](https://github.com/pblesi).
   * Your contribution here!
 
 ## [1.16.0][] (2018-02-03)

@@ -102,12 +102,12 @@ module SSHKit
 
     def test_working_as_a_given_group
       c = Command.new(:whoami, group: :devvers)
-      assert_equal "sg devvers -c \\\"/usr/bin/env whoami\\\"", c.to_command
+      assert_equal "sg devvers -c \"/usr/bin/env whoami\"", c.to_command
     end
 
     def test_working_as_a_given_user_and_group
       c = Command.new(:whoami, user: :anotheruser, group: :devvers)
-      assert_equal "sudo -u anotheruser -- sh -c 'sg devvers -c \\\"/usr/bin/env whoami\\\"'", c.to_command
+      assert_equal "sudo -u anotheruser -- sh -c 'sg devvers -c \"/usr/bin/env whoami\"'", c.to_command
     end
 
     def test_umask
