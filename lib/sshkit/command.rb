@@ -182,7 +182,7 @@ module SSHKit
 
     def group(&_block)
       return yield unless options[:group]
-      "sg #{options[:group]} -c \"%s\"" % %Q{#{yield}}
+      %Q(sg #{options[:group]} -c "#{yield}")
       # We could also use the so-called heredoc format perhaps:
       #"newgrp #{options[:group]} <<EOC \\\"%s\\\" EOC" % %Q{#{yield}}
     end
