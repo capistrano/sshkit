@@ -5,8 +5,11 @@ appear at the top.
 
 ## [Unreleased][]
 
-  * [#425](https://github.com/capistrano/sshkit/pull/425): Command#group incorrectly escapes double quotes, resulting in a a syntax error when specifying the group execution using `as`. This issue manifested when user command quotes changed from double quotes to single quotes. This fix removes the double quote escaping - [@pblesi](https://github.com/pblesi).
   * Your contribution here!
+
+## [1.16.1][] (2018-05-20)
+
+  * [#425](https://github.com/capistrano/sshkit/pull/425): Command#group incorrectly escapes double quotes, resulting in a a syntax error when specifying the group execution using `as`. This issue manifested when user command quotes changed from double quotes to single quotes. This fix removes the double quote escaping - [@pblesi](https://github.com/pblesi).
 
 ## [1.16.0][] (2018-02-03)
 
@@ -739,7 +742,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.16.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.16.1...HEAD
+[1.16.1]: https://github.com/capistrano/sshkit/compare/v1.16.0...v1.16.1
 [1.16.0]: https://github.com/capistrano/sshkit/compare/v1.15.1...v1.16.0
 [1.15.1]: https://github.com/capistrano/sshkit/compare/v1.15.0...v1.15.1
 [1.15.0]: https://github.com/capistrano/sshkit/compare/v1.14.0...v1.15.0
