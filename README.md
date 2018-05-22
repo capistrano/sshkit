@@ -5,7 +5,6 @@ more servers.
 
 [![Gem Version](https://badge.fury.io/rb/sshkit.svg)](https://rubygems.org/gems/sshkit)
 [![Build Status](https://travis-ci.org/capistrano/sshkit.svg?branch=master)](https://travis-ci.org/capistrano/sshkit)
-[![Dependency Status](https://gemnasium.com/capistrano/sshkit.svg)](https://gemnasium.com/capistrano/sshkit)
 
 ## How might it work?
 
