@@ -66,16 +66,21 @@ module SSHKit
       end
 
       def test_ssh_option_merge
-        a_host.ssh_options = { paranoid: true }
+        verify_host_opt = if Net::SSH::Version::MAJOR >= 5
+                            { verify_host_key: :always }
+                          else
+                            { paranoid: true }
+                          end
+        a_host.ssh_options = verify_host_opt
         host_ssh_options = {}
         SSHKit::Backend::Netssh.config.ssh_options = { forward_agent: false }
         Netssh.new(a_host) do |host|
           capture(:uname)
           host_ssh_options = host.ssh_options
         end.run
-        assert_equal [:forward_agent, :paranoid, :known_hosts, :logger, :password_prompt].sort, host_ssh_options.keys.sort
+        assert_equal [:forward_agent, *verify_host_opt.keys, :known_hosts, :logger, :password_prompt].sort, host_ssh_options.keys.sort
         assert_equal false, host_ssh_options[:forward_agent]
-        assert_equal true, host_ssh_options[:paranoid]
+        assert_equal verify_host_opt.values.first, host_ssh_options[verify_host_opt.keys.first]
         assert_instance_of SSHKit::Backend::Netssh::KnownHosts, host_ssh_options[:known_hosts]
       end
 
