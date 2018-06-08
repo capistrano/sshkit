@@ -7,6 +7,10 @@ appear at the top.
 
   * Your contribution here!
 
+## [1.17.0][] (2018-06-08)
+
+  * [#430](https://github.com/capistrano/sshkit/pull/430): [Feature] Command Argument STDOUT/capistrano.log Hiding - [@NorseGaud](https://github.com/NorseGaud)
+
 ## [1.16.1][] (2018-05-20)
 
   * [#425](https://github.com/capistrano/sshkit/pull/425): Command#group incorrectly escapes double quotes, resulting in a a syntax error when specifying the group execution using `as`. This issue manifested when user command quotes changed from double quotes to single quotes. This fix removes the double quote escaping - [@pblesi](https://github.com/pblesi).

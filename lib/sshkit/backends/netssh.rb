@@ -124,7 +124,7 @@ module SSHKit
 
       def hide_args_in_cmd(cmd)
         new_cmd = cmd.dup
-        new_cmd.args.map!{ |arg| arg.is_a?(Array) ? arg = '*HIDDEN*' : arg }
+        new_cmd.args.map!{ |arg| arg.is_a?(Array) ? '*HIDDEN*' : arg }
         return new_cmd
       end
 
