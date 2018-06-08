@@ -6,3 +6,4 @@ bin/rake
 .vagrant*
 test/tmp
 Gemfile.lock
+.idea

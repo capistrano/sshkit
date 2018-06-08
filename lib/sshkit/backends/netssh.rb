@@ -122,8 +122,20 @@ module SSHKit
         end
       end
 
+      def hide_args_in_cmd(cmd)
+        new_cmd = cmd.dup
+        new_cmd.args.map!{ |arg| arg.is_a?(Array) ? arg = '*HIDDEN*' : arg }
+        return new_cmd
+      end
+
+      def remove_hide_from_cmd(cmd)
+        cmd.args.map!{ |arg| arg.is_a?(Array) ? arg.join : arg }
+      end
+
       def execute_command(cmd)
-        output.log_command_start(cmd)
+        # Hiding anything in args wrapped with an Array
+        output.log_command_start(hide_args_in_cmd(cmd))
+        remove_hide_from_cmd(cmd) # Remove the array wrapped values
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|
