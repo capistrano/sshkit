@@ -122,20 +122,14 @@ module SSHKit
         end
       end
 
-      def hide_args_in_cmd(cmd)
+      def sanitize(cmd) # Hide any tained values from cmd.args
         new_cmd = cmd.dup
-        new_cmd.args.map!{ |arg| arg.is_a?(Array) ? '*HIDDEN*' : arg }
+        new_cmd.args.map!{ |arg| arg.tainted? ? '*HIDDEN*' : arg }
         return new_cmd
       end
 
-      def remove_hide_from_cmd(cmd)
-        cmd.args.map!{ |arg| arg.is_a?(Array) ? arg.join : arg }
-      end
-
       def execute_command(cmd)
-        # Hiding anything in args wrapped with an Array
-        output.log_command_start(hide_args_in_cmd(cmd))
-        remove_hide_from_cmd(cmd) # Remove the array wrapped values
+        output.log_command_start(sanitize(cmd))
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|
