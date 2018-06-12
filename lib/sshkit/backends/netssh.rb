@@ -122,7 +122,7 @@ module SSHKit
         end
       end
 
-      def sanitize(cmd) # Hide any tained values from cmd.args
+      def sanitize(cmd) # Hide any tainted values from cmd.args
         new_cmd = cmd.dup
         new_cmd.args.map!{ |arg| arg.tainted? ? '*HIDDEN*' : arg }
         return new_cmd
