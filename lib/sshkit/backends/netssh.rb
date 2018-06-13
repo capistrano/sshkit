@@ -96,6 +96,9 @@ module SSHKit
         end
       end
 
+
+      def redact(arg) ['*REDACTED*',arg] end # Used in execute_command to hide redact() values user passes in
+
       private
 
       def transfer_summarizer(action, options = {})
@@ -122,14 +125,13 @@ module SSHKit
         end
       end
 
-      def sanitize(cmd) # Hide any tainted values from cmd.args
-        new_cmd = cmd.dup
-        new_cmd.args.map!{ |arg| arg.tainted? ? '*HIDDEN*' : arg }
-        return new_cmd
-      end
-
       def execute_command(cmd)
-        output.log_command_start(sanitize(cmd))
+
+        # Redaction
+        cmd_w_redaction = cmd.dup
+        cmd.dup.args.map!{|arg| arg.is_a?(Array) ? arg[0] : arg }
+        output.log_command_start(cmd_w_redaction) # Handle redacted values by hiding them
+
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|

@@ -42,13 +42,13 @@ module SSHKit
         ], command_lines
       end
 
-      def test_tainted_sanitation
+      def test_redaction
         Netssh.new(a_host) do
-          execute :echo, 'password:', 'PASSWORD'.taint
+          execute :echo, 'password:', redact('PASSWORD')
         end.run
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
-                         "Command: /usr/bin/env echo password: *HIDDEN*\n"
+                         "Command: /usr/bin/env echo password: *REDACTED*\n"
                      ], command_lines
       end
 
