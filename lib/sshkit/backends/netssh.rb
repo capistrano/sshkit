@@ -97,7 +97,10 @@ module SSHKit
       end
 
 
-      def redact(arg) ['*REDACTED*',arg] end # Used in execute_command to hide redact() values user passes in
+      def redact(arg) # Used in execute_command to hide redact() values user passes in
+        raise ArgumentError, 'redact() does not support Array or Hash' if arg.is_a?(Array) || arg.is_a?(Hash)
+        ['*REDACTED*',arg]
+      end
 
       private
 

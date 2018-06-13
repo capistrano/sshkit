@@ -45,11 +45,20 @@ module SSHKit
       def test_redaction
         Netssh.new(a_host) do
           execute :echo, 'password:', redact('PASSWORD')
+          execute :echo, 'password:', redact(10000)
         end.run
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
+                         "Command: /usr/bin/env echo password: *REDACTED*\n",
                          "Command: /usr/bin/env echo password: *REDACTED*\n"
                      ], command_lines
+        # Error when user passes in Array to redact()
+        err = assert_raises ArgumentError do
+          Netssh.new(a_host) do |_host|
+            execute :echo, 'password array:', redact(['PASSWORD_IN_ARRAY'])
+          end.run
+        end
+        assert_equal "redact() does not support Array or Hash", err.message
       end
 
       def test_group_netssh
