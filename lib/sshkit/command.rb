@@ -207,7 +207,7 @@ module SSHKit
     def to_s
       if should_map?
         if options[:redacted]
-          new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[0] : arg }
+          new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[0] : arg }.join(' ')
         elsif !options[:redacted]
           new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[1] : arg }
         else

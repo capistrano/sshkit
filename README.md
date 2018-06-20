@@ -449,21 +449,21 @@ If necessary, redact() can be used on a section of your execute arguments to hid
 
 ```ruby
 # Example from capistrano-postgresql gem
-execute(:psql, fetch(:pg_system_db), '-c', %Q{"CREATE USER \\"#{fetch(:pg_username)}\\" PASSWORD '}, redact("#{fetch(:pg_password)}"), %Q{';"})
+execute(:psql, fetch(:pg_system_db), '-c', %Q{"CREATE USER \\"#{fetch(:pg_username)}\\" PASSWORD}, redact("'#{fetch(:pg_password)}'"), %Q{;"})
 ```
-
+*Take a special note:* SSHKIT will automatically add a space in-between each argument in `execute`. When quoting a password, like the above, you should include the quotes within redact().
 Once wrapped, sshkit logging will replace the actual pg_password with a *REDACTED* value:
 
 ```
 # STDOUT
 00:00 postgresql:create_database_user
-      01 sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD ' *REDACTED* ';"
+      01 sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD *REDACTED* ;"
       01 CREATE ROLE
     ✔ 01 user@localhost 0.099s
 
 # capistrano.log
-INFO [59dbd2ba] Running /usr/bin/env sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD ' *REDACTED* ';" as user@localhost
-DEBUG [59dbd2ba] Command: ( export PATH="$HOME/.gem/ruby/2.5.0/bin:$PATH" ; /usr/bin/env sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD ' *REDACTED* ';" )
+INFO [59dbd2ba] Running /usr/bin/env sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD *REDACTED* ;" as user@localhost
+DEBUG [59dbd2ba] Command: ( export PATH="$HOME/.gem/ruby/2.5.0/bin:$PATH" ; /usr/bin/env sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD *REDACTED* ;" )
 DEBUG [529b623c] CREATE ROLE
 
 ```
