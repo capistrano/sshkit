@@ -206,7 +206,14 @@ module SSHKit
 
     def to_s
       if should_map?
-        [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+        if options[:redacted]
+          new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[0] : arg }
+        elsif !options[:redacted]
+          new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[1] : arg }
+        else
+          new_args = args
+        end
+        [SSHKit.config.command_map[command.to_sym], *Array(new_args)].join(' ')
       else
         command.to_s
       end

@@ -43,6 +43,7 @@ module SSHKit
       end
 
       def test_redaction
+        # Be sure redaction in the logs is showing *REDACTED*
         Netssh.new(a_host) do
           execute :echo, 'password:', redact('PASSWORD')
           execute :echo, 'password:', redact(10000)
@@ -50,8 +51,16 @@ module SSHKit
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
                          "Command: /usr/bin/env echo password: *REDACTED*\n",
-                         "Command: /usr/bin/env echo password: *REDACTED*\n"
+                         "Command: /usr/bin/env echo password: *REDACTED*\n",
                      ], command_lines
+        # Be sure the actual command executed without *REDACTED*
+        Netssh.new(a_host) do
+          execute :touch, redact('test.file')
+          execute :ls, 'test.file'
+        end.run
+        assert_equal [
+                         "\ttest.file\n"
+                     ], @output.lines.select { |line| line.start_with?("\ttest.file") }
         # Error when user passes in Array to redact()
         err = assert_raises ArgumentError do
           Netssh.new(a_host) do |_host|
@@ -59,6 +68,10 @@ module SSHKit
           end.run
         end
         assert_equal "redact() does not support Array or Hash", err.message
+        # Cleanup
+        Netssh.new(a_host) do
+          execute :rm, ' -f test.file'
+        end.run
       end
 
       def test_group_netssh

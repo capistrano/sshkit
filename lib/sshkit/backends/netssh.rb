@@ -129,12 +129,9 @@ module SSHKit
       end
 
       def execute_command(cmd)
-
-        # Redaction
-        cmd_w_redaction = cmd.dup
-        cmd.dup.args.map!{|arg| arg.is_a?(Array) ? arg[0] : arg }
-        output.log_command_start(cmd_w_redaction) # Handle redacted values by hiding them
-
+        cmd.options[:redacted] = true
+        output.log_command_start(cmd)
+        cmd.options[:redacted] = false
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|
