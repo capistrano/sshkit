@@ -58,9 +58,10 @@ module SSHKit
           execute :touch, redact('test.file')
           execute :ls, 'test.file'
         end.run
+        ls_lines = @output.lines.select { |line| line.start_with?("\ttest.file") }
         assert_equal [
                          "\ttest.file\n"
-                     ], @output.lines.select { |line| line.start_with?("\ttest.file") }
+                     ], ls_lines
         # Error when user passes in Array to redact()
         err = assert_raises ArgumentError do
           Netssh.new(a_host) do |_host|
