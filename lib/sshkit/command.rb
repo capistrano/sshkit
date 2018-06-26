@@ -204,16 +204,16 @@ module SSHKit
       end
     end
 
+    def with_redaction
+      new_args = args.map{|arg| arg.is_a?(Redaction) ? '[REDACTED]' : arg }
+      redacted_cmd = dup
+      redacted_cmd.instance_variable_set(:@args, new_args)
+      redacted_cmd
+    end
+
     def to_s
       if should_map?
-        if options[:redacted]
-          new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[0] : arg }.join(' ')
-        elsif !options[:redacted]
-          new_args = args.map{|arg| arg.is_a?(Array) && arg[0] == '*REDACTED*' ? arg[1] : arg }
-        else
-          new_args = args
-        end
-        [SSHKit.config.command_map[command.to_sym], *Array(new_args)].join(' ')
+        [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
       else
         command.to_s
       end

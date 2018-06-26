@@ -96,12 +96,6 @@ module SSHKit
         end
       end
 
-
-      def redact(arg) # Used in execute_command to hide redact() values user passes in
-        raise ArgumentError, 'redact() does not support Array or Hash' if arg.is_a?(Array) || arg.is_a?(Hash)
-        ['*REDACTED*',arg]
-      end
-
       private
 
       def transfer_summarizer(action, options = {})
@@ -129,9 +123,7 @@ module SSHKit
       end
 
       def execute_command(cmd)
-        cmd.options[:redacted] = true
-        output.log_command_start(cmd)
-        cmd.options[:redacted] = false
+        output.log_command_start(cmd.with_redaction)
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|

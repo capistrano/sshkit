@@ -42,6 +42,10 @@ module SSHKit
         @group = nil
       end
 
+      def redact(arg) # Used in execute_command to hide redact() args a user passes in
+        arg.to_s.extend(Redaction) # to_s due to our inability to extend Integer, etc
+      end
+
       def make(commands=[])
         execute :make, commands
       end

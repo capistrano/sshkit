@@ -43,32 +43,30 @@ module SSHKit
       end
 
       def test_redaction
-        # Be sure redaction in the logs is showing *REDACTED*
+        # Be sure redaction in the logs is showing [REDACTED]
         Netssh.new(a_host) do
           execute :echo, 'password:', redact('PASSWORD')
           execute :echo, 'password:', redact(10000)
+          execute :echo, 'password:', redact(['test1','test2'])
+          execute :echo, 'password:', redact({:test => 'test_value'})
         end.run
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
-                         "Command: /usr/bin/env echo password: *REDACTED*\n",
-                         "Command: /usr/bin/env echo password: *REDACTED*\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n"
                      ], command_lines
         # Be sure the actual command executed without *REDACTED*
         Netssh.new(a_host) do
-          execute :touch, redact('test.file')
+          file_name = 'test.file'
+          execute :touch, redact("'#{file_name}'") # Test and be sure single quotes are included in actual command; expected /usr/bin/env touch 'test.file'
           execute :ls, 'test.file'
         end.run
         ls_lines = @output.lines.select { |line| line.start_with?("\ttest.file") }
         assert_equal [
                          "\ttest.file\n"
                      ], ls_lines
-        # Error when user passes in Array to redact()
-        err = assert_raises ArgumentError do
-          Netssh.new(a_host) do |_host|
-            execute :echo, 'password array:', redact(['PASSWORD_IN_ARRAY'])
-          end.run
-        end
-        assert_equal "redact() does not support Array or Hash", err.message
         # Cleanup
         Netssh.new(a_host) do
           execute :rm, ' -f test.file'
