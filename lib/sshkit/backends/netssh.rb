@@ -123,7 +123,7 @@ module SSHKit
       end
 
       def execute_command(cmd)
-        output.log_command_start(cmd)
+        output.log_command_start(cmd.with_redaction)
         cmd.started = true
         exit_status = nil
         with_ssh do |ssh|

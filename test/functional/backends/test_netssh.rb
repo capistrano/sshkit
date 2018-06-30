@@ -42,13 +42,43 @@ module SSHKit
         ], command_lines
       end
 
+      def test_redaction
+        # Be sure redaction in the logs is showing [REDACTED]
+        Netssh.new(a_host) do
+          execute :echo, 'password:', redact('PASSWORD')
+          execute :echo, 'password:', redact(10000)
+          execute :echo, 'password:', redact(['test1','test2'])
+          execute :echo, 'password:', redact({:test => 'test_value'})
+        end.run
+        command_lines = @output.lines.select { |line| line.start_with?('Command:') }
+        assert_equal [
+                         "Command: /usr/bin/env echo password: [REDACTED]\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n",
+                         "Command: /usr/bin/env echo password: [REDACTED]\n"
+                     ], command_lines
+        # Be sure the actual command executed without *REDACTED*
+        Netssh.new(a_host) do
+          file_name = 'test.file'
+          execute :touch, redact("'#{file_name}'") # Test and be sure single quotes are included in actual command; expected /usr/bin/env touch 'test.file'
+          execute :ls, 'test.file'
+        end.run
+        ls_lines = @output.lines.select { |line| line.start_with?("\ttest.file") }
+        assert_equal [
+                         "\ttest.file\n"
+                     ], ls_lines
+        # Cleanup
+        Netssh.new(a_host) do
+          execute :rm, ' -f test.file'
+        end.run
+      end
+
       def test_group_netssh
         Netssh.new(a_host) do
           as user: :root, group: :admin do
            execute :touch, 'restart.txt'
           end
         end.run
-
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
           "Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi\n",

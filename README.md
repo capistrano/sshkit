@@ -443,6 +443,32 @@ SSHKit.config.output = SSHKit::Formatter::Pretty.new(output)
 SSHKit.config.output = SSHKit::Formatter::SimpleText.new(File.open('log/deploy.log', 'wb'))
 ```
 
+#### Output & Log Redaction
+
+If necessary, redact() can be used on a section of your execute arguments to hide it from both STDOUT and the capistrano.log. It supports the majority of data types.
+
+```ruby
+# Example from capistrano-postgresql gem
+execute(:psql, fetch(:pg_system_db), '-c', %Q{"CREATE USER \\"#{fetch(:pg_username)}\\" PASSWORD}, redact("'#{fetch(:pg_password)}'"), %Q{;"})
+```
+Once wrapped, sshkit logging will replace the actual pg_password with a [REDACTED] value:
+
+```
+# STDOUT
+00:00 postgresql:create_database_user
+      01 sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD [REDACTED] ;"
+      01 CREATE ROLE
+    ✔ 01 user@localhost 0.099s
+
+# capistrano.log
+INFO [59dbd2ba] Running /usr/bin/env sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD [REDACTED] ;" as user@localhost
+DEBUG [59dbd2ba] Command: ( export PATH="$HOME/.gem/ruby/2.5.0/bin:$PATH" ; /usr/bin/env sudo -i -u postgres psql -d postgres -c "CREATE USER \"db_admin_user\" PASSWORD [REDACTED] ;" )
+DEBUG [529b623c] CREATE ROLE
+
+```
+
+Yet, the created database user will have the value from `fetch(:pg_password)`.
+
 #### Output Colors
 
 By default, SSHKit will color the output using ANSI color escape sequences

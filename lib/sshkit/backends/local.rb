@@ -39,10 +39,8 @@ module SSHKit
       private
 
       def execute_command(cmd)
-        output.log_command_start(cmd)
-
+        output.log_command_start(cmd.with_redaction)
         cmd.started = Time.now
-
         Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
           stdout_thread = Thread.new do
             while (line = stdout.gets) do
@@ -50,19 +48,15 @@ module SSHKit
               output.log_command_data(cmd, :stdout, line)
             end
           end
-
           stderr_thread = Thread.new do
             while (line = stderr.gets) do
               cmd.on_stderr(stdin, line)
               output.log_command_data(cmd, :stderr, line)
             end
           end
-
           stdout_thread.join
           stderr_thread.join
-
           cmd.exit_status = wait_thr.value.to_i
-
           output.log_command_exit(cmd)
         end
       end
