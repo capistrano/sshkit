@@ -6,6 +6,9 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.17.0][] (2018-07-07)
+
   * [#430](https://github.com/capistrano/sshkit/pull/430): [Feature] Command Argument STDOUT/capistrano.log Hiding - [@NorseGaud](https://github.com/NorseGaud)
 
 ## [1.16.1][] (2018-05-20)
@@ -743,7 +746,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.16.1...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.17.0...HEAD
+[1.17.0]: https://github.com/capistrano/sshkit/compare/v1.16.1...v1.17.0
 [1.16.1]: https://github.com/capistrano/sshkit/compare/v1.16.0...v1.16.1
 [1.16.0]: https://github.com/capistrano/sshkit/compare/v1.15.1...v1.16.0
 [1.15.1]: https://github.com/capistrano/sshkit/compare/v1.15.0...v1.15.1
