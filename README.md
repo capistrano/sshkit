@@ -451,16 +451,7 @@ If necessary, redact() can be used on a section of your execute arguments to hid
 # Example from capistrano-postgresql gem
 execute(:psql, fetch(:pg_system_db), '-c', %Q{"CREATE USER \\"#{fetch(:pg_username)}\\" PASSWORD}, redact("'#{fetch(:pg_password)}'"), %Q{;"})
 ```
-
-*Be aware* that each argument to execute will contain a space. This makes setting bash ENV, or anything where a space cannot exist between = and the value, hard to set. You should instead wrap the entire section like so:
-
-```ruby
-# lib/capistrano/tasks/systemd.rake
-execute :sudo, :bash, '-c "', :echo, redact("CONTENT_WEB_TOOLS_PASS='#{ENV['CONTENT_WEB_TOOLS_PASS']}'"), ">> /etc/systemd/system/#{fetch(:application)}_sidekiq.service.d/EnvironmentFile", '"'
-
-```
-
-Once wrapped, sshkit logging will replace the actual pg_password with a [REDACTED] value:
+Once wrapped, sshkit logging will replace the actual pg_password with a [REDACTED] value. The created database user will have the value from `fetch(:pg_password)`.
 
 ```
 # STDOUT
@@ -476,7 +467,13 @@ DEBUG [529b623c] CREATE ROLE
 
 ```
 
-Yet, the created database user will have the value from `fetch(:pg_password)`.
+Certain commands will require that no spaces exist between a string and what you want hidden. Because SSHKIT will include a space between each argument of execute, this can be dealt with by wrapping both in redact:
+
+```ruby
+# lib/capistrano/tasks/systemd.rake
+execute :sudo, :echo, redact("CONTENT_WEB_TOOLS_PASS='#{ENV['CONTENT_WEB_TOOLS_PASS']}'"), ">> /etc/systemd/system/#{fetch(:application)}_sidekiq.service.d/EnvironmentFile", '"'
+
+```
 
 #### Output Colors
 
