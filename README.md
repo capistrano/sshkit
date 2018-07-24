@@ -445,7 +445,7 @@ SSHKit.config.output = SSHKit::Formatter::SimpleText.new(File.open('log/deploy.l
 
 #### Output & Log Redaction
 
-If necessary, redact() can be used on a section of your execute arguments to hide it from both STDOUT and the capistrano.log. It supports the majority of data types.
+If necessary, redact() can be used on a section of your `execute` arguments to hide it from both STDOUT and the capistrano.log. It supports the majority of data types.
 
 ```ruby
 # Example from capistrano-postgresql gem
@@ -467,7 +467,7 @@ DEBUG [529b623c] CREATE ROLE
 
 ```
 
-Certain commands will require that no spaces exist between a string and what you want hidden. Because SSHKIT will include a space between each argument of execute, this can be dealt with by wrapping both in redact:
+Certain commands will require that no spaces exist between a string and what you want hidden. Because SSHKIT will include a whitespace between each argument of `execute`, this can be dealt with by wrapping both in redact:
 
 ```ruby
 # lib/capistrano/tasks/systemd.rake
