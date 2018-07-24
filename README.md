@@ -445,7 +445,7 @@ SSHKit.config.output = SSHKit::Formatter::SimpleText.new(File.open('log/deploy.l
 
 #### Output & Log Redaction
 
-If necessary, redact() can be used on a section of your `execute` arguments to hide it from both STDOUT and the capistrano.log. It supports the majority of data types.
+If necessary, `redact` can be used on a section of your `execute` arguments to hide it from both STDOUT and the capistrano.log. It supports the majority of data types.
 
 ```ruby
 # Example from capistrano-postgresql gem
