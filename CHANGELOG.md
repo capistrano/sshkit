@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#435](https://github.com/capistrano/sshkit/pull/435): Consistent verbosity configuration #capture and #test methods - [@NikolayRys](https://github.com/NikolayRys)
 
 ## [1.17.0][] (2018-07-07)
 
