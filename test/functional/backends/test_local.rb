@@ -99,6 +99,24 @@ module SSHKit
         end.run
         assert_equal("Enter Data\nCaptured SOME DATA", captured_command_result)
       end
+
+      def test_interaction_handler_with_proc
+        captured_command_result = nil
+        Local.new do
+          command = 'echo Enter Data; read the_data; echo Captured $the_data;'
+          captured_command_result = capture(command, interaction_handler:
+            lambda { |data|
+              case data
+              when "Enter Data\n"
+                "SOME DATA\n"
+              when "Captured SOME DATA\n"
+                nil
+              end
+            }
+          )
+        end.run
+        assert_equal("Enter Data\nCaptured SOME DATA", captured_command_result)
+      end
     end
   end
 end

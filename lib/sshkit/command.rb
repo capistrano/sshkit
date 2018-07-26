@@ -234,7 +234,7 @@ module SSHKit
 
     def call_interaction_handler(stream_name, data, channel)
       interaction_handler = options[:interaction_handler]
-      interaction_handler = MappingInteractionHandler.new(interaction_handler) if interaction_handler.kind_of?(Hash)
+      interaction_handler = MappingInteractionHandler.new(interaction_handler) if interaction_handler.kind_of?(Hash) or interaction_handler.kind_of?(Proc)
       interaction_handler.on_data(self, stream_name, data, channel) if interaction_handler.respond_to?(:on_data)
     end
 
