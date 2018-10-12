@@ -520,6 +520,8 @@ produces a large amount of noise. They are tagged with a verbosity option on
 the `Command` instances of `Logger::DEBUG`. The default configuration for
 output verbosity is available to override with `SSHKit.config.output_verbosity=`,
 and defaults to `Logger::INFO`.
+Another way to is to provide a hash containing `{verbosity: Logger::INFO}` as
+a last parameter for the method call.
 
 At present the `Logger::WARN`, `ERROR` and `FATAL` are not used.
 

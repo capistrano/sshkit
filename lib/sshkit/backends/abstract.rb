@@ -55,7 +55,7 @@ module SSHKit
       end
 
       def test(*args)
-        options = args.extract_options!.merge(raise_on_non_zero_exit: false, verbosity: Logger::DEBUG)
+        options = { verbosity: Logger::DEBUG, raise_on_non_zero_exit: false }.merge(args.extract_options!)
         create_command_and_execute(args, options).success?
       end
 

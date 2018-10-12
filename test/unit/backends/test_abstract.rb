@@ -40,7 +40,7 @@ module SSHKit
         )
       end
 
-      def test_test_method_creates_and_executes_command_with_false_raise_on_non_zero_exit
+      def test_test_creates_and_executes_command_with_false_raise_on_non_zero_exit
         backend = ExampleBackend.new do
           test '[ -d /some/file ]'
         end
@@ -49,6 +49,14 @@ module SSHKit
 
         assert_equal '[ -d /some/file ]', backend.executed_command.to_command
         assert_equal false, backend.executed_command.options[:raise_on_non_zero_exit], 'raise_on_non_zero_exit option'
+      end
+
+      def test_test_allows_to_override_verbosity
+        backend = ExampleBackend.new do
+          test 'echo output', {verbosity: Logger::INFO}
+        end
+        backend.run
+        assert_equal(backend.executed_command.options[:verbosity], Logger::INFO)
       end
 
       def test_capture_creates_and_executes_command_and_returns_stripped_output
