@@ -6,6 +6,9 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.18.0][] (2018-10-21)
+
   * [#435](https://github.com/capistrano/sshkit/pull/435): Consistent verbosity configuration #capture and #test methods - [@NikolayRys](https://github.com/NikolayRys)
 
 ## [1.17.0][] (2018-07-07)
@@ -747,7 +750,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.17.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.18.0...HEAD
+[1.18.0]: https://github.com/capistrano/sshkit/compare/v1.17.0...v1.18.0
 [1.17.0]: https://github.com/capistrano/sshkit/compare/v1.16.1...v1.17.0
 [1.16.1]: https://github.com/capistrano/sshkit/compare/v1.16.0...v1.16.1
 [1.16.0]: https://github.com/capistrano/sshkit/compare/v1.15.1...v1.16.0
