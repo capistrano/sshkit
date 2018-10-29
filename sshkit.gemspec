@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('minitest-reporters')
   gem.add_development_dependency('rainbow', '~> 2.2.2')
   gem.add_development_dependency('rake')
-  gem.add_development_dependency('rubocop', "~> 0.49.1")
+  gem.add_development_dependency('rubocop', "~> 0.60.0")
   gem.add_development_dependency('mocha')
 
   gem.add_development_dependency('bcrypt_pbkdf')
