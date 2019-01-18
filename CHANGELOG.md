@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#447](https://github.com/capistrano/sshkit/pull/447): Fix broken thread safety by widening critical section - [Takumasa Ochi](https://github.com/aeroastro)
 
 ## [1.18.0][] (2018-10-21)
 
