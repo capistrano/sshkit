@@ -118,9 +118,9 @@ class SSHKit::Backend::ConnectionPool
   # Update cache key with changed args to prevent cache miss
   def update_key_if_args_changed(cache, args)
     new_key = cache_key_for_connection_args(args)
-    return if cache.same_key?(new_key)
 
     caches.synchronize do
+      return if cache.same_key?(new_key)
       caches[new_key] = caches.delete(cache.key)
       cache.key = new_key
     end
