@@ -6,6 +6,9 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.18.1][] (2019-01-26)
+
   * [#447](https://github.com/capistrano/sshkit/pull/447): Fix broken thread safety by widening critical section - [Takumasa Ochi](https://github.com/aeroastro)
 
 ## [1.18.0][] (2018-10-21)
@@ -751,7 +754,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.18.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.18.1...HEAD
+[1.18.1]: https://github.com/capistrano/sshkit/compare/v1.18.0...v1.18.1
 [1.18.0]: https://github.com/capistrano/sshkit/compare/v1.17.0...v1.18.0
 [1.17.0]: https://github.com/capistrano/sshkit/compare/v1.16.1...v1.17.0
 [1.16.1]: https://github.com/capistrano/sshkit/compare/v1.16.0...v1.16.1
