@@ -46,7 +46,11 @@ class SSHKit::Backend::ConnectionPool
     @caches = {}
     @caches.extend(MonitorMixin)
     @timed_out_connections = Queue.new
-    Thread.new { run_eviction_loop }
+
+    # Spin up eviction loop only if caching is enabled
+    if cache_enabled?
+      Thread.new { run_eviction_loop }
+    end
   end
 
   # Creates a new connection or reuses a cached connection (if possible) and
