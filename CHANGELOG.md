@@ -5,7 +5,7 @@ appear at the top.
 
 ## [Unreleased][]
 
-  * Your contribution here!
+  * [#448](https://github.com/capistrano/sshkit/pull/448): Fix misbehaving connection eviction loop when disabling connection pooling - [Sebastian Cohnen](https://github.com/tisba)
 
 ## [1.18.1][] (2019-01-26)
 
