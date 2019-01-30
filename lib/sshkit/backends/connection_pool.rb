@@ -21,7 +21,7 @@ end
 
 # The ConnectionPool caches connections and allows them to be reused, so long as
 # the reuse happens within the `idle_timeout` period. Timed out connections are
-# closed, forcing a new connection to be used in that case.
+# eventually closed, forcing a new connection to be used in that case.
 #
 # Additionally, a background thread is started to check for abandoned
 # connections that have timed out without any attempt at being reused. These
@@ -46,7 +46,11 @@ class SSHKit::Backend::ConnectionPool
     @caches = {}
     @caches.extend(MonitorMixin)
     @timed_out_connections = Queue.new
-    Thread.new { run_eviction_loop }
+
+    # Spin up eviction loop only if caching is enabled
+    if cache_enabled?
+      Thread.new { run_eviction_loop }
+    end
   end
 
   # Creates a new connection or reuses a cached connection (if possible) and
@@ -133,7 +137,7 @@ class SSHKit::Backend::ConnectionPool
       process_deferred_close
 
       # Periodically sweep all Caches to evict stale connections
-      sleep([idle_timeout, 5].min)
+      sleep(5)
       caches.values.each(&:evict)
     end
   end
