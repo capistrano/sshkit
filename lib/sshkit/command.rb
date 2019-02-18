@@ -1,5 +1,6 @@
 require 'digest/sha1'
 require 'securerandom'
+require 'shellwords'
 
 # @author Lee Hambley
 module SSHKit
@@ -145,7 +146,7 @@ module SSHKit
 
     def within(&_block)
       return yield unless options[:in]
-      sprintf("cd #{options[:in]} && %s", yield)
+      "cd #{options[:in].shellescape} && #{yield}"
     end
 
     def environment_hash
@@ -155,8 +156,7 @@ module SSHKit
     def environment_string
       environment_hash.collect do |key,value|
         key_string = key.is_a?(Symbol) ? key.to_s.upcase : key.to_s
-        escaped_value = value.to_s.gsub(/"/, '\"')
-        %{#{key_string}="#{escaped_value}"}
+        "#{key_string}=#{value.to_s.shellescape}"
       end.join(' ')
     end
 
@@ -167,22 +167,22 @@ module SSHKit
 
     def user(&_block)
       return yield unless options[:user]
-      "sudo -u #{options[:user]} #{environment_string + " " unless environment_string.empty?}-- sh -c '#{yield}'"
+      "sudo -u #{options[:user].to_s.shellescape} #{environment_string + " " unless environment_string.empty?}-- sh -c #{yield.shellescape}"
     end
 
     def in_background(&_block)
       return yield unless options[:run_in_background]
-      sprintf("( nohup %s > /dev/null & )", yield)
+      "( nohup #{yield} > /dev/null & )"
     end
 
     def umask(&_block)
       return yield unless SSHKit.config.umask
-      sprintf("umask #{SSHKit.config.umask} && %s", yield)
+      "umask #{SSHKit.config.umask} && #{yield}"
     end
 
     def group(&_block)
       return yield unless options[:group]
-      %Q(sg #{options[:group]} -c "#{yield}")
+      "sg #{options[:group].to_s.shellescape} -c #{yield.shellescape}"
       # We could also use the so-called heredoc format perhaps:
       #"newgrp #{options[:group]} <<EOC \\\"%s\\\" EOC" % %Q{#{yield}}
     end
@@ -213,7 +213,9 @@ module SSHKit
 
     def to_s
       if should_map?
-        [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+        arguments = Array(args)
+        arguments = (arguments.any? ? arguments.shelljoin : [])
+        [SSHKit.config.command_map[command.to_sym], *arguments].join(" ")
       else
         command.to_s
       end

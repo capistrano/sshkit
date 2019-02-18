@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#451](https://github.com/capistrano/sshkit/pull/451): support commands/users/groups/directories with spaces or other shell characters - [@grosser](https://github.com/grosser)
 
 ## [1.18.2][] (2019-02-03)
 
