@@ -145,7 +145,7 @@ module SSHKit
 
     def within(&_block)
       return yield unless options[:in]
-      sprintf("cd #{options[:in]} && %s", yield)
+      "cd #{options[:in]} && #{yield}"
     end
 
     def environment_hash
@@ -172,12 +172,12 @@ module SSHKit
 
     def in_background(&_block)
       return yield unless options[:run_in_background]
-      sprintf("( nohup %s > /dev/null & )", yield)
+      "( nohup #{yield} > /dev/null & )"
     end
 
     def umask(&_block)
       return yield unless SSHKit.config.umask
-      sprintf("umask #{SSHKit.config.umask} && %s", yield)
+      "umask #{SSHKit.config.umask} && #{yield}"
     end
 
     def group(&_block)
