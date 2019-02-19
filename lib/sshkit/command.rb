@@ -1,5 +1,6 @@
 require 'digest/sha1'
 require 'securerandom'
+require 'shellwords'
 
 # @author Lee Hambley
 module SSHKit
@@ -142,7 +143,7 @@ module SSHKit
 
     def within(&_block)
       return yield unless options[:in]
-      "cd #{options[:in]} && #{yield}"
+      "cd #{options[:in].shellescape} && #{yield}"
     end
 
     def environment_hash
@@ -164,7 +165,7 @@ module SSHKit
 
     def user(&_block)
       return yield unless options[:user]
-      "sudo -u #{options[:user]} #{environment_string + " " unless environment_string.empty?}-- sh -c '#{yield}'"
+      "sudo -u #{options[:user].to_s.shellescape} #{environment_string + " " unless environment_string.empty?}-- sh -c #{yield.shellescape}"
     end
 
     def in_background(&_block)
@@ -179,7 +180,7 @@ module SSHKit
 
     def group(&_block)
       return yield unless options[:group]
-      %Q(sg #{options[:group]} -c "#{yield}")
+      "sg #{options[:group].to_s.shellescape} -c #{yield.shellescape}"
       # We could also use the so-called heredoc format perhaps:
       #"newgrp #{options[:group]} <<EOC \\\"%s\\\" EOC" % %Q{#{yield}}
     end
