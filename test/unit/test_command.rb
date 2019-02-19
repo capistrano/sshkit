@@ -51,13 +51,13 @@ module SSHKit
     def test_double_quotes_are_escaped_in_env
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {foo: 'asdf"hjkl'})
-      assert_equal %{( export FOO="asdf\\\"hjkl" ; /usr/bin/env rails server )}, c.to_command
+      assert_equal %{( export FOO="asdf\\"hjkl" ; /usr/bin/env rails server )}, c.to_command
     end
 
     def test_percentage_symbol_handled_in_env
       SSHKit.config = nil
       c = Command.new(:rails, 'server', env: {foo: 'asdf%hjkl'}, user: "anotheruser")
-      assert_equal %{( export FOO="asdf%hjkl" ; sudo -u anotheruser FOO=\"asdf%hjkl\" -- sh -c '/usr/bin/env rails server' )}, c.to_command
+      assert_equal %{( export FOO="asdf%hjkl" ; sudo -u anotheruser FOO=\"asdf%hjkl\" -- sh -c /usr/bin/env\\ rails\\ server )}, c.to_command
     end
 
     def test_including_the_env_doesnt_addressively_escape
@@ -84,6 +84,11 @@ module SSHKit
       assert_equal "cd /opt/sites && /usr/bin/env ls -l", c.to_command
     end
 
+    def test_working_in_a_given_weird_directory
+      c = Command.new(:ls, '-l', in: "/opt/sites and stuff")
+      assert_equal "cd /opt/sites\\ and\\ stuff && /usr/bin/env ls -l", c.to_command
+    end
+
     def test_working_in_a_given_directory_with_env
       c = Command.new(:ls, '-l', in: "/opt/sites", env: {a: :b})
       assert_equal %{cd /opt/sites && ( export A="b" ; /usr/bin/env ls -l )}, c.to_command
@@ -97,17 +102,27 @@ module SSHKit
 
     def test_working_as_a_given_user
       c = Command.new(:whoami, user: :anotheruser)
-      assert_equal "sudo -u anotheruser -- sh -c '/usr/bin/env whoami'", c.to_command
+      assert_equal "sudo -u anotheruser -- sh -c /usr/bin/env\\ whoami", c.to_command
+    end
+
+    def test_working_as_a_given_weird_user
+      c = Command.new(:whoami, user: "mr space |")
+      assert_equal "sudo -u mr\\ space\\ \\| -- sh -c /usr/bin/env\\ whoami", c.to_command
     end
 
     def test_working_as_a_given_group
       c = Command.new(:whoami, group: :devvers)
-      assert_equal 'sg devvers -c "/usr/bin/env whoami"', c.to_command
+      assert_equal 'sg devvers -c /usr/bin/env\\ whoami', c.to_command
+    end
+
+    def test_working_as_a_given_weird_group
+      c = Command.new(:whoami, group: "space | group")
+      assert_equal "sg space\\ \\|\\ group -c /usr/bin/env\\ whoami", c.to_command
     end
 
     def test_working_as_a_given_user_and_group
       c = Command.new(:whoami, user: :anotheruser, group: :devvers)
-      assert_equal %Q(sudo -u anotheruser -- sh -c 'sg devvers -c "/usr/bin/env whoami"'), c.to_command
+      assert_equal %Q(sudo -u anotheruser -- sh -c sg\\ devvers\\ -c\\ /usr/bin/env\\\\\\ whoami), c.to_command
     end
 
     def test_umask
@@ -125,13 +140,13 @@ module SSHKit
     def test_umask_with_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', in: '/var', user: 'alice')
-      assert_equal "cd /var && umask 007 && sudo -u alice -- sh -c '/usr/bin/env touch somefile'", c.to_command
+      assert_equal "cd /var && umask 007 && sudo -u alice -- sh -c /usr/bin/env\\ touch\\ somefile", c.to_command
     end
 
     def test_umask_with_env_and_working_directory_and_user
       SSHKit.config.umask = '007'
       c = Command.new(:touch, 'somefile', user: 'bob', env: {a: 'b'}, in: '/var')
-      assert_equal %{cd /var && umask 007 && ( export A="b" ; sudo -u bob A="b" -- sh -c '/usr/bin/env touch somefile' )}, c.to_command
+      assert_equal %{cd /var && umask 007 && ( export A="b" ; sudo -u bob A="b" -- sh -c /usr/bin/env\\ touch\\ somefile )}, c.to_command
     end
 
     def test_verbosity_defaults_to_logger_info
