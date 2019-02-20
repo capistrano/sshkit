@@ -162,13 +162,15 @@ module SSHKit
     end
 
     def with(&_block)
-      return yield unless environment_hash.any?
-      "( export #{environment_string} ; #{yield} )"
+      env_string = environment_string
+      return yield if env_string.empty?
+      "( export #{env_string} ; #{yield} )"
     end
 
     def user(&_block)
       return yield unless options[:user]
-      "sudo -u #{options[:user].to_s.shellescape} #{environment_string + " " unless environment_string.empty?}-- sh -c #{yield.shellescape}"
+      env_string = environment_string
+      "sudo -u #{options[:user].to_s.shellescape} #{env_string + " " unless env_string.empty?}-- sh -c #{yield.shellescape}"
     end
 
     def in_background(&_block)

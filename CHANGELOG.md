@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#453](https://github.com/capistrano/sshkit/pull/453): quotes/special characters no loner break commands when using user/group/directory - [@grosser](https://github.com/grosser)
 
 ## [1.18.2][] (2019-02-03)
 
