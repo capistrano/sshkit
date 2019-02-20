@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module SSHKit
 
   module Backend
@@ -81,12 +83,12 @@ module SSHKit
       def within(directory, &_block)
         (@pwd ||= []).push directory.to_s
         execute <<-EOTEST, verbosity: Logger::DEBUG
-          if test ! -d #{File.join(@pwd)}
-            then echo "Directory does not exist '#{File.join(@pwd)}'" 1>&2
+          if test ! -d #{File.join(@pwd).shellescape}
+            then echo "Directory does not exist '#{File.join(@pwd).shellescape}'" 1>&2
             false
           fi
-          EOTEST
-          yield
+        EOTEST
+        yield
       ensure
         @pwd.pop
       end
@@ -108,8 +110,8 @@ module SSHKit
           @group = nil
         end
         execute <<-EOTEST, verbosity: Logger::DEBUG
-          if ! sudo -u #{@user} whoami > /dev/null
-            then echo "You cannot switch to user '#{@user}' using sudo, please check the sudoers file" 1>&2
+          if ! sudo -u #{@user.to_s.shellescape} whoami > /dev/null
+            then echo "You cannot switch to user '#{@user.to_s.shellescape}' using sudo, please check the sudoers file" 1>&2
             false
           fi
         EOTEST
