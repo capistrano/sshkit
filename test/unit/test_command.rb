@@ -245,5 +245,10 @@ module SSHKit
       assert_equal "whoami exit status: 1\nwhoami stdout: Nothing written\nwhoami stderr: Nothing written\n", error.message
     end
 
+    def test_shares_same_uuid_before_and_after_redaction
+      command = Command.new(:whoami)
+      command_with_redaction = command.with_redaction
+      assert_equal command.uuid, command_with_redaction.uuid, "UUID should be stable before and after redaction"
+    end
   end
 end
