@@ -79,10 +79,9 @@ module SSHKit
 
       # Note that this pool must be explicitly closed before Ruby exits to
       # ensure the underlying IO objects are properly cleaned up. We register an
-      # at_exit handler to do this automatically, as long as Ruby is exiting
-      # cleanly (i.e. without an exception).
+      # at_exit handler to do this automatically.
       @pool = SSHKit::Backend::ConnectionPool.new
-      at_exit { @pool.close_connections if @pool && !$ERROR_INFO }
+      at_exit { @pool.close_connections if @pool }
 
       class << self
         attr_accessor :pool
