@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+* [#457](https://github.com/capistrano/sshkit/pull/457): https://github.com/capistrano/sshkit/pull/457 - [@eatwithforks](https://github.com/eatwithforks)
 * [#455](https://github.com/capistrano/sshkit/pull/455): Ensure UUID of commands are stable in logging - [@lazyatom](https://github.com/lazyatom)
 
 ## [1.18.2][] (2019-02-03)
