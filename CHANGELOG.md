@@ -6,7 +6,8 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
-  * [#453](https://github.com/capistrano/sshkit/pull/453): quotes/special characters no loner break commands when using user/group/directory - [@grosser](https://github.com/grosser)
+  * [#455](https://github.com/capistrano/sshkit/pull/455): Ensure UUID of commands are stable in logging - [@lazyatom](https://github.com/lazyatom)
+  * [#453](https://github.com/capistrano/sshkit/pull/453): `as` and `within` now properly escape their user/group/path arguments, and the command nested within an `as` block is now properly escaped before passing to `sh -c`. In the unlikely case that you were manually escaping commands passed to SSHKit as a workaround, you will no longer need to do this. See [#458](https://github.com/capistrano/sshkit/issues/458) for examples of what has been fixed. - [@grosser](https://github.com/grosser)
 
 ## [1.18.2][] (2019-02-03)
 
