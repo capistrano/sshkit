@@ -10,7 +10,7 @@ module SSHKit
 
     Failed = Class.new(SSHKit::StandardError)
 
-    attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr
+    attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr, :uuid
 
     # Initialize a new Command object
     #
@@ -26,6 +26,7 @@ module SSHKit
       @args    = args
       @options.symbolize_keys!
       @stdout, @stderr, @full_stdout, @full_stderr = String.new, String.new, String.new, String.new
+      @uuid = Digest::SHA1.hexdigest(SecureRandom.random_bytes(10))[0..7]
     end
 
     def complete?
@@ -40,10 +41,6 @@ module SSHKit
     def started=(new_started)
       @started_at = Time.now
       @started = new_started
-    end
-
-    def uuid
-      @uuid ||= Digest::SHA1.hexdigest(SecureRandom.random_bytes(10))[0..7]
     end
 
     def success?
