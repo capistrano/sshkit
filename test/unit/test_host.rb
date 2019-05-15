@@ -56,6 +56,11 @@ module SSHKit
       assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
     end
 
+    def test_does_not_confuse_ipv6_hosts_without_port_specification
+      h = Host.new '[2001:db8:85a3:8d3:1319:8a2e:370:7348]'
+      assert_equal '2001:db8:85a3:8d3:1319:8a2e:370:7348', h.hostname
+    end
+
     def testing_host_casting_to_a_string
       assert_equal "example.com", Host.new('user@example.com:1234').to_s
     end
