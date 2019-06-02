@@ -151,18 +151,20 @@ module SSHKit
   # @private
   # :nodoc:
   class IPv6HostWithPortParser < SimpleHostParser
+    IPV6_REGEX = /\[([a-fA-F0-9:]+)\](?:\:(\d+))?/
 
     def self.suitable?(host_string)
-      host_string.match(/[a-fA-F0-9:]+:\d+/)
+      host_string.match(IPV6_REGEX)
     end
 
     def port
-      @host_string.split(':').last.to_i
+      prt = @host_string.match(IPV6_REGEX)[2]
+      prt = prt.to_i unless prt.nil?
+      prt
     end
 
     def hostname
-      @host_string.gsub!(/\[|\]/, '')
-      @host_string.split(':')[0..-2].join(':')
+      @host_string.match(IPV6_REGEX)[1]
     end
 
   end
