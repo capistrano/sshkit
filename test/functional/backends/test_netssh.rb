@@ -38,7 +38,7 @@ module SSHKit
           "Command: /usr/bin/env ls -l\n",
           "Command: if test ! -d /tmp; then echo \"Directory does not exist '/tmp'\" 1>&2; false; fi\n",
           "Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi\n",
-          "Command: cd /tmp && ( export RAILS_ENV=\"production\" ; sudo -u root RAILS_ENV=\"production\" -- sh -c '/usr/bin/env touch restart.txt' )\n"
+          "Command: cd /tmp && ( export RAILS_ENV=\"production\" ; sudo -u root RAILS_ENV=\"production\" -- sh -c /usr/bin/env\\ touch\\ restart.txt )\n"
         ], command_lines
       end
 
@@ -82,7 +82,7 @@ module SSHKit
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
           "Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi\n",
-          "Command: sudo -u root -- sh -c 'sg admin -c \"/usr/bin/env touch restart.txt\"'\n"
+          "Command: sudo -u root -- sh -c sg\\ admin\\ -c\\ /usr/bin/env\\\\\\ touch\\\\\\ restart.txt\n"
         ], command_lines
       end
 
@@ -96,21 +96,18 @@ module SSHKit
       end
 
       def test_ssh_option_merge
-        verify_host_opt = if Net::SSH::Version::MAJOR >= 5
-                            { verify_host_key: :always }
-                          else
-                            { paranoid: true }
-                          end
-        a_host.ssh_options = verify_host_opt
+        keepalive_opt = { keepalive: true }
+        test_host = a_host.dup
+        test_host.ssh_options = keepalive_opt
         host_ssh_options = {}
         SSHKit::Backend::Netssh.config.ssh_options = { forward_agent: false }
-        Netssh.new(a_host) do |host|
+        Netssh.new(test_host) do |host|
           capture(:uname)
           host_ssh_options = host.ssh_options
         end.run
-        assert_equal [:forward_agent, *verify_host_opt.keys, :known_hosts, :logger, :password_prompt].sort, host_ssh_options.keys.sort
+        assert_equal [:forward_agent, *keepalive_opt.keys, :known_hosts, :logger, :password_prompt].sort, host_ssh_options.keys.sort
         assert_equal false, host_ssh_options[:forward_agent]
-        assert_equal verify_host_opt.values.first, host_ssh_options[verify_host_opt.keys.first]
+        assert_equal keepalive_opt.values.first, host_ssh_options[keepalive_opt.keys.first]
         assert_instance_of SSHKit::Backend::Netssh::KnownHosts, host_ssh_options[:known_hosts]
       end
 

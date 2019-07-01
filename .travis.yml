@@ -6,6 +6,9 @@ rvm:
   - 2.2
   - 2.1
   - 2.0
+branches:
+  only:
+  - master
 matrix:
   include:
     # Run Danger only once, on 2.5
