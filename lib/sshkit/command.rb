@@ -143,7 +143,7 @@ module SSHKit
 
     def within(&_block)
       return yield unless options[:in]
-      "cd #{options[:in].shellescape} && #{yield}"
+      "cd #{self.class.shellescape_except_tilde(options[:in])} && #{yield}"
     end
 
     def environment_hash
@@ -217,6 +217,11 @@ module SSHKit
       else
         command.to_s
       end
+    end
+
+    # allow using home directory but escape everything else like spaces etc
+    def self.shellescape_except_tilde(file)
+      file.shellescape.gsub("\\~", "~")
     end
 
     private

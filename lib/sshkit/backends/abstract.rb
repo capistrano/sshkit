@@ -82,9 +82,10 @@ module SSHKit
 
       def within(directory, &_block)
         (@pwd ||= []).push directory.to_s
+        escaped = Command.shellescape_except_tilde(pwd_path)
         execute <<-EOTEST, verbosity: Logger::DEBUG
-          if test ! -d #{File.join(@pwd).shellescape}
-            then echo "Directory does not exist '#{File.join(@pwd).shellescape}'" 1>&2
+          if test ! -d #{escaped}
+            then echo "Directory does not exist '#{escaped}'" 1>&2
             false
           fi
         EOTEST
