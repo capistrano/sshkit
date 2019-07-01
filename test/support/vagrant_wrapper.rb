@@ -46,10 +46,19 @@ class VagrantWrapper
           user: vm['user'] || 'vagrant',
           hostname: vm['hostname'] || 'localhost',
           port: vm['port'] || '22',
-          password: vm['password'] || 'vagrant'
+          password: vm['password'] || 'vagrant',
+          ssh_options: host_verify_options
       }
 
       SSHKit::Host.new(host_options)
+    end
+
+    def host_verify_options
+      if Net::SSH::Version::MAJOR >= 5
+        { verify_host_key: :never }
+      else
+        { paranoid: false }
+      end
     end
   end
 end
