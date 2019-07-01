@@ -6,6 +6,9 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+
+## [1.19.0][] (2019-06-30)
+
   * [#455](https://github.com/capistrano/sshkit/pull/455): Ensure UUID of commands are stable in logging - [@lazyatom](https://github.com/lazyatom)
   * [#453](https://github.com/capistrano/sshkit/pull/453): `as` and `within` now properly escape their user/group/path arguments, and the command nested within an `as` block is now properly escaped before passing to `sh -c`. In the unlikely case that you were manually escaping commands passed to SSHKit as a workaround, you will no longer need to do this. See [#458](https://github.com/capistrano/sshkit/issues/458) for examples of what has been fixed. - [@grosser](https://github.com/grosser)
   * [#460](https://github.com/capistrano/sshkit/pull/460): Handle IPv6 addresses without port - [@will-in-wi](https://github.com/will-in-wi)
@@ -761,7 +764,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.18.2...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.19.0...HEAD
+[1.19.0]: https://github.com/capistrano/sshkit/compare/v1.18.2...v1.19.0
 [1.18.2]: https://github.com/capistrano/sshkit/compare/v1.18.1...v1.18.2
 [1.18.1]: https://github.com/capistrano/sshkit/compare/v1.18.0...v1.18.1
 [1.18.0]: https://github.com/capistrano/sshkit/compare/v1.17.0...v1.18.0
