@@ -99,6 +99,18 @@ module SSHKit
         assert_equal '/usr/bin/env cat file', backend.executed_command.to_command
       end
 
+      def test_within_home
+        backend = ExampleBackend.new do
+          within '~/foo' do
+            execute :cat, 'file', :strip => false
+          end
+        end
+
+        backend.run
+
+        assert_equal 'cd ~/foo && /usr/bin/env cat file', backend.executed_command.to_command
+      end
+
       def test_background_logs_deprecation_warnings
         deprecation_out = ''
         SSHKit.config.deprecation_output = deprecation_out

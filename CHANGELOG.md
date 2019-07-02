@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#465](https://github.com/capistrano/sshkit/pull/456): Fix withing/in escaping ~ - [@grosser](https://github.com/grosser)
 
 ## [1.19.0][] (2019-06-30)
 

@@ -84,6 +84,11 @@ module SSHKit
       assert_equal "cd /opt/sites && /usr/bin/env ls -l", c.to_command
     end
 
+    def test_working_in_home_directory
+      c = Command.new(:ls, '-l', in: "~/sites")
+      assert_equal "cd ~/sites && /usr/bin/env ls -l", c.to_command
+    end
+
     def test_working_in_a_given_weird_directory
       c = Command.new(:ls, '-l', in: "/opt/sites and stuff")
       assert_equal "cd /opt/sites\\ and\\ stuff && /usr/bin/env ls -l", c.to_command
