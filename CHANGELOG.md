@@ -6,7 +6,10 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
-  * [#465](https://github.com/capistrano/sshkit/pull/456): Fix withing/in escaping ~ - [@grosser](https://github.com/grosser)
+
+## [1.19.1][] (2019-07-02)
+
+  * [#465](https://github.com/capistrano/sshkit/pull/456): Fix a regression in 1.19.0 that prevented `~` from being used in Capistrano paths, e.g. `:deploy_to`, etc. - [@grosser](https://github.com/grosser)
 
 ## [1.19.0][] (2019-06-30)
 
@@ -765,7 +768,8 @@ version `0.0.5`.
 
 First release.
 
-[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.19.0...HEAD
+[Unreleased]: https://github.com/capistrano/sshkit/compare/v1.19.1...HEAD
+[1.19.1]: https://github.com/capistrano/sshkit/compare/v1.19.0...v1.19.1
 [1.19.0]: https://github.com/capistrano/sshkit/compare/v1.18.2...v1.19.0
 [1.18.2]: https://github.com/capistrano/sshkit/compare/v1.18.1...v1.18.2
 [1.18.1]: https://github.com/capistrano/sshkit/compare/v1.18.0...v1.18.1
