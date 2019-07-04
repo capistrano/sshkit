@@ -6,29 +6,31 @@ more servers.
 [![Gem Version](https://badge.fury.io/rb/sshkit.svg)](https://rubygems.org/gems/sshkit)
 [![Build Status](https://travis-ci.org/capistrano/sshkit.svg?branch=master)](https://travis-ci.org/capistrano/sshkit)
 
-## How might it work?
+## Example
 
-The typical use-case looks something like this:
+ - Connect to 2 servers
+ - Execute commands as `deploy` user with `RAILS_ENV=production`
+ - Execute commands in serial (default is `:parallel`)
 
 ```ruby
 require 'sshkit'
 require 'sshkit/dsl'
 include SSHKit::DSL
 
-on %w{1.example.com 2.example.com}, in: :sequence, wait: 5 do |host|
+on ["1.example.com", "2.example.com"], in: :sequence do |host|
+  puts "Now executing on #{host}"
   within "/opt/sites/example.com" do
     as :deploy  do
-      with rails_env: :production do
-        rake   "assets:precompile"
-        runner "S3::Sync.notify"
-        execute :node, "socket_server.js"
+      with RAILS_ENV: 'production' do
+        execute :rake, "assets:precompile"
+        execute :rails, "runner", "S3::Sync.notify"
       end
     end
   end
 end
 ```
 
-You can find many other examples of how to use SSHKit over in [EXAMPLES.md](EXAMPLES.md).
+Many other examples are in [EXAMPLES.md](EXAMPLES.md).
 
 ## Basic usage
 
