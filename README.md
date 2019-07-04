@@ -567,6 +567,20 @@ In order to do special gymnastics with SSH, tunneling, aliasing, complex options
 
 These system level files are the preferred way of setting up tunneling and proxies because the system implementations of these things are faster and better than the Ruby implementations you would get if you were to configure them through Net::SSH. In cases where it's not possible (Windows?), it should be possible to make use of the Net::SSH APIs to setup tunnels and proxy commands before deferring control to Capistrano/SSHKit..
 
+## Proxying
+
+To connect to the target host via a jump/bastion host, use a `Net::SSH::Proxy::Jump`
+
+```ruby
+host = SSHKit::Host.new(
+  hostname: 'target.host.com',
+  ssh_options: { proxy: Net::SSH::Proxy::Jump.new("proxy.bar.com") }
+)
+on [host] do
+  execute :echo, '1'
+end
+```
+
 ## SSHKit Related Blog Posts
 
 [SSHKit Gem Basics](http://www.rubyplus.com/articles/591)
