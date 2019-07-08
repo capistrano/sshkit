@@ -39,7 +39,7 @@ You can pass one or more hosts as parameters; this runs commands via SSH. Altern
 pass `:local` to run commands locally. By default SSKit will run the commands on all hosts in
 parallel.
 
-#### Running commands
+### Running commands
 
 All backends support the `execute(*args)`, `test(*args)` & `capture(*args)` methods
 for executing a command. You can call any of these methods in the context of an `on()`
@@ -65,7 +65,7 @@ end
 By default the `capture` methods strips whitespace. If you need to preserve whitespace
 you can pass the `strip: false` option: `capture(:ls, '-l', strip: false)`
 
-#### Transferring files
+### Transferring files
 
 All backends also support the `upload!` and `download!` methods for transferring files.
 For the remote backend, the file is transferred with scp.
@@ -77,7 +77,7 @@ on '1.example.com' do
 end
 ```
 
-#### Users, working directories, environment variables and umask
+### Users, working directories, environment variables and umask
 
 When running commands, you can tell SSHKit to set up the context for those
 commands using the following methods:
@@ -114,6 +114,11 @@ the raised error.
 
 Helpers such as `runner()` and `rake()` which expand to `execute(:rails, "runner", ...)` and
 `execute(:rake, ...)` are convenience helpers for Ruby, and Rails based apps.
+
+### Verbosity / Silence
+
+ - raise verbosity of a command: `execute "echo DEAD", verbosity: :ERROR`
+ - hide a command from output: `execute "echo HIDDEN", verbosity: :DEBUG`
 
 ## Parallel
 
