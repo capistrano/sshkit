@@ -6,6 +6,7 @@ appear at the top.
 ## [Unreleased][]
 
   * Your contribution here!
+  * [#468](https://github.com/capistrano/sshkit/pull/468): Make `upload!` take a `:verbosity` option like `exec` does - [@grosser](https://github.com/grosser)
 
 ## [1.19.1][] (2019-07-02)
 

@@ -54,6 +54,13 @@ module SSHKit
         end
       end
 
+      def test_transfer_summarizer_uses_verbosity
+        netssh = Netssh.new(Host.new('fake'))
+        summarizer = netssh.send(:transfer_summarizer, 'Transferring', verbosity: :ERROR)
+        netssh.expects(:error).with { |msg| msg.include?('Transferring afile 15.0%') }
+        summarizer.call(nil,'afile',15,100)
+      end
+
       if Net::SSH::Version::CURRENT >= Net::SSH::Version[3, 1, 0]
         def test_known_hosts_for_when_all_hosts_are_recognized
           perform_known_hosts_test('github', 'github.com')

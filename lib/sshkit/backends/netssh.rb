@@ -109,7 +109,8 @@ module SSHKit
             message = "#{action} #{name} #{percentage.round(2)}%"
             percentage_r = (percentage / log_percent).truncate * log_percent
             if percentage_r > 0 && (last_name != name || last_percentage != percentage_r)
-              info message
+              verbosity = (options[:verbosity] || :INFO).downcase # TODO: ideally reuse command.rb logic
+              public_send verbosity, message
               last_name = name
               last_percentage = percentage_r
             else
