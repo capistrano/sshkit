@@ -7,6 +7,7 @@ appear at the top.
 
   * Your contribution here!
   * [#468](https://github.com/capistrano/sshkit/pull/468): Make `upload!` take a `:verbosity` option like `exec` does - [@grosser](https://github.com/grosser)
+  * [#469](https://github.com/capistrano/sshkit/pull/469): Fix a regression in 1.19.0 that prevented `$HOME` from being used in Capistrano paths, e.g. `:deploy_to`, etc.  - [@Madogiwa0124](https://github.com/Madogiwa0124)
 
 ## [1.19.1][] (2019-07-02)
 

@@ -221,7 +221,7 @@ module SSHKit
 
     # allow using home directory but escape everything else like spaces etc
     def self.shellescape_except_tilde(file)
-      file.shellescape.gsub("\\~", "~")
+      file.shellescape.gsub("\\~", "~").gsub("\\$HOME", "$HOME")
     end
 
     private
