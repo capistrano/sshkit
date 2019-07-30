@@ -111,16 +111,6 @@ module SSHKit
           @user  = who
           @group = nil
         end
-        puts who
-        puts @skip_whoami
-        if !@skip_whoami
-          execute <<-EOTEST, verbosity: Logger::DEBUG
-            if ! sudo -u #{@user.to_s.shellescape} whoami > /dev/null
-              then echo "You cannot switch to user '#{@user.to_s.shellescape}' using sudo, please check the sudoers file" 1>&2
-              false
-            fi
-          EOTEST
-        end      
         yield
       ensure
         remove_instance_variable(:@user)
