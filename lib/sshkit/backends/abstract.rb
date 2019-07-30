@@ -111,6 +111,8 @@ module SSHKit
           @user  = who
           @group = nil
         end
+        puts who
+        puts @skip_whoami
         if !@skip_whoami
           execute <<-EOTEST, verbosity: Logger::DEBUG
             if ! sudo -u #{@user.to_s.shellescape} whoami > /dev/null
