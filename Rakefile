@@ -30,10 +30,7 @@ RuboCop::RakeTask.new(:lint) do |task|
   task.options = ['--lint']
 end
 
-task "release:rubygem_push" do
-  # Delay loading Chandler until this point, since it requires Ruby >= 2.1,
-  # which may not be available in all environments (e.g. Travis).
-  # We assume that the person doing `rake release` has Ruby >= 2.1.
-  require "chandler/tasks"
-  Rake.application.invoke_task("chandler:push")
+Rake::Task["release"].enhance do
+  puts "Don't forget to publish the release on GitHub!"
+  system "open https://github.com/capistrano/sshkit/releases"
 end
