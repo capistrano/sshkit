@@ -9,6 +9,9 @@ Gem::Specification.new do |gem|
   gem.description   = %q{A comprehensive toolkit for remotely running commands in a structured manner on groups of servers.}
   gem.homepage      = "http://github.com/capistrano/sshkit"
   gem.license       = "MIT"
+  gem.metadata      = {
+    "changelog_uri" => "https://github.com/capistrano/sshkit/releases"
+  }
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
