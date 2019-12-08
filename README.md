@@ -590,8 +590,4 @@ end
 
 ## SSHKit Related Blog Posts
 
-[SSHKit Gem Basics](http://www.rubyplus.com/articles/591)
-
-[SSHKit Gem Part 2](http://www.rubyplus.com/articles/601)
-
 [Embedded Capistrano with SSHKit](http://ryandoyle.net/posts/embedded-capistrano-with-sshkit/)
