@@ -7,4 +7,3 @@ include SSHKit::DSL
 on [ENV.fetch("HOST")] do
   execute "echo hello"
 end
-
