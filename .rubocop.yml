@@ -6,10 +6,10 @@ AllCops:
   TargetRubyVersion: 2.0
 
 Lint/AmbiguousBlockAssociation:
-  Enabled:
-    false
+  Enabled: false
 Metrics/BlockLength:
   Exclude:
+    - "sshkit.gemspec"
     - "spec/**/*"
     - "lib/**/*.rake"
 Style/BarePercentLiterals:
