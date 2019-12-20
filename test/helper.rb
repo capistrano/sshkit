@@ -3,7 +3,7 @@ require 'bundler/setup'
 require 'tempfile'
 require 'minitest/autorun'
 require 'minitest/reporters'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'stringio'
 require 'json'
 
