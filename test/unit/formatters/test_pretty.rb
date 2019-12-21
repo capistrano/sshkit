@@ -115,7 +115,7 @@ module SSHKit
 
     def test_can_write_to_output_which_just_supports_append
       # Note output doesn't have to be an IO, it only needs to support <<
-      output = stub(:<<)
+      output = stub(:<< => nil)
       pretty = SSHKit::Formatter::Pretty.new(output)
       simulate_command_lifecycle(pretty)
     end
