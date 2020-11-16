@@ -171,6 +171,7 @@ individual hosts:
 SSHKit::Backend::Netssh.configure do |ssh|
   ssh.connection_timeout = 30
   ssh.ssh_options = {
+    user: 'adifferentuser',
     keys: %w(/home/user/.ssh/id_rsa),
     forward_agent: false,
     auth_methods: %w(publickey password)
