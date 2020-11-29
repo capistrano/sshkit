@@ -212,6 +212,20 @@ module SSHKit
         end.run
         assert_equal("Enter Data\nCaptured SOME DATA", captured_command_result)
       end
+
+      def test_connection_pool_keepalive
+        # ensure we enable connection pool
+        SSHKit::Backend::Netssh.pool.idle_timeout = 10
+        Netssh.new(a_host) do |_host|
+          test :false
+        end.run
+        sleep 2.5
+        captured_command_result = nil
+        Netssh.new(a_host) do |_host|
+          captured_command_result = capture(:echo, 'some_value')
+        end.run
+        assert_equal "some_value", captured_command_result
+      end
     end
 
   end
