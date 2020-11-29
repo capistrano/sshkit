@@ -36,12 +36,12 @@ class SSHKit::Backend::ConnectionPool::Cache
   def evict
     # Peek at the first connection to see if it is still fresh. If so, we can
     # return right away without needing to use `synchronize`.
-    first_expires_at, _connection = connections.first
-    return if first_expires_at.nil? || fresh?(first_expires_at)
+    first_expires_at, first_conn = connections.first
+    return if (first_expires_at.nil? || fresh?(first_expires_at)) && !closed?(first_conn)
 
     connections.synchronize do
-      fresh, stale = connections.partition do |expires_at, _|
-        fresh?(expires_at)
+      fresh, stale = connections.partition do |expires_at, conn|
+        fresh?(expires_at) && !closed?(conn)
       end
       connections.replace(fresh)
       stale.each { |_, conn| closer.call(conn) }
@@ -71,6 +71,13 @@ class SSHKit::Backend::ConnectionPool::Cache
   end
 
   def closed?(conn)
-    conn.respond_to?(:closed?) && conn.closed?
+    return true if conn.respond_to?(:closed?) && conn.closed?
+    # test if connection is alive
+    conn.process(0) if conn.respond_to?(:process)
+    return false
+  rescue IOError => e
+    # connection is closed by server
+    return true if e.message == 'closed stream'
+    raise
   end
 end
