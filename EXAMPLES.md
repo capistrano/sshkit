@@ -339,6 +339,15 @@ end
 This will resolve the `example.com` hostname into a `SSHKit::Host` object, and
 try to pull up the correct configuration for it.
 
+## Connect to a host on a port different than 22
+
+If your ssh server is running on a port different than 22, you can change this is
+shown:
+
+```ruby
+on('example.com', {port: 1234}) do
+end
+```
 
 ## Run a command without it being command-mapped
 
