@@ -9,3 +9,8 @@ updates:
   - dependency-name: rubocop
     versions:
     - "> 0.49.1"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule: 
+    interval: monthly
+  open-pull-requests-limit: 10
