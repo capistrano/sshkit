@@ -1,3 +1,5 @@
+require 'set'
+
 module SSHKit
   class DeprecationLogger
     def initialize(out)
