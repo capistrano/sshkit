@@ -4,7 +4,7 @@
 more servers.
 
 [![Gem Version](https://badge.fury.io/rb/sshkit.svg)](https://rubygems.org/gems/sshkit)
-[![Build Status](https://travis-ci.org/capistrano/sshkit.svg?branch=master)](https://travis-ci.org/capistrano/sshkit)
+[![Build Status](https://github.com/capistrano/sshkit/actions/workflows/ci.yml/badge.svg)](https://github.com/capistrano/sshkit/actions/workflows/ci.yml)
 
 ## Example
 
