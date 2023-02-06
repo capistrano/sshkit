@@ -3,8 +3,8 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'hashicorp/precise64'
   config.vm.provision "shell", inline: <<-SHELL
-  echo 'ClientAliveInterval 1' >> /etc/ssh/sshd_config
-  echo 'ClientAliveCountMax 1' >> /etc/ssh/sshd_config
+  echo 'ClientAliveInterval 3' >> /etc/ssh/sshd_config
+  echo 'ClientAliveCountMax 3' >> /etc/ssh/sshd_config
   service ssh restart
   SHELL
 
