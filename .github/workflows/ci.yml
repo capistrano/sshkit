@@ -1,14 +1,14 @@
 name: test on CI
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ "2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "3.0", "3.1", "3.2", "head" ]
+        ruby: ["2.3", "2.4", "2.5", "2.6", "2.7", "3.0", "3.1", "3.2", "head"]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby
@@ -18,6 +18,33 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rake test:units
+
+  test-legacy:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        ruby: ["2.0", "2.1", "2.2"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run tests
+        run: bundle exec rake test:units
+
+  test-all:
+    runs-on: ubuntu-latest
+    needs: [test, test-legacy]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
 
   rubocop:
     runs-on: ubuntu-latest
@@ -35,7 +62,21 @@ jobs:
     runs-on: macos-12
     strategy:
       matrix:
-        ruby: [ "2.0", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "3.0", "3.1", "3.2", "head" ]
+        ruby:
+          [
+            "2.0",
+            "2.1",
+            "2.2",
+            "2.3",
+            "2.4",
+            "2.5",
+            "2.6",
+            "2.7",
+            "3.0",
+            "3.1",
+            "3.2",
+            "head",
+          ]
     steps:
       - uses: actions/checkout@v3
 
@@ -58,3 +99,15 @@ jobs:
 
       - name: Run functional tests
         run: bundle exec rake test:functional
+
+  functional-all:
+    runs-on: ubuntu-latest
+    needs: [functional]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
