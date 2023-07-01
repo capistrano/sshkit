@@ -84,9 +84,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.vagrant.d/boxes
-          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          key: ${{ runner.os }}-vagrant-v2-${{ hashFiles('Vagrantfile') }}
           restore-keys: |
-            ${{ runner.os }}-vagrant-
+            ${{ runner.os }}-vagrant-v2-
 
       - name: Run vagrant up
         run: vagrant up
