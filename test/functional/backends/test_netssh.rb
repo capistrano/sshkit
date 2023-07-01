@@ -75,14 +75,14 @@ module SSHKit
 
       def test_group_netssh
         Netssh.new(a_host) do
-          as user: :root, group: :admin do
+          as user: :root, group: :root do
            execute :touch, 'restart.txt'
           end
         end.run
         command_lines = @output.lines.select { |line| line.start_with?('Command:') }
         assert_equal [
           "Command: if ! sudo -u root whoami > /dev/null; then echo \"You cannot switch to user 'root' using sudo, please check the sudoers file\" 1>&2; false; fi\n",
-          "Command: sudo -u root -- sh -c sg\\ admin\\ -c\\ /usr/bin/env\\\\\\ touch\\\\\\ restart.txt\n"
+          "Command: sudo -u root -- sh -c sg\\ root\\ -c\\ /usr/bin/env\\\\\\ touch\\\\\\ restart.txt\n"
         ], command_lines
       end
 
