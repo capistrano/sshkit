@@ -69,3 +69,59 @@ jobs:
           bundler-cache: true
       - name: Run rubocop
         run: bundle exec rake lint
+
+  functional:
+    runs-on: macos-latest
+    env:
+      VAGRANT_DISABLE_VBOXSYMLINKCREATE: "1"
+    strategy:
+      matrix:
+        ruby:
+          [
+            "2.0",
+            "2.1",
+            "2.2",
+            "2.3",
+            "2.4",
+            "2.5",
+            "2.6",
+            "2.7",
+            "3.0",
+            "3.1",
+            "3.2",
+            "head",
+          ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v3
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-v2-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-v2-
+
+      - name: Run vagrant up
+        run: vagrant up
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Run functional tests
+        run: bundle exec rake test:functional
+
+  functional-all:
+    runs-on: ubuntu-latest
+    needs: [functional]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
