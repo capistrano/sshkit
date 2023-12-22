@@ -104,7 +104,7 @@ module SSHKit
         last_percentage = nil
         proc do |_ch, name, transferred, total|
           percentage = (transferred.to_f * 100 / total.to_f)
-          unless percentage.nan?
+          unless percentage.nan? || percentage.infinite?
             message = "#{action} #{name} #{percentage.round(2)}%"
             percentage_r = (percentage / log_percent).truncate * log_percent
             if percentage_r > 0 && (last_name != name || last_percentage != percentage_r)
