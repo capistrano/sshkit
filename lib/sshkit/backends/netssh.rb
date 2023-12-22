@@ -2,7 +2,6 @@ require 'English'
 require 'strscan'
 require 'mutex_m'
 require 'net/ssh'
-require 'net/scp'
 
 module Net
   module SSH
@@ -64,16 +63,16 @@ module SSHKit
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading', options)
         remote = File.join(pwd_path, remote) unless remote.to_s.start_with?("/") || pwd_path.nil?
-        with_ssh do |ssh|
-          ssh.scp.upload!(local, remote, options, &summarizer)
+        with_transfer(summarizer) do |transfer|
+          transfer.upload!(local, remote, options)
         end
       end
 
       def download!(remote, local=nil, options = {})
         summarizer = transfer_summarizer('Downloading', options)
         remote = File.join(pwd_path, remote) unless remote.to_s.start_with?("/") || pwd_path.nil?
-        with_ssh do |ssh|
-          ssh.scp.download!(remote, local, options, &summarizer)
+        with_transfer(summarizer) do |transfer|
+          transfer.download!(remote, local, options)
         end
       end
 
@@ -183,6 +182,13 @@ module SSHKit
         )
       end
 
+      def with_transfer(summarizer)
+        require_relative "netssh/scp_transfer"
+
+        with_ssh do |ssh|
+          yield(ScpTransfer.new(ssh, summarizer))
+        end
+      end
     end
   end
 
