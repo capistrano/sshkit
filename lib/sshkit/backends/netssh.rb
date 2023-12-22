@@ -200,10 +200,17 @@ module SSHKit
       end
 
       def with_transfer(summarizer)
-        require_relative "netssh/scp_transfer"
+        transfer_method = host.transfer_method || self.class.config.transfer_method
+        transfer_class = if transfer_method == :sftp
+                           require_relative "netssh/sftp_transfer"
+                           SftpTransfer
+                         else
+                           require_relative "netssh/scp_transfer"
+                           ScpTransfer
+                         end
 
         with_ssh do |ssh|
-          yield(ScpTransfer.new(ssh, summarizer))
+          yield(transfer_class.new(ssh, summarizer))
         end
       end
     end
