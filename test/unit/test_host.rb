@@ -142,6 +142,33 @@ module SSHKit
       end
     end
 
+    def test_transfer_method_defaults_to_nil
+      host = Host.new 'example.com'
+      assert_nil host.transfer_method
+    end
+
+    def test_transfer_method_can_be_configured
+      host = Host.new 'example.com'
+
+      host.transfer_method = :scp
+      assert_equal :scp, host.transfer_method
+
+      host.transfer_method = :sftp
+      assert_equal :sftp, host.transfer_method
+
+      host.transfer_method = nil
+      assert_nil host.transfer_method
+    end
+
+    def test_transfer_method_prohibits_invalid_values
+      host = Host.new 'example.com'
+
+      error = assert_raises ArgumentError do
+        host.transfer_method = :nope
+      end
+
+      assert_match ":nope is not a valid transfer method", error.message
+    end
   end
 
 end

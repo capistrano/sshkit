@@ -13,6 +13,7 @@ module SSHKit
         backend.configure do |ssh|
           ssh.pty = true
           ssh.connection_timeout = 30
+          ssh.transfer_method = :sftp
           ssh.ssh_options = {
             keys: %w(/home/user/.ssh/id_rsa),
             forward_agent: false,
@@ -21,12 +22,23 @@ module SSHKit
         end
 
         assert_equal 30, backend.config.connection_timeout
+        assert_equal :sftp, backend.config.transfer_method
         assert_equal true, backend.config.pty
 
         assert_equal %w(/home/user/.ssh/id_rsa),  backend.config.ssh_options[:keys]
         assert_equal false,                       backend.config.ssh_options[:forward_agent]
         assert_equal %w(publickey password),      backend.config.ssh_options[:auth_methods]
         assert_instance_of backend::KnownHosts,   backend.config.ssh_options[:known_hosts]
+      end
+
+      def test_transfer_method_prohibits_invalid_values
+        error = assert_raises ArgumentError do
+          backend.configure do |ssh|
+            ssh.transfer_method = :nope
+          end
+        end
+
+        assert_match ":nope is not a valid transfer method", error.message
       end
 
       def test_netssh_ext
