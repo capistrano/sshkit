@@ -47,6 +47,16 @@ module SSHKit
         assert_match ":nope is not a valid transfer method", error.message
       end
 
+      def test_transfer_method_does_not_allow_nil
+        error = assert_raises ArgumentError do
+          backend.configure do |ssh|
+            ssh.transfer_method = nil
+          end
+        end
+
+        assert_match "nil is not a valid transfer method", error.message
+      end
+
       def test_transfer_method_defaults_to_scp
         assert_equal :scp, backend.config.transfer_method
       end

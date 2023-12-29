@@ -43,7 +43,7 @@ module SSHKit
     end
 
     def transfer_method=(method)
-      Backend::Netssh.assert_valid_transfer_method!(method)
+      Backend::Netssh.assert_valid_transfer_method!(method) unless method.nil?
 
       @transfer_method = method
     end

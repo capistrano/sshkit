@@ -23,7 +23,7 @@ module SSHKit
 
     class Netssh < Abstract
       def self.assert_valid_transfer_method!(method)
-        return if [nil, :scp, :sftp].include?(method)
+        return if [:scp, :sftp].include?(method)
 
         raise ArgumentError, "#{method.inspect} is not a valid transfer method. Supported methods are :scp, :sftp."
       end
