@@ -154,7 +154,8 @@ end
 ```
 
 In this case the `recursive: true` option mirrors the same options which are
-available to [`Net::{SCP,SFTP}`](http://net-ssh.github.io/net-scp/).
+available to [`Net::SCP`](http://net-ssh.github.io/net-scp/) and
+[`Net::SFTP`](https://github.com/net-ssh/net-sftp).
 
 ## Setting global SSH options
 
