@@ -121,9 +121,6 @@ on hosts do |host|
 end
 ```
 
-**Note:** The `upload!()` method doesn't honor the values of `as()` etc, this
-will be improved as the library matures, but we're not there yet.
-
 ## Upload a file from a stream
 
 ```ruby
@@ -147,9 +144,6 @@ end
 
 This spares one from having to figure out the correct escaping sequences for
 something like "echo(:cat, '...?...', '> /etc/sudoers.d/yolo')".
-
-**Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
-etc, this will be improved as the library matures, but we're not there yet.
 
 ## Upload a directory of files
 
