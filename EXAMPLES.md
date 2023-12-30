@@ -249,7 +249,7 @@ module SSHKit
   module Formatter
     class MyFormatter < SSHKit::Formatter::Abstract
       def write(obj)
-        case obj.is_a? SSHKit::Command
+        if obj.is_a? SSHKit::Command
           # Do something here, see the SSHKit::Command documentation
         end
       end
