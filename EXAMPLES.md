@@ -230,16 +230,16 @@ end
 
 ```ruby
 # The default format is pretty, which outputs colored text
-SSHKit.config.format = :pretty
+SSHKit.config.use_format :pretty
 
 # Text with no coloring
-SSHKit.config.format = :simpletext
+SSHKit.config.use_format :simpletext
 
 # Red / Green dots for each completed step
-SSHKit.config.format = :dot
+SSHKit.config.use_format :dot
 
 # No output
-SSHKit.config.format = :blackhole
+SSHKit.config.use_format :blackhole
 ```
 
 ## Implement a dirt-simple formatter class
@@ -258,7 +258,7 @@ module SSHKit
 end
 
 # If your formatter is defined in the SSHKit::Formatter module configure with the format option:
-SSHKit.config.format = :myformatter
+SSHKit.config.use_format :myformatter
 
 # Or configure the output directly
 SSHKit.config.output = MyFormatter.new($stdout)
