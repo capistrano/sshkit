@@ -162,6 +162,23 @@ end
 In this case the `recursive: true` option mirrors the same options which are
 available to [`Net::{SCP,SFTP}`](http://net-ssh.github.io/net-scp/).
 
+## Set the upload/download method (SCP or SFTP).
+
+SSHKit can use SCP or SFTP for file transfers. The default is SCP, but this can be changed to SFTP per host:
+
+```ruby
+host = SSHKit::Host.new('user@example.com')
+host.transfer_method = :sftp
+```
+
+or globally:
+
+```ruby
+SSHKit::Backend::Netssh.configure do |ssh|
+  ssh.transfer_method = :sftp
+end
+```
+
 ## Setting global SSH options
 
 Setting global SSH options, these will be overwritten by options set on the
