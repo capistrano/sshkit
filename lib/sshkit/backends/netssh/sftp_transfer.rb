@@ -29,7 +29,7 @@ module SSHKit
         end
 
         def on_get(download, entry, offset, data)
-          entry.size ||= download.sftp.file.open(entry.remote, &:size)
+          entry.size ||= download.sftp.file.open(entry.remote) { |file| file.stat.size }
           summarizer.call(nil, entry.remote, offset + data.bytesize, entry.size)
         end
 
