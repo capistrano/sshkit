@@ -4,12 +4,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'bento/ubuntu-22.10'
   config.vm.boot_timeout = 600 # seconds
   config.vm.provider 'virtualbox' do |vb|
-    vb.memory = 2048
+    vb.memory = 1024
     vb.cpus = 1
-
-    # https://github.com/hashicorp/vagrant/issues/11777#issuecomment-661076612
-    vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
-    vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
   end
   config.ssh.insert_key = false
   config.vm.provision "shell", inline: <<-SHELL
