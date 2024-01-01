@@ -4,7 +4,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'bento/ubuntu-22.10'
   config.vm.boot_timeout = 600 # seconds
   config.vm.provider 'virtualbox' do |vb|
-    vb.memory = 1024
+    vb.memory = 2048
     vb.cpus = 1
 
     # https://github.com/hashicorp/vagrant/issues/11777#issuecomment-661076612
