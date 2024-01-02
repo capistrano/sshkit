@@ -5,13 +5,5 @@
     "user": "vagrant",
     "password": "vagrant",
     "hostname": "localhost"
-  },
-  {
-    "name": "two",
-    "port": 3002
-  },
-  {
-    "name": "three",
-    "port": 3003
   }
 ]
