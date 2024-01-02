@@ -71,7 +71,7 @@ jobs:
         run: bundle exec rake lint
 
   functional:
-    runs-on: macos-latest
+    runs-on: macos-latest-xl
     env:
       VAGRANT_DISABLE_VBOXSYMLINKCREATE: "1"
     strategy:
