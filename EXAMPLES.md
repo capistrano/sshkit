@@ -121,9 +121,6 @@ on hosts do |host|
 end
 ```
 
-**Note:** The `upload!()` method doesn't honor the values of `as()` etc, this
-will be improved as the library matures, but we're not there yet.
-
 ## Upload a file from a stream
 
 ```ruby
@@ -148,9 +145,6 @@ end
 This spares one from having to figure out the correct escaping sequences for
 something like "echo(:cat, '...?...', '> /etc/sudoers.d/yolo')".
 
-**Note:** The `upload!()` method doesn't honor the values of `within()`, `as()`
-etc, this will be improved as the library matures, but we're not there yet.
-
 ## Upload a directory of files
 
 ```ruby
@@ -160,7 +154,8 @@ end
 ```
 
 In this case the `recursive: true` option mirrors the same options which are
-available to [`Net::{SCP,SFTP}`](http://net-ssh.github.io/net-scp/).
+available to [`Net::SCP`](https://github.com/net-ssh/net-scp) and
+[`Net::SFTP`](https://github.com/net-ssh/net-sftp).
 
 ## Set the upload/download method (SCP or SFTP).
 
@@ -252,16 +247,16 @@ end
 
 ```ruby
 # The default format is pretty, which outputs colored text
-SSHKit.config.format = :pretty
+SSHKit.config.use_format :pretty
 
 # Text with no coloring
-SSHKit.config.format = :simpletext
+SSHKit.config.use_format :simpletext
 
 # Red / Green dots for each completed step
-SSHKit.config.format = :dot
+SSHKit.config.use_format :dot
 
 # No output
-SSHKit.config.format = :blackhole
+SSHKit.config.use_format :blackhole
 ```
 
 ## Implement a dirt-simple formatter class
@@ -271,7 +266,7 @@ module SSHKit
   module Formatter
     class MyFormatter < SSHKit::Formatter::Abstract
       def write(obj)
-        case obj.is_a? SSHKit::Command
+        if obj.is_a? SSHKit::Command
           # Do something here, see the SSHKit::Command documentation
         end
       end
@@ -280,7 +275,7 @@ module SSHKit
 end
 
 # If your formatter is defined in the SSHKit::Formatter module configure with the format option:
-SSHKit.config.format = :myformatter
+SSHKit.config.use_format :myformatter
 
 # Or configure the output directly
 SSHKit.config.output = MyFormatter.new($stdout)
