@@ -7,6 +7,7 @@ module SSHKit
   class Host
 
     attr_accessor :password, :hostname, :port, :user, :ssh_options
+    attr_reader :transfer_method
 
     def key=(new_key)
       @keys = [new_key]
@@ -39,6 +40,12 @@ module SSHKit
           end
         end
       end
+    end
+
+    def transfer_method=(method)
+      Backend::Netssh.assert_valid_transfer_method!(method) unless method.nil?
+
+      @transfer_method = method
     end
 
     def local?
