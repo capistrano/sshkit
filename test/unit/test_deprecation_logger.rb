@@ -20,7 +20,7 @@ module SSHKit
 
       assert_equal(2, actual_lines.size)
       assert_equal "[Deprecated] Some message\n", actual_lines[0]
-      assert_match %r{    \(Called from .*sshkit/test/unit/test_deprecation_logger.rb:#{line_number}:in `generate_warning'\)\n}, actual_lines[1]
+      assert_match %r{    \(Called from .*sshkit/test/unit/test_deprecation_logger.rb:#{line_number}:in .*generate_warning.\)\n}, actual_lines[1]
     end
 
     def test_handles_nil_output
