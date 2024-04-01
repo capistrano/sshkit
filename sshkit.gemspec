@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = SSHKit::VERSION
 
+  gem.add_runtime_dependency('base64')
   gem.add_runtime_dependency('mutex_m')
   gem.add_runtime_dependency('net-ssh',  '>= 2.8.0')
   gem.add_runtime_dependency('net-scp',  '>= 1.1.2')
