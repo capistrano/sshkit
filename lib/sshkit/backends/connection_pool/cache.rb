@@ -36,7 +36,7 @@ class SSHKit::Backend::ConnectionPool::Cache
   def evict
     # Peek at the first connection to see if it is still fresh. If so, we can
     # return right away without needing to use `synchronize`.
-    first_expires_at, first_conn = connections.first
+    first_expires_at, _first_conn = connections.first
     return if (first_expires_at.nil? || fresh?(first_expires_at))
 
     connections.synchronize do
