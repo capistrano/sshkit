@@ -1,6 +1,5 @@
 require 'English'
 require 'strscan'
-require 'mutex_m'
 require 'net/ssh'
 
 module Net

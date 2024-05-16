@@ -7,12 +7,11 @@ module SSHKit
     class Netssh < Abstract
 
       class KnownHostsKeys
-        include Mutex_m
-
         def initialize(path)
           super()
           @path = File.expand_path(path)
           @hosts_keys = nil
+          @mutex = Mutex.new
         end
 
         def keys_for(hostlist)
@@ -46,7 +45,7 @@ module SSHKit
         end
 
         def parse_file
-          synchronize do
+          @mutex.synchronize do
             return if hosts_keys && hosts_hashes
 
             unless File.readable?(path)
@@ -112,11 +111,10 @@ module SSHKit
       end
 
       class KnownHosts
-        include Mutex_m
-
         def initialize
           super()
           @files = {}
+          @mutex = Mutex.new
         end
 
         def search_for(host, options = {})
@@ -128,13 +126,13 @@ module SSHKit
 
         def add(*args)
           ::Net::SSH::KnownHosts.add(*args)
-          synchronize { @files = {} }
+          @mutex.synchronize { @files = {} }
         end
 
         private
 
         def known_hosts_file(path)
-          @files[path] || synchronize { @files[path] ||= KnownHostsKeys.new(path) }
+          @files[path] || @mutex.synchronize { @files[path] ||= KnownHostsKeys.new(path) }
         end
       end
 
