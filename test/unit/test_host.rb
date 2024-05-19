@@ -50,6 +50,12 @@ module SSHKit
       assert_equal 'localhost',         h.hostname
     end
 
+    def test_ipv6_without_brackets
+      h = Host.new '1fff:0:a88:85a3::ac1f'
+      assert_nil h.port
+      assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
+    end
+
     def test_does_not_confuse_ipv6_hosts_with_port_specification
       h = Host.new '[1fff:0:a88:85a3::ac1f]:8001'
       assert_equal 8001,                    h.port

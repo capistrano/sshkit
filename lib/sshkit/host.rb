@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'resolv'
 
 module SSHKit
 
@@ -115,6 +116,23 @@ module SSHKit
 
   end
 
+  # @private
+  # :nodoc:
+  class IPv6HostParser < SimpleHostParser
+    def self.suitable?(host_string)
+      host_string.match(Resolv::IPv6::Regex)
+    end
+
+    def port
+
+    end
+
+    def hostname
+      @host_string.match(Resolv::IPv6::Regex)[0]
+    end
+
+  end
+
   class HostWithPortParser < SimpleHostParser
 
     def self.suitable?(host_string)
@@ -185,6 +203,7 @@ module SSHKit
 
   PARSERS = [
     SimpleHostParser,
+    IPv6HostParser,
     HostWithPortParser,
     HostWithUsernameAndPortParser,
     IPv6HostWithPortParser,
