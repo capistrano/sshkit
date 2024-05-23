@@ -106,20 +106,16 @@ module SSHKit
         if who.is_a? Hash
           @user  = who[:user]  || who["user"]
           @group = who[:group] || who["group"]
+          @skip_whoami = who[:skip_whoami] || who["skip_whoami"]
         else
           @user  = who
           @group = nil
         end
-        execute <<-EOTEST, verbosity: Logger::DEBUG
-          if ! sudo -u #{@user.to_s.shellescape} whoami > /dev/null
-            then echo "You cannot switch to user '#{@user.to_s.shellescape}' using sudo, please check the sudoers file" 1>&2
-            false
-          fi
-        EOTEST
         yield
       ensure
         remove_instance_variable(:@user)
         remove_instance_variable(:@group)
+        remove_instance_variable(:@skip_whoami)      
       end
 
       class << self
