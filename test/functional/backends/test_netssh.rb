@@ -15,7 +15,7 @@ module SSHKit
       end
 
       def a_host
-        VagrantWrapper.hosts['one']
+        DockerWrapper.host
       end
 
       def test_simple_netssh

@@ -102,7 +102,6 @@ Layout/IndentHash:
   Exclude:
     - 'test/functional/backends/test_local.rb'
     - 'test/functional/backends/test_netssh.rb'
-    - 'test/support/vagrant_wrapper.rb'
     - 'test/unit/formatters/test_custom.rb'
     - 'test/unit/formatters/test_pretty.rb'
     - 'test/unit/test_mapping_interaction_handler.rb'
@@ -444,12 +443,6 @@ Style/MethodName:
   EnforcedStyle: snake_case
   Exclude:
     - 'test/unit/test_color.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/MutableConstant:
-  Exclude:
-    - 'Vagrantfile'
 
 # Offense count: 1
 # Cop supports --auto-correct.
