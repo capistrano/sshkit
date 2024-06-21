@@ -39,8 +39,8 @@ module DockerWrapper
     end
 
     def capture_stream(stream, echo=true)
-      buffer = +''
-      while line = stream.gets
+      buffer = String.new
+      while (line = stream.gets)
         buffer << line
         $stderr.puts("[docker compose] #{line}") if echo
       end
