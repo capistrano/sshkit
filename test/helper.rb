@@ -30,7 +30,10 @@ end
 class FunctionalTest < Minitest::Test
   def setup
     require_relative "support/docker_wrapper"
-    DockerWrapper.start unless DockerWrapper.running?
+    return if DockerWrapper.running?
+
+    DockerWrapper.start
+    DockerWrapper.wait_for_ssh_server
   end
 end
 

@@ -1,14 +1,18 @@
+require "socket"
+
 Minitest.after_run do
   DockerWrapper.stop if DockerWrapper.running?
 end
 
 module DockerWrapper
+  SSH_SERVER_PORT = 2122
+
   class << self
     def host
       SSHKit::Host.new(
         user: "deployer",
         hostname: "localhost",
-        port: "2122",
+        port: SSH_SERVER_PORT,
         password: "topsecret",
         ssh_options: host_verify_options
       )
@@ -25,6 +29,14 @@ module DockerWrapper
 
     def stop
       run_compose_command("down")
+    end
+
+    def wait_for_ssh_server(retries=3)
+      Socket.tcp("localhost", SSH_SERVER_PORT, connect_timeout: 1).close
+    rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT
+      retries -= 1
+      sleep(2) && retry if retries.positive?
+      raise
     end
 
     private
