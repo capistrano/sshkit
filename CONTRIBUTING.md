@@ -24,8 +24,8 @@ using unsupported features.
 
 ## Tests
 
-SSHKit has a unit test suite and a functional test suite. Some functional tests run against
-[Vagrant](https://www.vagrantup.com/) VMs. If possible, you should make sure that the
+SSHKit has a unit test suite and a functional test suite. Some functional tests run using
+[Docker](https://docs.docker.com/get-docker/). If possible, you should make sure that the
 tests pass for each commit by running `rake` in the sshkit directory. This is in case we
 need to cherry pick commits or rebase. You should ensure the tests pass, (preferably on
 the minimum and maximum ruby version), before creating a PR.

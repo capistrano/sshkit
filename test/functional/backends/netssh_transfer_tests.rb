@@ -11,7 +11,7 @@ module SSHKit
       end
 
       def a_host
-        VagrantWrapper.hosts['one']
+        DockerWrapper.host
       end
 
       def test_upload_and_then_capture_file_contents
