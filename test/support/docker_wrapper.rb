@@ -33,6 +33,7 @@ module DockerWrapper
 
     def wait_for_ssh_server(retries=3)
       Socket.tcp("localhost", SSH_SERVER_PORT, connect_timeout: 1).close
+      sleep(1)
     rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT
       retries -= 1
       sleep(2) && retry if retries.positive?
