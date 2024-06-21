@@ -31,12 +31,20 @@ module DockerWrapper
 
     def run_compose_command(command, echo=true)
       $stderr.puts "[docker compose] #{command}" if echo
-      stdout, stderr, status = Open3.capture3("docker compose #{command}")
+      Open3.popen2e("docker compose #{command}") do |stdin, outerr, wait_thread|
+        stdin.close
+        output = Thread.new { capture_stream(outerr, echo) }
+        [output.value, wait_thread.value]
+      end
+    end
 
-      output = stdout + stderr
-      output.each_line { |line| $stderr.puts "[docker compose] #{line}" } if echo
-
-      [output, status]
+    def capture_stream(stream, echo=true)
+      buffer = +''
+      while line = stream.gets
+        buffer << line
+        $stderr.puts("[docker compose] #{line}") if echo
+      end
+      buffer
     end
 
     def host_verify_options
