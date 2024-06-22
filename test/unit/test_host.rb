@@ -28,6 +28,12 @@ module SSHKit
       assert_equal 'example.com', h.hostname
     end
 
+    def test_custom_host_with_port
+      h = Host.new 'db:22'
+      assert_equal 22,   h.port
+      assert_equal 'db', h.hostname
+    end
+
     def test_host_with_username
       h = Host.new 'root@example.com'
       assert_equal 'root',        h.username
