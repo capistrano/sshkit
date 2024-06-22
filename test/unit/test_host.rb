@@ -28,6 +28,12 @@ module SSHKit
       assert_equal 'example.com', h.hostname
     end
 
+    def test_custom_host_with_port
+      h = Host.new 'db:22'
+      assert_equal 22,   h.port
+      assert_equal 'db', h.hostname
+    end
+
     def test_host_with_username
       h = Host.new 'root@example.com'
       assert_equal 'root',        h.username
@@ -48,6 +54,12 @@ module SSHKit
       username_candidates = ENV['USER'] || ENV['LOGNAME'] || ENV['USERNAME']
       assert_equal username_candidates, h.username
       assert_equal 'localhost',         h.hostname
+    end
+
+    def test_ipv6_without_brackets
+      h = Host.new '1fff:0:a88:85a3::ac1f'
+      assert_nil h.port
+      assert_equal '1fff:0:a88:85a3::ac1f', h.hostname
     end
 
     def test_does_not_confuse_ipv6_hosts_with_port_specification
