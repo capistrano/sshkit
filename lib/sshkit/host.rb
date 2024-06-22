@@ -137,7 +137,6 @@ module SSHKit
     def hostname
       @host_string.match(Resolv::IPv6::Regex)[0]
     end
-
   end
 
   class HostWithPortParser < SimpleHostParser
