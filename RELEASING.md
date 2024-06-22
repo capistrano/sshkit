@@ -9,7 +9,7 @@
 ## How to release
 
 1. Run `bundle install` to make sure that you have all the gems necessary for testing and releasing.
-2.  **Ensure the tests are passing by running `rake test`.** If functional tests fail, ensure you have [Vagrant](https://www.vagrantup.com) installed and have started it with `vagrant up`.
+2.  **Ensure the tests are passing by running `rake test`.** If functional tests fail, ensure you have [Docker installed](https://docs.docker.com/get-docker/) and running.
 3. Determine which would be the correct next version number according to [semver](http://semver.org/).
 4. Update the version in `./lib/sshkit/version.rb`.
 5. Commit the `version.rb` change with a message like "Preparing vX.Y.Z"

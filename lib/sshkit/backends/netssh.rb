@@ -1,8 +1,6 @@
 require 'English'
 require 'strscan'
-require 'mutex_m'
 require 'net/ssh'
-require 'net/scp'
 
 module Net
   module SSH
@@ -23,9 +21,26 @@ module SSHKit
   module Backend
 
     class Netssh < Abstract
+      def self.assert_valid_transfer_method!(method)
+        return if [:scp, :sftp].include?(method)
+
+        raise ArgumentError, "#{method.inspect} is not a valid transfer method. Supported methods are :scp, :sftp."
+      end
+
       class Configuration
         attr_accessor :connection_timeout, :pty
+        attr_reader :transfer_method
         attr_writer :ssh_options
+
+        def initialize
+          self.transfer_method = :scp
+        end
+
+        def transfer_method=(method)
+          Netssh.assert_valid_transfer_method!(method)
+
+          @transfer_method = method
+        end
 
         def ssh_options
           default_options.merge(@ssh_options ||= {})
@@ -64,16 +79,16 @@ module SSHKit
       def upload!(local, remote, options = {})
         summarizer = transfer_summarizer('Uploading', options)
         remote = File.join(pwd_path, remote) unless remote.to_s.start_with?("/") || pwd_path.nil?
-        with_ssh do |ssh|
-          ssh.scp.upload!(local, remote, options, &summarizer)
+        with_transfer(summarizer) do |transfer|
+          transfer.upload!(local, remote, options)
         end
       end
 
       def download!(remote, local=nil, options = {})
         summarizer = transfer_summarizer('Downloading', options)
         remote = File.join(pwd_path, remote) unless remote.to_s.start_with?("/") || pwd_path.nil?
-        with_ssh do |ssh|
-          ssh.scp.download!(remote, local, options, &summarizer)
+        with_transfer(summarizer) do |transfer|
+          transfer.download!(remote, local, options)
         end
       end
 
@@ -105,7 +120,7 @@ module SSHKit
         last_percentage = nil
         proc do |_ch, name, transferred, total|
           percentage = (transferred.to_f * 100 / total.to_f)
-          unless percentage.nan?
+          unless percentage.nan? || percentage.infinite?
             message = "#{action} #{name} #{percentage.round(2)}%"
             percentage_r = (percentage / log_percent).truncate * log_percent
             if percentage_r > 0 && (last_name != name || last_percentage != percentage_r)
@@ -183,6 +198,20 @@ module SSHKit
         )
       end
 
+      def with_transfer(summarizer)
+        transfer_method = host.transfer_method || self.class.config.transfer_method
+        transfer_class = if transfer_method == :sftp
+                           require_relative "netssh/sftp_transfer"
+                           SftpTransfer
+                         else
+                           require_relative "netssh/scp_transfer"
+                           ScpTransfer
+                         end
+
+        with_ssh do |ssh|
+          yield(transfer_class.new(ssh, summarizer))
+        end
+      end
     end
   end
 

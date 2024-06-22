@@ -21,10 +21,6 @@ namespace :test do
 
 end
 
-Rake::Task["test:functional"].enhance do
-  warn "Remember there are still some VMs running, kill them with `vagrant halt` if you are finished using them."
-end
-
 desc 'Run RuboCop lint checks'
 RuboCop::RakeTask.new(:lint) do |task|
   task.options = ['--lint']

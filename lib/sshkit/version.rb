@@ -1,3 +1,3 @@
 module SSHKit
-  VERSION = "1.21.4".freeze
+  VERSION = "1.22.2".freeze
 end

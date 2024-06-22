@@ -124,7 +124,7 @@ module SSHKit
         assert_equal 2, lines.length
 
         assert_equal("[Deprecated] The background method is deprecated. Blame badly behaved pseudo-daemons!\n", lines[0])
-        assert_match(/    \(Called from.*test_abstract.rb:\d+:in `block in test_background_logs_deprecation_warnings'\)\n/, lines[1])
+        assert_match(/    \(Called from.*test_abstract.rb:\d+:in .block in .*test_background_logs_deprecation_warnings.\)\n/, lines[1])
       end
 
       def test_calling_abstract_with_undefined_execute_command_raises_exception
