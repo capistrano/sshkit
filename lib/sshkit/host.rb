@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'resolv'
 
 module SSHKit
 
@@ -117,21 +118,17 @@ module SSHKit
 
   # @private
   # :nodoc:
-  class IPv6HostWithPortParser < SimpleHostParser
-    IPV6_REGEX = /\A\[?([a-fA-F0-9:]+)\]?(?:\:(\d+))?\z/
-
+  class IPv6HostParser < SimpleHostParser
     def self.suitable?(host_string)
-      host_string.match(IPV6_REGEX)
+      host_string.match(Resolv::IPv6::Regex)
     end
 
     def port
-      prt = @host_string.match(IPV6_REGEX)[2]
-      prt = prt.to_i unless prt.nil?
-      prt
+
     end
 
     def hostname
-      @host_string.match(IPV6_REGEX)[1]
+      @host_string.match(Resolv::IPv6::Regex)[0]
     end
 
   end
@@ -171,6 +168,27 @@ module SSHKit
 
   # @private
   # :nodoc:
+  class IPv6HostWithPortParser < SimpleHostParser
+    IPV6_REGEX = /\[([a-fA-F0-9:]+)\](?:\:(\d+))?/
+
+    def self.suitable?(host_string)
+      host_string.match(IPV6_REGEX)
+    end
+
+    def port
+      prt = @host_string.match(IPV6_REGEX)[2]
+      prt = prt.to_i unless prt.nil?
+      prt
+    end
+
+    def hostname
+      @host_string.match(IPV6_REGEX)[1]
+    end
+
+  end
+
+  # @private
+  # :nodoc:
   class HostWithUsernameParser < SimpleHostParser
     def self.suitable?(host_string)
       host_string.match(/@/) && !host_string.match(/\:/)
@@ -185,9 +203,10 @@ module SSHKit
 
   PARSERS = [
     SimpleHostParser,
-    IPv6HostWithPortParser,
+    IPv6HostParser,
     HostWithPortParser,
     HostWithUsernameAndPortParser,
+    IPv6HostWithPortParser,
     HostWithUsernameParser,
   ].freeze
 
