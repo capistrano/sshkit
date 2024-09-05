@@ -24,7 +24,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency('net-ssh',  '>= 2.8.0')
   gem.add_runtime_dependency('net-scp',  '>= 1.1.2')
   gem.add_runtime_dependency('net-sftp', '>= 2.1.2')
-  gem.add_runtime_dependency('ostruct')
+  gem.add_runtime_dependency('ostruct') if RUBY_VERSION >= "2.5"
 
   gem.add_development_dependency('danger')
   gem.add_development_dependency('minitest', '>= 5.0.0')
