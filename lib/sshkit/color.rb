@@ -44,8 +44,8 @@ module SSHKit
       return string unless COLOR_CODES.key?(color)
 
       result = mode == :bold ? "\e[1;" : "\e[0;"
-      result << COLOR_CODES.fetch(color).to_s
-      result << ";49m#{string}\e[0m"
+
+      "#{result}#{COLOR_CODES.fetch(color)};49m#{string}\e[0m"
     end
 
     # Returns `true` if the underlying output is a tty, or if the SSHKIT_COLOR

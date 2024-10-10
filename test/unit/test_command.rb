@@ -211,7 +211,13 @@ module SSHKit
     end
 
     def test_deprecated_stdtream_accessors
-      deprecation_out = ''
+      deprecation_out =
+        if RUBY_VERSION < "2.3"
+          ''
+        else
+          +''
+        end
+
       SSHKit.config.deprecation_output = deprecation_out
 
       c = Command.new(:whoami)
