@@ -30,6 +30,8 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rake test:units
+        env:
+          RUBYOPT: ${{ startsWith(matrix.ruby, 'head') && '--enable=frozen-string-literal' || '' }}
 
   test-legacy:
     runs-on: ubuntu-20.04

@@ -11,8 +11,14 @@ module SSHKit
       return if @out.nil?
       warning_msg = "[Deprecated] #{message}\n"
       caller_line = caller.find { |line| !line.include?('lib/sshkit') }
-      warning_msg << "    (Called from #{caller_line})\n" unless caller_line.nil?
-      @out << warning_msg unless @previous_warnings.include?(warning_msg)
+      warning_msg = "#{warning_msg}    (Called from #{caller_line})\n" unless caller_line.nil?
+      unless @previous_warnings.include?(warning_msg)
+        if @out.frozen?
+          @out = "#{@out}#{warning_msg}"
+        else
+          @out << warning_msg
+        end
+      end
       @previous_warnings << warning_msg
     end
   end

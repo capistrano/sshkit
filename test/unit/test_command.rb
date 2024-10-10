@@ -211,7 +211,7 @@ module SSHKit
     end
 
     def test_deprecated_stdtream_accessors
-      deprecation_out = ''
+      deprecation_out = []
       SSHKit.config.deprecation_output = deprecation_out
 
       c = Command.new(:whoami)
@@ -219,7 +219,7 @@ module SSHKit
       assert_equal('a test', c.stdout)
       c.stderr='another test'
       assert_equal('another test', c.stderr)
-      deprecation_lines = deprecation_out.lines.to_a
+      deprecation_lines = deprecation_out.join.lines.to_a
 
       assert_equal 8, deprecation_lines.size
       assert_equal(

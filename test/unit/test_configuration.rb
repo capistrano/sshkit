@@ -11,10 +11,10 @@ module SSHKit
     end
 
     def test_deprecation_output
-      output = ''
+      output = []
       SSHKit.config.deprecation_output = output
       SSHKit.config.deprecation_logger.log('Test')
-      assert_equal "[Deprecated] Test\n", output.lines.first
+      assert_equal "[Deprecated] Test\n", output.join.lines.first
     end
 
     def test_default_deprecation_output
