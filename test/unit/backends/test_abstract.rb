@@ -112,14 +112,14 @@ module SSHKit
       end
 
       def test_background_logs_deprecation_warnings
-        deprecation_out = []
+        deprecation_out = +''
         SSHKit.config.deprecation_output = deprecation_out
 
         ExampleBackend.new do
           background :ls
         end.run
 
-        lines = deprecation_out.join.lines.to_a
+        lines = deprecation_out.lines.to_a
 
         assert_equal 2, lines.length
 
