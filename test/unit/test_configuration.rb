@@ -11,7 +11,13 @@ module SSHKit
     end
 
     def test_deprecation_output
-      output = +''
+      output =
+        if RUBY_VERSION < "2.3"
+          ''
+        else
+          +''
+        end
+
       SSHKit.config.deprecation_output = output
       SSHKit.config.deprecation_logger.log('Test')
       assert_equal "[Deprecated] Test\n", output.lines.first
