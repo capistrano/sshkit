@@ -4,7 +4,7 @@
 
 * You must have commit rights to the SSHKit repository.
 * You must have push rights for the sshkit gem on rubygems.org.
-* You must be using Ruby >= 2.1.0.
+* You must be using Ruby >= 2.5.0.
 
 ## How to release
 
