@@ -131,7 +131,7 @@ module SSHKit
 
       def test_test_does_not_raise_on_non_zero_exit_status
         Netssh.new(a_host) do |_host|
-          test :false
+          test :false # rubocop:disable Lint/BooleanSymbol
         end.run
       end
 
@@ -151,7 +151,7 @@ module SSHKit
         # ensure we enable connection pool
         SSHKit::Backend::Netssh.pool.idle_timeout = 10
         Netssh.new(a_host) do |_host|
-          test :false
+          test :false # rubocop:disable Lint/BooleanSymbol
         end.run
         sleep 2.5
         captured_command_result = nil
