@@ -18,12 +18,12 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/DoubleNegation:
   Enabled: false
-Style/FileName:
+Naming/FileName:
   Exclude:
     - "Dangerfile"
-Style/IndentHeredoc:
+Layout/IndentHeredoc:
   Enabled: false
-Style/SpaceAroundEqualsInParameterDefault:
+Layout/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: no_space
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -47,7 +47,7 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
-Style/PredicateName:
+Naming/PredicateName:
   Enabled: false
 Metrics/LineLength:
   Enabled: false
@@ -59,5 +59,5 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/ModuleLength:
   Enabled: false
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Enabled: false
