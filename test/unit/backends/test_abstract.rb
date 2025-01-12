@@ -112,12 +112,7 @@ module SSHKit
       end
 
       def test_background_logs_deprecation_warnings
-        deprecation_out =
-          if RUBY_VERSION < "2.3"
-            ''
-          else
-            +''
-          end
+        deprecation_out = +''
         SSHKit.config.deprecation_output = deprecation_out
 
         ExampleBackend.new do
