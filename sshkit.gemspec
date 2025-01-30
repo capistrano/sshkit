@@ -19,19 +19,20 @@ Gem::Specification.new do |gem|
   gem.name          = "sshkit"
   gem.require_paths = ["lib"]
   gem.version       = SSHKit::VERSION
+  gem.required_ruby_version = ">= 2.5"
 
-  gem.add_runtime_dependency('base64') if RUBY_VERSION >= "2.4"
+  gem.add_runtime_dependency('base64')
   gem.add_runtime_dependency('net-ssh',  '>= 2.8.0')
   gem.add_runtime_dependency('net-scp',  '>= 1.1.2')
   gem.add_runtime_dependency('net-sftp', '>= 2.1.2')
-  gem.add_runtime_dependency('ostruct') if RUBY_VERSION >= "2.5"
+  gem.add_runtime_dependency('ostruct')
 
   gem.add_development_dependency('danger')
   gem.add_development_dependency('minitest', '>= 5.0.0')
   gem.add_development_dependency('minitest-reporters')
   gem.add_development_dependency('rainbow', '~> 2.2.2')
   gem.add_development_dependency('rake')
-  gem.add_development_dependency('rubocop', "~> 0.49.1")
+  gem.add_development_dependency('rubocop', "~> 0.52.0")
   gem.add_development_dependency('mocha')
 
   gem.add_development_dependency('bcrypt_pbkdf')

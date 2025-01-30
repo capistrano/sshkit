@@ -211,12 +211,7 @@ module SSHKit
     end
 
     def test_deprecated_stdtream_accessors
-      deprecation_out =
-        if RUBY_VERSION < "2.3"
-          ''
-        else
-          +''
-        end
+      deprecation_out = +''
 
       SSHKit.config.deprecation_output = deprecation_out
 

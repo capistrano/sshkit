@@ -1,5 +1,3 @@
-require 'thread'
-
 module SSHKit
 
   module Runner

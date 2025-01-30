@@ -1,5 +1,4 @@
 require "monitor"
-require "thread"
 
 # Since we call to_s on new connection arguments and use that as a cache key, we
 # need to make sure the memory address of the object is not used as part of the
