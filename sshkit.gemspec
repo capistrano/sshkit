@@ -30,7 +30,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('danger')
   gem.add_development_dependency('minitest', '>= 5.0.0')
   gem.add_development_dependency('minitest-reporters')
-  gem.add_development_dependency('rainbow', '~> 2.2.2')
   gem.add_development_dependency('rake')
   gem.add_development_dependency('rubocop', "~> 0.52.0")
   gem.add_development_dependency('mocha')
