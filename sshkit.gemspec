@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = ">= 2.5"
 
   gem.add_runtime_dependency('base64')
+  gem.add_runtime_dependency('logger')
   gem.add_runtime_dependency('net-ssh',  '>= 2.8.0')
   gem.add_runtime_dependency('net-scp',  '>= 1.1.2')
   gem.add_runtime_dependency('net-sftp', '>= 2.1.2')
