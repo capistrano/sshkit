@@ -24,7 +24,7 @@ module SSHKit
       extend Forwardable
       def_delegators :output, :log, :fatal, :error, :warn, :info, :debug
 
-      attr_reader :host
+      attr_reader :host, :config
 
       def run
         Thread.current["sshkit_backend"] = self
@@ -33,10 +33,12 @@ module SSHKit
         Thread.current["sshkit_backend"] = nil
       end
 
-      def initialize(host, &block)
+      def initialize(host, **options, &block)
         raise "Must pass a Host object" unless host.is_a? Host
         @host  = host
+        @options = options
         @block = block
+        @config = options[:config] || SSHKit.config
 
         @pwd   = nil
         @env   = nil
@@ -68,7 +70,7 @@ module SSHKit
       end
 
       def background(*args)
-        SSHKit.config.deprecation_logger.log(
+        config.deprecation_logger.log(
           'The background method is deprecated. Blame badly behaved pseudo-daemons!'
         )
         options = args.extract_options!.merge(run_in_background: true)
@@ -140,7 +142,7 @@ module SSHKit
       private
 
       def output
-        SSHKit.config.output
+        config.output
       end
 
       def create_command_and_execute(args, options)
@@ -156,7 +158,9 @@ module SSHKit
       end
 
       def command(args, options)
-        SSHKit::Command.new(*args, options.merge({in: pwd_path, env: @env, host: @host, user: @user, group: @group}))
+        SSHKit::Command.new(
+          *args, options.merge({in: pwd_path, env: @env, host: @host, user: @user, group: @group, config: config})
+        )
       end
 
     end

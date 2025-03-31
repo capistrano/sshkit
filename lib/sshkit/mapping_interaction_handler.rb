@@ -2,8 +2,9 @@ module SSHKit
 
   class MappingInteractionHandler
 
-    def initialize(mapping, log_level=nil)
+    def initialize(mapping, log_level=nil, **options)
       @log_level = log_level
+      @config = options[:config] || SSHKit.config
       @mapping_proc = \
         case mapping
         when Hash
@@ -40,7 +41,7 @@ module SSHKit
     private
 
     def log(message)
-      SSHKit.config.output.send(@log_level, message) unless @log_level.nil?
+      @config.output.send(@log_level, message) unless @log_level.nil?
     end
 
   end
