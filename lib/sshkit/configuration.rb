@@ -35,8 +35,8 @@ module SSHKit
 
     def default_runner_config=(config_hash)
       config = config_hash.dup
-      SSHKit.config.default_runner = config.delete(:in) if config[:in]
-      @default_runner_config = config.merge(in: SSHKit.config.default_runner)
+      @default_runner = config.delete(:in) if config[:in]
+      @default_runner_config = config.merge(in: @default_runner)
     end
 
     def backend
@@ -71,9 +71,9 @@ module SSHKit
     #
     #   config.output = SSHKit::Formatter::Pretty.new($stdout)
     #
-    def use_format(formatter, *args)
+    def use_format(formatter, options = {})
       klass = formatter.is_a?(Class) ? formatter : formatter_class(formatter)
-      self.output = klass.new($stdout, *args)
+      self.output = klass.new($stdout, options.merge(config: self))
     end
 
     def command_map
