@@ -111,6 +111,61 @@ module SSHKit
         assert_equal 'cd ~/foo && /usr/bin/env cat file', backend.executed_command.to_command
       end
 
+      def test_as_properly_clears
+        backend = ExampleBackend.new do
+          as :root do
+            execute :cat, 'file', :strip => false
+          end
+
+          execute :cat, 'file', :strip => false
+        end
+
+        backend.run
+
+        assert_equal '/usr/bin/env cat file', backend.executed_command.to_command
+      end
+
+      def test_as_root
+        backend = ExampleBackend.new do
+          as :root do
+            execute :cat, 'file', :strip => false
+          end
+        end
+
+        backend.run
+
+        assert_equal 'sudo -u root -- sh -c /usr/bin/env\\ cat\\ file', backend.executed_command.to_command
+      end
+
+      def test_nested_as
+        backend = ExampleBackend.new do
+          as :root do
+            as :other_user do
+              execute :cat, 'file', :strip => false
+            end
+          end
+        end
+
+        backend.run
+
+        assert_equal 'sudo -u other_user -- sh -c /usr/bin/env\\ cat\\ file', backend.executed_command.to_command
+      end
+
+      def test_nested_as_properly_clears
+        backend = ExampleBackend.new do
+          as :root do
+            as :other_user do
+              execute :cat, 'file', :strip => false
+            end
+            execute :cat, 'file', :strip => false
+          end
+        end
+
+        backend.run
+
+        assert_equal 'sudo -u root -- sh -c /usr/bin/env\\ cat\\ file', backend.executed_command.to_command
+      end
+
       def test_background_logs_deprecation_warnings
         deprecation_out = +''
         SSHKit.config.deprecation_output = deprecation_out

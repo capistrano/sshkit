@@ -103,6 +103,7 @@ module SSHKit
       end
 
       def as(who, &_block)
+        who_old = [@user, @group]
         if who.is_a? Hash
           @user  = who[:user]  || who["user"]
           @group = who[:group] || who["group"]
@@ -118,8 +119,7 @@ module SSHKit
         EOTEST
         yield
       ensure
-        remove_instance_variable(:@user)
-        remove_instance_variable(:@group)
+        @user, @group = *who_old
       end
 
       class << self
