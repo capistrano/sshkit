@@ -14,13 +14,13 @@ module SSHKit
     end
 
     def test_calls_send_data_with_mapped_input_when_stdout_matches
-      handler = MappingInteractionHandler.new('Server output' => "some input\n")
+      handler = MappingInteractionHandler.new({'Server output' => "some input\n"})
       channel.expects(:send_data).with("some input\n")
       handler.on_data(nil, :stdout, 'Server output', channel)
     end
 
     def test_calls_send_data_with_mapped_input_when_stderr_matches
-      handler = MappingInteractionHandler.new('Server output' => "some input\n")
+      handler = MappingInteractionHandler.new({'Server output' => "some input\n"})
       channel.expects(:send_data).with("some input\n")
       handler.on_data(nil, :stderr, 'Server output', channel)
     end
