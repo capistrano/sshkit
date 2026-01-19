@@ -145,7 +145,7 @@ module SSHKit
         with_ssh do |ssh|
           ssh.open_channel do |chan|
             chan.request_pty if Netssh.config.pty
-            chan.exec cmd.to_command do |_ch, _success|
+            chan.exec "echo '#{cmd.to_command}' | bash" do |_ch, _success|
               chan.on_data do |ch, data|
                 cmd.on_stdout(ch, data)
                 output.log_command_data(cmd, :stdout, data)
