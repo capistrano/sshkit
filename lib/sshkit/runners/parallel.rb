@@ -14,7 +14,24 @@ module SSHKit
             end
           end
         end
-        threads.each(&:join)
+
+        wait_for_threads(threads)
+      end
+
+      private
+
+      def wait_for_threads(threads)
+        exception = nil
+
+        threads.map do |t|
+          begin
+            t.join
+          rescue ExecuteError => e
+            exception ||= e
+          end
+        end
+
+        raise exception if exception
       end
     end
 
