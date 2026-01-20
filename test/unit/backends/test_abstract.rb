@@ -35,7 +35,7 @@ module SSHKit
 
         assert_equal '/usr/bin/env ls -l /some/directory', backend.executed_command.to_command
         assert_equal(
-          {:raise_on_non_zero_exit=>true, :run_in_background=>false, :in=>nil, :env=>nil, :host=>ExampleBackend.example_host, :user=>nil, :group=>nil},
+          {:raise_on_non_zero_exit=>true, :run_in_background=>false, :in=>nil, :env=>nil, :host=>ExampleBackend.example_host, :user=>nil, :group=>nil, :config=>SSHKit.config},
           backend.executed_command.options
         )
       end

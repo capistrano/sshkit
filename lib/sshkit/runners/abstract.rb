@@ -4,21 +4,22 @@ module SSHKit
 
     class Abstract
 
-      attr_reader :hosts, :options, :block
+      attr_reader :hosts, :options, :block, :config
 
-      def initialize(hosts, options = nil, &block)
+      def initialize(hosts, **options, &block)
         @hosts       = Array(hosts)
-        @options     = options || {}
+        @options     = options
         @block       = block
+        @config      = options[:config] || SSHKit.config
       end
 
       private
 
       def backend(host, &block)
         if host.local?
-          SSHKit::Backend::Local.new(&block)
+          SSHKit::Backend::Local.new(config: config, &block)
         else
-          SSHKit.config.backend.new(host, &block)
+          config.backend.new(host, config: config, &block)
         end
       end
 
