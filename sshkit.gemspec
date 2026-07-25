@@ -10,7 +10,8 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://github.com/capistrano/sshkit"
   gem.license       = "MIT"
   gem.metadata      = {
-    "changelog_uri" => "https://github.com/capistrano/sshkit/releases"
+    "changelog_uri" => "https://github.com/capistrano/sshkit/releases",
+    "rubygems_mfa_required" => "true"
   }
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
