@@ -28,7 +28,7 @@ module SSHKit
       end
 
       class Configuration
-        attr_accessor :connection_timeout, :pty
+        attr_accessor :connection_timeout, :pty, :force_bash
         attr_reader :transfer_method
         attr_writer :ssh_options
 
@@ -145,7 +145,12 @@ module SSHKit
         with_ssh do |ssh|
           ssh.open_channel do |chan|
             chan.request_pty if Netssh.config.pty
-            chan.exec cmd.to_command do |_ch, _success|
+            if Netssh.config.force_bash
+              cmd_to_exec = "bash -c '#{cmd.to_command}'"
+            else
+              cmd_to_exec = cmd.to_command
+            end
+            chan.exec cmd_to_exec  do |_ch, _success|
               chan.on_data do |ch, data|
                 cmd.on_stdout(ch, data)
                 output.log_command_data(cmd, :stdout, data)
