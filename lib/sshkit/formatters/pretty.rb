@@ -50,7 +50,7 @@ module SSHKit
       private
 
       def write_message(verbosity, message, uuid=nil)
-        original_output << "#{format_message(verbosity, message, uuid)}\n" if verbosity >= SSHKit.config.output_verbosity
+        original_output << "#{format_message(verbosity, message, uuid)}\n" if verbosity >= config.output_verbosity
       end
 
     end

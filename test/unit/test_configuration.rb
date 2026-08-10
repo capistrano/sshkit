@@ -109,7 +109,7 @@ module SSHKit
       formatter = SSHKit.config.output
       assert_instance_of(TestFormatter, formatter)
       assert_equal($stdout, formatter.output)
-      assert_equal({ :color => false }, formatter.options)
+      assert_equal({ :color => false, :config => SSHKit.config }, formatter.options)
     end
 
     class TestFormatter

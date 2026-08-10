@@ -5,8 +5,8 @@ module SSHKit
     class Sequential < Abstract
       attr_accessor :wait_interval
 
-      def initialize(hosts, options = nil, &block)
-        super(hosts, options, &block)
+      def initialize(hosts, **options, &block)
+        super(hosts, **options, &block)
         @wait_interval = @options[:wait] || 2
       end
 

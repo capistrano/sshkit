@@ -5,8 +5,8 @@ module SSHKit
     class Group < Sequential
       attr_accessor :group_size
 
-      def initialize(hosts, options = nil, &block)
-        super(hosts, options, &block)
+      def initialize(hosts, **options, &block)
+        super(hosts, **options, &block)
         @group_size = @options[:limit] || 2
       end
 

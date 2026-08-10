@@ -10,7 +10,7 @@ module SSHKit
 
     Failed = Class.new(SSHKit::StandardError)
 
-    attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr, :uuid
+    attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr, :uuid, :config
 
     # Initialize a new Command object
     #
@@ -27,6 +27,7 @@ module SSHKit
       @options.symbolize_keys!
       @stdout, @stderr, @full_stdout, @full_stderr = String.new, String.new, String.new, String.new
       @uuid = Digest::SHA1.hexdigest(SecureRandom.random_bytes(10))[0..7]
+      @config = @options[:config] || SSHKit.config
     end
 
     def complete?
@@ -147,7 +148,7 @@ module SSHKit
     end
 
     def environment_hash
-      (SSHKit.config.default_env || {}).merge(options[:env] || {})
+      (config.default_env || {}).merge(options[:env] || {})
     end
 
     def environment_string
@@ -176,8 +177,8 @@ module SSHKit
     end
 
     def umask(&_block)
-      return yield unless SSHKit.config.umask
-      "umask #{SSHKit.config.umask} && #{yield}"
+      return yield unless config.umask
+      "umask #{config.umask} && #{yield}"
     end
 
     def group(&_block)
@@ -213,7 +214,7 @@ module SSHKit
 
     def to_s
       if should_map?
-        [SSHKit.config.command_map[command.to_sym], *Array(args)].join(' ')
+        [config.command_map[command.to_sym], *Array(args)].join(' ')
       else
         command.to_s
       end
@@ -239,19 +240,19 @@ module SSHKit
 
     def call_interaction_handler(stream_name, data, channel)
       interaction_handler = options[:interaction_handler]
-      interaction_handler = MappingInteractionHandler.new(interaction_handler) if interaction_handler.kind_of?(Hash) or interaction_handler.kind_of?(Proc)
+      interaction_handler = MappingInteractionHandler.new(interaction_handler, nil, config: config) if interaction_handler.kind_of?(Hash) or interaction_handler.kind_of?(Proc)
       interaction_handler.on_data(self, stream_name, data, channel) if interaction_handler.respond_to?(:on_data)
     end
 
     def log_reader_deprecation(stream)
-      SSHKit.config.deprecation_logger.log(
+      config.deprecation_logger.log(
         "The #{stream} method on Command is deprecated. " \
         "The @#{stream} attribute will be removed in a future release. Use full_#{stream}() instead."
       )
     end
 
     def log_writer_deprecation(stream)
-      SSHKit.config.deprecation_logger.log(
+      config.deprecation_logger.log(
         "The #{stream}= method on Command is deprecated. The @#{stream} attribute will be removed in a future release."
       )
     end
