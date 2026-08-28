@@ -4,7 +4,9 @@ module SSHKit
 
   class << self
 
-    attr_writer :config
+    def config=(configuration)
+      @@config = configuration
+    end
 
     def configure
       @@config ||= Configuration.new
