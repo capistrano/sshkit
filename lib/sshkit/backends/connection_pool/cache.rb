@@ -16,8 +16,12 @@ class SSHKit::Backend::ConnectionPool::Cache
   def pop
     connections.synchronize do
       evict
-      _, connection = connections.pop
-      connection
+      while (entry = connections.pop)
+        _, connection = entry
+        return connection unless closed?(connection)
+        closer.call(connection)
+      end
+      nil
     end
   end
 
