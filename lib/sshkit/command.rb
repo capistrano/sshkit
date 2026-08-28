@@ -234,7 +234,9 @@ module SSHKit
     end
 
     def sanitize_command(cmd)
-      cmd.to_s.lines.map(&:strip).join("; ")
+      cmd.to_s.lines.map do |line|
+        line.chomp.lstrip.sub(/(?<!\\)(?:\\\\)*\K[ \t\r\f\v]+\z/, '')
+      end.join("; ")
     end
 
     def call_interaction_handler(stream_name, data, channel)
