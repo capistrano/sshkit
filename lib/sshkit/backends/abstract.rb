@@ -27,10 +27,11 @@ module SSHKit
       attr_reader :host
 
       def run
+        previous_backend = Thread.current["sshkit_backend"]
         Thread.current["sshkit_backend"] = self
         instance_exec(@host, &@block)
       ensure
-        Thread.current["sshkit_backend"] = nil
+        Thread.current["sshkit_backend"] = previous_backend
       end
 
       def initialize(host, &block)
