@@ -11,16 +11,13 @@ module SSHKit
       end
 
       def execute
-        last_host = hosts.pop
-
-        hosts.each do |host|
-          run_backend(host, &block)
+        last_index = hosts.length - 1
+        hosts.each_with_index do |host, index|
+          result = run_backend(host, &block)
+          return result if index == last_index
           sleep wait_interval
         end
-
-        unless last_host.nil?
-          run_backend(last_host, &block)
-        end
+        nil
       end
 
       private
