@@ -75,13 +75,13 @@ module SSHKit
 
     def on_stdout(channel, data)
       @stdout = data
-      @full_stdout += data
+      @full_stdout << data
       call_interaction_handler(:stdout, data, channel)
     end
 
     def on_stderr(channel, data)
       @stderr = data
-      @full_stderr += data
+      @full_stderr << data
       call_interaction_handler(:stderr, data, channel)
     end
 
