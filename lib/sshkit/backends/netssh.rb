@@ -188,12 +188,14 @@ module SSHKit
       end
 
       def with_ssh(&block)
-        host.ssh_options = self.class.config.ssh_options.merge(host.ssh_options || {})
+        ssh_options = host.netssh_options
+          .merge(self.class.config.ssh_options)
+          .merge(host.ssh_options || {})
         self.class.pool.with(
           Net::SSH.method(:start),
           String(host.hostname),
           host.username,
-          host.netssh_options,
+          ssh_options,
           &block
         )
       end
