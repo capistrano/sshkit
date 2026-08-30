@@ -164,10 +164,6 @@ module SSHKit
               #  warn ">>> " + exit_signal.inspect
               #  output.log_command_killed(cmd, exit_signal)
               #end
-              chan.on_open_failed do |_ch|
-                # TODO: What do do here?
-                # I think we should raise something
-              end
               chan.on_process do |_ch|
                 # TODO: I don't know if this is useful
               end
