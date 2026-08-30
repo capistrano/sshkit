@@ -71,6 +71,15 @@ module SSHKit
       assert_equal config_hash_with_runner[:in], SSHKit.config.default_runner
     end
 
+    def test_default_runner_config_updates_its_own_configuration
+      configuration = Configuration.new
+
+      configuration.default_runner_config = { in: :groups, limit: 5 }
+
+      assert_equal :groups, configuration.default_runner
+      assert_equal({ in: :groups, limit: 5 }, configuration.default_runner_config)
+    end
+
     def test_backend
       assert_equal SSHKit::Backend::Netssh, SSHKit.config.backend
       assert SSHKit.config.backend = SSHKit::Backend::Printer
