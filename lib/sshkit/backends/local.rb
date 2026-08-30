@@ -13,11 +13,7 @@ module SSHKit
       def upload!(local, remote, options = {})
         remote = File.join(pwd_path, remote) unless remote.to_s.start_with?("/") || pwd_path.nil?
         if local.is_a?(String)
-          if options[:recursive]
-            FileUtils.cp_r(local, remote)
-          else
-            FileUtils.cp(local, remote)
-          end
+          options[:recursive] ? FileUtils.cp_r(local, remote) : FileUtils.cp(local, remote)
         else
           File.open(remote, "wb") do |f|
             IO.copy_stream(local, f)
@@ -25,9 +21,11 @@ module SSHKit
         end
       end
 
-      def download!(remote, local=nil, _options = {})
+      def download!(remote, local=nil, options = {})
         remote = File.join(pwd_path, remote) unless remote.to_s.start_with?("/") || pwd_path.nil?
-        if local.nil?
+        if options[:recursive] && (local.nil? || local.is_a?(String))
+          FileUtils.cp_r(remote, local || File.basename(remote))
+        elsif local.nil?
           FileUtils.cp(remote, File.basename(remote))
         else
           File.open(remote, "rb") do |f|
