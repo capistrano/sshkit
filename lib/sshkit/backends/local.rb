@@ -42,6 +42,7 @@ module SSHKit
         output.log_command_start(cmd.with_redaction)
         cmd.started = Time.now
         Open3.popen3(cmd.to_command) do |stdin, stdout, stderr, wait_thr|
+          stdin.close unless cmd.options[:interaction_handler]
           stdout_thread = Thread.new do
             while (line = stdout.gets) do
               cmd.on_stdout(stdin, line)
