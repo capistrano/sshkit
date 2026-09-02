@@ -9,6 +9,9 @@ module SSHKit
   class Command
 
     Failed = Class.new(SSHKit::StandardError)
+    ENVIRONMENT_VARIABLE = /\A[A-Za-z_][A-Za-z0-9_]*\z/
+    # Preserve documented $VAR/${VAR} expansion while escaping executable shell forms.
+    ENVIRONMENT_VALUE_ESCAPE = /\\[$\x60"\\]|["\x60]|\$(?![A-Za-z_][A-Za-z0-9_]*|\{[A-Za-z_][A-Za-z0-9_]*\})/
 
     attr_reader :command, :args, :options, :started_at, :started, :exit_status, :full_stdout, :full_stderr, :uuid
 
@@ -153,7 +156,13 @@ module SSHKit
     def environment_string
       environment_hash.collect do |key,value|
         key_string = key.is_a?(Symbol) ? key.to_s.upcase : key.to_s
-        escaped_value = value.to_s.gsub(/"/, '\"')
+        unless key_string.match?(ENVIRONMENT_VARIABLE)
+          raise ArgumentError, "Invalid environment variable name: #{key.inspect}"
+        end
+
+        escaped_value = value.to_s.gsub(ENVIRONMENT_VALUE_ESCAPE) do |match|
+          match.start_with?("\\") ? match : "\\#{match}"
+        end
         %{#{key_string}="#{escaped_value}"}
       end.join(' ')
     end
