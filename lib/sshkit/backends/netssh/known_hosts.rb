@@ -25,11 +25,8 @@ module SSHKit
           return keys_found unless keys_found.empty?
 
           host_names.each do |host|
-            hashes.each do |(hmac, salt), hash_keys|
-              if OpenSSL::HMAC.digest(sha1, salt, host) == hmac
-                return hash_keys
-              end
-            end
+            hash_keys = hashes.select { |(hmac, salt), _key| OpenSSL::HMAC.digest(sha1, salt, host) == hmac }.map(&:last)
+            return hash_keys unless hash_keys.empty?
           end
 
           []
