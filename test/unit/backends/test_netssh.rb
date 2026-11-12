@@ -123,7 +123,7 @@ module SSHKit
           kh = Netssh::KnownHosts.new
           keys = kh.search_for('github.com', user_known_hosts_file: source, global_known_hosts_file: Tempfile.new('sshkit-test').path)
 
-          assert_equal(%w[ecdsa-sha2-nistp256 ssh-ed25519 ssh-rsa], keys.map(&:ssh_type).sort)
+          assert_equal(%w(ecdsa-sha2-nistp256 ssh-ed25519 ssh-rsa), keys.map(&:ssh_type).sort)
         end
 
         def test_known_hosts_for_with_multiple_hosts
