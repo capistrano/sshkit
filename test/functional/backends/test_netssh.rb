@@ -104,7 +104,7 @@ module SSHKit
           capture(:uname)
           host_ssh_options = host.ssh_options
         end.run
-        # net-ssh >= 8.1 also sets :non_interactive when stdin is not a TTY (e.g. on CI)
+        # net-ssh >= 8.1 also sets :non_interactive when it can't prompt (e.g. stdin is not a TTY on CI)
         assert_equal [:forward_agent, *keepalive_opt.keys, :known_hosts, :logger, :password_prompt].sort, (host_ssh_options.keys - [:non_interactive]).sort
         assert_equal false, host_ssh_options[:forward_agent]
         assert_equal keepalive_opt.values.first, host_ssh_options[keepalive_opt.keys.first]
