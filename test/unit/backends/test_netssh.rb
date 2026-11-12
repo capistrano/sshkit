@@ -118,6 +118,14 @@ module SSHKit
           perform_known_hosts_test('github_hash', 'github.com')
         end
 
+        def test_known_hosts_for_when_host_hashes_are_recognized_for_multiple_keys
+          source = File.join(File.dirname(__FILE__), '../../known_hosts', 'github_hash_multiple_keys')
+          kh = Netssh::KnownHosts.new
+          keys = kh.search_for('github.com', user_known_hosts_file: source, global_known_hosts_file: Tempfile.new('sshkit-test').path)
+
+          assert_equal(%w(ecdsa-sha2-nistp256 ssh-ed25519 ssh-rsa), keys.map(&:ssh_type).sort)
+        end
+
         def test_known_hosts_for_with_multiple_hosts
           perform_known_hosts_test('github', '192.30.252.123,github.com', 0)
           perform_known_hosts_test('github_ip', '192.30.252.123,github.com', 1)
